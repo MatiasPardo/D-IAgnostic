@@ -1,0 +1,23 @@
+title Crear pedido agregando un producto 
+
+Usuario->Front: Productos
+Front->Back: /items
+Back->Front: lista de productos
+Front->Usuario: Lista de productos
+Usuario->Front: click en agregar producto
+note right of Usuario
+Como de pedidos + crear pedido 
+selecciona crear pedido =>
+se asigna a una variable el order seleccionad
+para que en la proxima vez que hace
+click en agregar producto se use el pedido
+seleccionado anteriormente
+end note 
+Front->Back: /order -> {items}
+Back->Front: pedido creado 
+Front->Usuario: Pedido creado e item agregado
+note right of Usuario
+Si el usuario quiere agregar
+un producto a otro pedido debera tener
+una seccion en donde pueda cambiar de pedido
+end note

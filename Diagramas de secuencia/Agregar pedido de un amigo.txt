@@ -1,0 +1,17 @@
+title Agregar pedido de un amigo
+
+Usuario2->Front: Pedidos
+Front->Back: /items
+Back->Front: lista de productos
+Front->Usuario2: Lista de productos
+Usuario2->Front: Agregar id de pedido amigo
+Front->Usuario2: Pedido agregado
+Front->Back: Agregar pedido amigo
+note left of Back
+    Si el pedido no esta cerrado
+    Se agrega el usuario a la lista
+    de usuarios invitados del pedido
+    Y el pedido al usuario2
+end note
+Back->Front: Peido agregado 
+Front->Usuario2: pedido agregado 

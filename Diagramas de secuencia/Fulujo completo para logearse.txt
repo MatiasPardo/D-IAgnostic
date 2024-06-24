@@ -1,0 +1,18 @@
+title Fulujo completo para logearse
+
+Usuario->Front: Crear usuario
+Front->Back: Crer usuario
+note left of Back: manejar los codigos de error 409 
+Back->Front: OK
+Front->Usuario: Usuario creado con exito
+note right of Usuario: Se redirige al usuario al login
+
+Usuario->Front: Login
+Front->Back: Login
+Back->Front: token 
+Front->Usuario: logeado con exito
+note right of Usuario: Se redirige al usuario al home
+
+
+
+

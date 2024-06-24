@@ -1,0 +1,15 @@
+title Compartir pedido
+
+Usuario->Front: Pedidos
+Front->Back: /items
+Back->Front: lista de productos
+Front->Usuario: Lista de productos
+Usuario->Front: copiar id en el portapeles
+Front->Usuario: pedido copiado, compartilo con tus amigos
+note left of Usuario
+    El usuario le pasa el id 
+    a un amigo o conocido
+end note
+
+
+
