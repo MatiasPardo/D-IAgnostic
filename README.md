@@ -1,4 +1,4 @@
-# TP - TACS - GRUPO 1
+# TP - Proyecto final - Asistente para diagnostico de imagenes
 
 ## Ejecución con Docker
 
