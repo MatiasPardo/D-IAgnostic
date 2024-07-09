@@ -15,14 +15,14 @@ export const Navbar = () => {
 
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
-            <Link className="navbar-brand" to="/">Home</Link>
+            <Link className="navbar-brand text-info" to="/">Home</Link>
             <div className="navbar-collapse">
                 <div className="navbar-nav">
                     <NavLink className="nav-item nav-link" to="/products">Productos</NavLink>
-                    <NavLink className="nav-item nav-link" to="/orders">Pedidos</NavLink>
+                    <NavLink className="nav-item nav-link" to="/orders">Solicitar Informe</NavLink>
                 </div>
             </div>
-            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
+            <div className="navbar-collapse collapse order-3 dual-collapse2 d-flex justify-content-end">
                 <ul className="navbar-nav ml-auto">
                     { login.isAuth ?
                         <>
