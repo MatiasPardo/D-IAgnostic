@@ -478,6 +478,5 @@ Para hacer pruebas, el repositorio de items es inicializado con tres items con i
 		}
 	]
 }
-</details>
 ```
-
+</details>
