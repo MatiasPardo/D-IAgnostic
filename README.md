@@ -97,7 +97,7 @@ Para hacer pruebas, el repositorio de items es inicializado con tres items con i
 {
 	"info": {
 		"_postman_id": "e1e58114-569c-41c5-bcec-c1399d73b80c",
-		"name": "tp tacs",
+		"name": "diagnostic",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16278070"
 	},
