@@ -16,13 +16,22 @@ public class Tomography {
     private String title;
     private String report;
     private String userId;
-    private Status status;
+    private StatusReport statusReport;
     private String codeReport;
+    private TomographyCategory category;
 
 
-    public enum Status {
+    public enum StatusReport {
         SIN_INFORME,
         GENERACION_EN_PROCESO,
         INFORME_GENERADO
+    }
+
+    public enum TomographyCategory {
+        STONE,
+        NORMAL,
+        TUMOR,
+        CYST,
+        STATELESS,
     }
 }

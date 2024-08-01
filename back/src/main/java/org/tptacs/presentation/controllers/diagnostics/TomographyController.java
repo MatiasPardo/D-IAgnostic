@@ -7,11 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tptacs.application.useCases.CreateTomographyUC;
 import org.tptacs.domain.entities.Tomography;
+import org.tptacs.presentation.controllers.BaseController;
 import org.tptacs.presentation.requestModels.TomographyRequest;
 
 @RestController
 @RequestMapping("/api/tomographies")
-public class TomographyController {
+public class TomographyController extends BaseController {
 
     @Autowired
     private CreateTomographyUC tomographyService;
@@ -21,18 +22,18 @@ public class TomographyController {
         Tomography tomography = new Tomography();
         tomography.setTomography(request.getTomography());
         tomography.setTitle(request.getTitle());
-        tomography.setUserId(request.getUserId());
+        tomography.setUserId(this.getUserFromJwt().getId());
         String codeReport = tomographyService.saveTomography(tomography);
         return new ResponseEntity<>(codeReport, HttpStatus.CREATED);
     }
 
-    @GetMapping("/Report/{codeReport}")
+    @GetMapping("/report/{codeReport}")
     public ResponseEntity<Tomography> getTomographyStatus(
             @PathVariable String codeReport,
             @RequestHeader("Authorization") String jwtToken) {
 
         // Extract userId from JWT token
-        String userId = extractUserIdFromJwt(jwtToken);
+        String userId = this.getUserFromJwt().getId();
 
         Tomography tomography = tomographyService.getTomographyStatus(codeReport, userId);
         if (tomography != null) {
@@ -42,8 +43,4 @@ public class TomographyController {
         }
     }
 
-    private String extractUserIdFromJwt(String jwtToken) {
-        // Implement JWT token parsing to extract userId
-        return "parsedUserId";
-    }
 }
