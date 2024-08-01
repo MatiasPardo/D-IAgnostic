@@ -43,6 +43,10 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-logging</artifactId>
+    </dependency>
     <!-- Swagger -->
     <dependency>
       <groupId>org.springdoc</groupId>

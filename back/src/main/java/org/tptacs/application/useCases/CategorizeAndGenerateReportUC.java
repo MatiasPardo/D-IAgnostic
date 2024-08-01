@@ -1,6 +1,7 @@
 package org.tptacs.application.useCases;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +12,7 @@ import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
 @Slf4j
 public class CategorizeAndGenerateReportUC {
 
+    @Autowired
     private final RestTemplate restTemplate;
 
     private final ITomographyRepository tomographyRepository;
