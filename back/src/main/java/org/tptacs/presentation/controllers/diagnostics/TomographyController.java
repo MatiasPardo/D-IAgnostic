@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.tptacs.application.security.AuthExceptionHandler;
+import org.tptacs.application.useCases.CategorizeAndGenerateReportUC;
 import org.tptacs.application.useCases.CreateTomographyUC;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.presentation.controllers.BaseController;
@@ -30,6 +31,9 @@ public class TomographyController extends BaseController {
     @Autowired
     private CreateTomographyUC tomographyService;
 
+    @Autowired
+    private CategorizeAndGenerateReportUC categorizeAndGenerateReportUC;
+
     @PostMapping(produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> saveTomography(@RequestParam("tomography") MultipartFile tomographyByte,
                                                  @RequestParam("title") String title) throws IOException {
@@ -44,6 +48,7 @@ public class TomographyController extends BaseController {
         tomography.setUserId(this.getUserFromJwt().getId());
         logger.error("Usuario {}",this.getUserFromJwt().getUsername());
         String codeReport = tomographyService.saveTomography(tomography);
+        categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
         logger.error("Fin proceso de recepcion de tomografia...");
         return new ResponseEntity<>(codeReport, HttpStatus.CREATED);
     }
@@ -53,7 +58,6 @@ public class TomographyController extends BaseController {
             @PathVariable String codeReport,
             @RequestHeader("Authorization") String jwtToken) {
 
-        // Extract userId from JWT token
         String userId = this.getUserFromJwt().getId();
 
         Tomography tomography = tomographyService.getTomographyStatus(codeReport, userId);

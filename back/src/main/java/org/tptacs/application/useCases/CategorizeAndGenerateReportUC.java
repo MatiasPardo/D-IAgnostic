@@ -1,12 +1,17 @@
 package org.tptacs.application.useCases;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
+import org.tptacs.presentation.responseModels.PredictionResponse;
 
 @Service
 @Slf4j
@@ -45,14 +50,20 @@ public class CategorizeAndGenerateReportUC {
 
 
     private Tomography.TomographyCategory categorizeTomography(Tomography tomography) {
-        String apiUrl = "https://539f-181-229-20-5.ngrok-free.app/Input";
+        String apiUrl = "http://127.0.0.1:5000/predicted";
         Tomography.TomographyCategory tomographyCategory = null;
-        try{
-            String respone = restTemplate.postForObject(apiUrl, tomography.getTomography(), String.class);
-            log.info("Categorizando la tomografia {}, api:{} - Respuesta: {}",tomography.getCodeReport(), apiUrl, respone);
-            tomographyCategory = Tomography.TomographyCategory.valueOf(respone);
-        }catch (Exception e){
-            log.error("Error al buscar la categoria de la tomografia {}",tomography.getCodeReport());
+        try {
+            byte[] tomographyBytes = tomography.getTomography();
+            MultipartBodyBuilder builder = new MultipartBodyBuilder();
+            builder.part("file", tomographyBytes).header("Content-Disposition", "form-data; name=file; filename=tomography.jpg");
+
+            HttpEntity<MultiValueMap<String, HttpEntity<?>>> requestEntity = new HttpEntity<>(builder.build(), createHeaders());
+
+            ResponseEntity<PredictionResponse> response = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, PredictionResponse.class);
+            log.info("Categorizando la tomografia {}, api:{} - Respuesta: {}", tomography.getCodeReport(), apiUrl, response.getBody().toString());
+            tomographyCategory = Tomography.TomographyCategory.valueOf(response.getBody().getPredictedClass().toUpperCase());
+        } catch (Exception e) {
+            log.error("Error al buscar la categoria de la tomografia {}", tomography.getCodeReport(), e);
         }
         return tomographyCategory;
     }
@@ -69,6 +80,13 @@ public class CategorizeAndGenerateReportUC {
             log.error("Error al buscar la categoria de la tomografia {}",tomography.getCodeReport());
         }
         return response;
+    }
+
+
+    private HttpHeaders createHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return headers;
     }
 
 

@@ -21,6 +21,18 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.reactivestreams</groupId>
+      <artifactId>reactive-streams</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.github.mvallim</groupId>
       <artifactId>java-fluent-validator</artifactId>

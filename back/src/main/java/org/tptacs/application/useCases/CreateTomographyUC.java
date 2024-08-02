@@ -14,11 +14,9 @@ public class CreateTomographyUC {
 
     private final ITomographyRepository tomographyRepository;
 
-    private final CategorizeAndGenerateReportUC categorizeAndGenerateReportUC;
 
-    public CreateTomographyUC(ITomographyRepository tomographyRepository, CategorizeAndGenerateReportUC categorizeAndGenerateReportUC) {
+    public CreateTomographyUC(ITomographyRepository tomographyRepository) {
         this.tomographyRepository = tomographyRepository;
-        this.categorizeAndGenerateReportUC = categorizeAndGenerateReportUC;
     }
 
     public String saveTomography(Tomography tomography) {
@@ -30,9 +28,6 @@ public class CreateTomographyUC {
 
         // Save Tomography
         tomographyRepository.save(tomography);
-
-        //IAS
-        categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
 
         return codeReport;
     }
