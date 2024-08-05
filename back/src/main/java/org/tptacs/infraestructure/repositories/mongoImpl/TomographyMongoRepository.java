@@ -9,6 +9,8 @@ import org.tptacs.domain.entities.Tomography;
 import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
 import org.tptacs.infraestructure.repositories.mongoImpl.interfaces.ITomographyMongoRepository;
 
+import java.util.List;
+
 @Repository
 @Primary
 public class TomographyMongoRepository implements ITomographyRepository {
@@ -24,5 +26,10 @@ public class TomographyMongoRepository implements ITomographyRepository {
     @Override
     public Tomography findByCodeReport(String codeReport) {
         return ITomographyMongoRepository.findByCodeReport(codeReport);
+    }
+
+    @Override
+    public List<Tomography> findByUserId(String codeReport) {
+        return ITomographyMongoRepository.findByUserId(codeReport);
     }
 }

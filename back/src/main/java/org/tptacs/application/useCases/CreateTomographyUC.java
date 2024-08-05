@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,5 +35,9 @@ public class CreateTomographyUC {
 
     public Tomography getTomographyStatus(String codeReport, String userId) {
         return tomographyRepository.findByCodeReport(codeReport);
+    }
+
+    public List<Tomography> getTomography(String userId) {
+        return tomographyRepository.findByUserId(userId);
     }
 }

@@ -1,7 +1,11 @@
 package org.tptacs.presentation.controllers.diagnostics;
 
-
-import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +14,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.tptacs.application.security.AuthExceptionHandler;
 import org.tptacs.application.useCases.CategorizeAndGenerateReportUC;
 import org.tptacs.application.useCases.CreateTomographyUC;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.presentation.controllers.BaseController;
-import org.tptacs.presentation.requestModels.TomographyRequest;
+import org.tptacs.presentation.responseModels.TomographyResponse;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tomographies")
+@Tag(name = "Tomographies", description = "Endpoints for managing tomographies")
 public class TomographyController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(TomographyController.class);
@@ -34,9 +36,19 @@ public class TomographyController extends BaseController {
     @Autowired
     private CategorizeAndGenerateReportUC categorizeAndGenerateReportUC;
 
+    @Operation(summary = "Upload a new tomography", description = "Uploads a new tomography file and title")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tomography successfully uploaded",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)))
+    })
     @PostMapping(produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> saveTomography(@RequestParam("tomography") MultipartFile tomographyByte,
-                                                 @RequestParam("title") String title) throws IOException {
+    public ResponseEntity<String> saveTomography(
+            @RequestParam("tomography") MultipartFile tomographyByte,
+            @RequestParam("title") String title) throws IOException {
         logger.error("Reciiendo tomografia...");
         Tomography tomography = new Tomography();
 
@@ -53,6 +65,15 @@ public class TomographyController extends BaseController {
         return new ResponseEntity<>(codeReport, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get tomography status", description = "Gets the status of a tomography by its code report")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tomography found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Tomography.class))),
+            @ApiResponse(responseCode = "404", description = "Tomography not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Void.class)))
+    })
     @GetMapping(path = "/report/{codeReport}", produces = "application/json")
     public ResponseEntity<Tomography> getTomographyStatus(
             @PathVariable String codeReport,
@@ -68,4 +89,26 @@ public class TomographyController extends BaseController {
         }
     }
 
+    @Operation(summary = "Get tomographies", description = "Gets the status of a tomography by its code report")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tomographies found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Tomography.class))),
+            @ApiResponse(responseCode = "404", description = "Tomography not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Void.class)))
+    })
+    @GetMapping(path = "/", produces = "application/json")
+    public ResponseEntity<TomographyResponse> getTomography(
+            @RequestHeader("Authorization") String jwtToken) {
+
+        String userId = this.getUserFromJwt().getId();
+
+        List<Tomography> tomography = tomographyService.getTomography(userId);
+        if (tomography != null) {
+            return new ResponseEntity<>(new TomographyResponse(tomography,Boolean.TRUE), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new TomographyResponse(Boolean.FALSE, "No se encontraron tomografias para ese usuario"), HttpStatus.NOT_FOUND);
+        }
+    }
 }
