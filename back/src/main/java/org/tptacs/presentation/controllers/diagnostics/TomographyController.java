@@ -49,19 +49,19 @@ public class TomographyController extends BaseController {
     public ResponseEntity<String> saveTomography(
             @RequestParam("tomography") MultipartFile tomographyByte,
             @RequestParam("title") String title) throws IOException {
-        logger.error("Reciiendo tomografia...");
+        logger.info("Reciiendo tomografia...");
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
             return new ResponseEntity<>("El archivo y el titulo son requeridos", HttpStatus.BAD_REQUEST);
         }
         tomography.setTomography(tomographyByte.getBytes());
-        tomography.setTitle("Una tomografia");
+        tomography.setTitle(title);
         tomography.setUserId(this.getUserFromJwt().getId());
-        logger.error("Usuario {}",this.getUserFromJwt().getUsername());
+        logger.info("Usuario {}",this.getUserFromJwt().getUsername());
         String codeReport = tomographyService.saveTomography(tomography);
         categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
-        logger.error("Fin proceso de recepcion de tomografia...");
+        logger.info("Fin proceso de recepcion de tomografia...");
         return new ResponseEntity<>(codeReport, HttpStatus.CREATED);
     }
 
@@ -79,9 +79,11 @@ public class TomographyController extends BaseController {
             @PathVariable String codeReport,
             @RequestHeader("Authorization") String jwtToken) {
 
+        logger.info("Consulta de informe para tomografi con codigo: {} - START",codeReport);
         String userId = this.getUserFromJwt().getId();
-
         Tomography tomography = tomographyService.getTomographyStatus(codeReport, userId);
+        logger.info("Consulta de informe - END");
+
         if (tomography != null) {
             return new ResponseEntity<>(tomography, HttpStatus.OK);
         } else {
@@ -101,10 +103,10 @@ public class TomographyController extends BaseController {
     @GetMapping(path = "/", produces = "application/json")
     public ResponseEntity<TomographyResponse> getTomography(
             @RequestHeader("Authorization") String jwtToken) {
-
+        logger.info("Consulta de tomografias - START");
         String userId = this.getUserFromJwt().getId();
-
         List<Tomography> tomography = tomographyService.getTomography(userId);
+        logger.info("Consulta de tomografias - END");
         if (tomography != null) {
             return new ResponseEntity<>(new TomographyResponse(tomography,Boolean.TRUE), HttpStatus.OK);
         } else {
