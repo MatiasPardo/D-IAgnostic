@@ -18,7 +18,7 @@ export const Navbar = () => {
             <Link className="navbar-brand text-info" to="/">Home</Link>
             <div className="navbar-collapse">
                 <div className="navbar-nav">
-                    <NavLink className="nav-item nav-link" to="/products">Productos</NavLink>
+                    <NavLink className="nav-item nav-link" to="/tomographies">Tomografias</NavLink>
                     <NavLink className="nav-item nav-link" to="/orders">Solicitar Informe</NavLink>
                 </div>
             </div>

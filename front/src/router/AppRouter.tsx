@@ -3,7 +3,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import {Home, Login, Register} from '../auth/pages';
 import {Orders} from '../auth/pages/Orders';
 import {Navbar} from '../components/navbar/Navbar';
-import { Products } from '../views'
+import { Tomographies } from '../views'
 import { OrdersProvider } from '../context/OrdersProvider';
 
 class ProtectedRoute extends React.Component<{ element: any }> {
@@ -39,14 +39,13 @@ export const AppRouter = () => {
                             element={<ProtectedRoute element={<Orders />} />}
                         />
                         <Route 
-                            path="/products" 
-                            element={<ProtectedRoute element={<Products />} />}
+                            path="/tomographies" 
+                            element={<ProtectedRoute element={<Tomographies />} />}
                         />
 
                         {/* Redirección desde la raíz ("/") a la página de inicio ("/home") */}
                         <Route path="/" element={<Navigate to="/home" />} />
 
-                        <Route path="/items" element={<Products />} />
                     </Routes>
                 </div>
             </OrdersProvider>
