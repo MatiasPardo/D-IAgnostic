@@ -4,6 +4,7 @@ import { TomographiesContext } from "../context/TomographiesContext";
 import { Tomography } from "../interfaces/Tomography"; // Asegúrate de importar el tipo correcto
 
 export const Tomographies = () => {
+
     const { tomographies, getTomographies } = useContext(TomographiesContext);
 
     useEffect(() => {

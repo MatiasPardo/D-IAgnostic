@@ -5,11 +5,12 @@ import {Orders} from '../auth/pages/Orders';
 import {Navbar} from '../components/navbar/Navbar';
 import { Tomographies } from '../views'
 import { OrdersProvider } from '../context/OrdersProvider';
+import { TomographiesProvider } from '../context/TomographiesProvider';
 
 class ProtectedRoute extends React.Component<{ element: any }> {
     render() {
         let {element} = this.props;
-        console.log('token: ', localStorage.getItem('token'));
+        //console.log('token: ', localStorage.getItem('token'));
         if (localStorage.getItem('token') !== null) {
             return element;
         } else {
@@ -25,29 +26,29 @@ export const AppRouter = () => {
             <Navbar />
 
             <OrdersProvider>
-                <div className="containers">
-                    <Routes>
-                        {/* Rutas públicas */}
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/home" element={<Home />} />
+                <TomographiesProvider>
+                    <div className="containers">
+                        <Routes>
+                            {/* Rutas públicas */}
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/home" element={<Home />} />
 
-                        {/* Rutas protegidas (requiere autenticación) */}
+                            {/* Rutas protegidas (requiere autenticación) */}
+                            <Route
+                                path="/orders"
+                                element={<ProtectedRoute element={<Orders />} />}
+                            />
+                            <Route 
+                                path="/tomographies" 
+                                element={<ProtectedRoute element={<Tomographies />} />}
+                            />
 
-                        <Route
-                            path="/orders"
-                            element={<ProtectedRoute element={<Orders />} />}
-                        />
-                        <Route 
-                            path="/tomographies" 
-                            element={<ProtectedRoute element={<Tomographies />} />}
-                        />
-
-                        {/* Redirección desde la raíz ("/") a la página de inicio ("/home") */}
-                        <Route path="/" element={<Navigate to="/home" />} />
-
-                    </Routes>
-                </div>
+                            {/* Redirección desde la raíz ("/") a la página de inicio ("/home") */}
+                            <Route path="/" element={<Navigate to="/home" />} />
+                        </Routes>
+                    </div>
+                </TomographiesProvider>
             </OrdersProvider>
         </>
     );

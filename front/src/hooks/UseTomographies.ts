@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import { findTomographies } from "../services/TomographiesService";
-import { TomographiesReducer } from "../reducers/TomographiesReducer"
+import { TomographiesReducer } from "../reducers/TomographiesReducer";
 import { Tomography } from "../interfaces/Tomography";
 
 const initialTomographies: Tomography[] = [];
@@ -24,5 +24,4 @@ export const UseTomographies = () => {
     tomographies,
     getTomographies
   };
-
-}
+};
