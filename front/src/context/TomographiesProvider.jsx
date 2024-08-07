@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { TomographiesContext } from './TomographiesContext';
-import { findTomographies } from '../services/TomographiesService';
-import { Tomography } from '../interfaces/Tomography';
+import { TomographiesContext } from './TomographiesContext'
+import { UseTomographies } from '../hooks/UseTomographies'
 
-export const TomographiesProvider = ({ children }) => {
-    const [tomographies, setTomographies] = useState<undefined>([]);
+export const TomographiesProvider = ({children}) => {
 
-    const getTomographies = async () => {
-        try {
-            const data = await findTomographies();
-            setTomographies(data);
-        } catch (error) {
-            console.error('Error al obtener las tomografías:', error);
-        }
-    };
-
-    useEffect(() => {
-        getTomographies();
-    }, []);
+    const [tomographies, setTomographies] = UseTomographies();
 
     return (
         <TomographiesContext.Provider value={{ tomographies, getTomographies }}>
             {children}
         </TomographiesContext.Provider>
     );
-};
+}
