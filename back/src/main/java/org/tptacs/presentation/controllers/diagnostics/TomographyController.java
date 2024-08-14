@@ -18,10 +18,16 @@ import org.tptacs.application.useCases.CategorizeAndGenerateReportUC;
 import org.tptacs.application.useCases.CreateTomographyUC;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.presentation.controllers.BaseController;
+import org.tptacs.presentation.responseModels.ReportResponse;
+import org.tptacs.presentation.responseModels.Response;
 import org.tptacs.presentation.responseModels.TomographyResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
+
 
 @RestController
 @RequestMapping("/api/tomographies")
@@ -46,14 +52,14 @@ public class TomographyController extends BaseController {
                             schema = @Schema(implementation = String.class)))
     })
     @PostMapping(produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> saveTomography(
+    public ResponseEntity<Response> saveTomography(
             @RequestParam("tomography") MultipartFile tomographyByte,
             @RequestParam("title") String title) throws IOException {
         logger.info("Reciiendo tomografia...");
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
-            return new ResponseEntity<>("El archivo y el titulo son requeridos", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Response("1001","El archivo y el titulo son requeridos", LocalDateTime.now()), HttpStatus.BAD_REQUEST);
         }
         tomography.setTomography(tomographyByte.getBytes());
         tomography.setTitle(title);
@@ -62,7 +68,7 @@ public class TomographyController extends BaseController {
         String codeReport = tomographyService.saveTomography(tomography);
         categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
         logger.info("Fin proceso de recepcion de tomografia...");
-        return new ResponseEntity<>(codeReport, HttpStatus.CREATED);
+        return ok(new ReportResponse(codeReport,"200","Consulta exitosa"));
     }
 
     @Operation(summary = "Get tomography status", description = "Gets the status of a tomography by its code report")
