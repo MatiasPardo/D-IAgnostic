@@ -7,37 +7,26 @@ import { InputNameModal } from '../../components/InputNameModal';
 import ImageUploader from '../../components/ImageUploader';
 
 export const Orders = () => {
-    const {orders, getOrders, handleCreateOrder} = useContext(OrdersContext);
+    const {orders, getOrders, handleSaveTomography} = useContext(OrdersContext);
     const [show, setShow] = useState(false);
     const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
 
     useEffect(() => { 
         const fetch = async () => {
-            await getOrders();
+            // await getOrders();
         };
         fetch();
     }, []);
 
     const handleAcceptModal = async (type: string, nameOrId: string) => {
-        if (type === 'new') await handleCreateOrder({items: [], name: nameOrId});
-        if (type === 'other') await handleCreateOrder({items: [], id: nameOrId});
+        if (type === 'new') await handleSaveTomography({items: [], name: nameOrId});
+        if (type === 'other') await handleSaveTomography({items: [], id: nameOrId});
     };
 
     return (
         <div className="container mt-4">
             <h1 className="mb-4">Solicitar un Informe</h1>
-            {
-                orders.length === 0 ? (
-                    <p className="my-3">Para solicitar un informe, importe una imagen de una Tomografía.</p>
-                ) :
-                <ul className="list-group">{
-                    orders.map((o: Order) => (
-                        <OrderPage key={o.id} id={o.id} name={o.name} items={o.items} userId={o.userId} status={o.status} hasItems={o.hasItems}/>
-                    ))
-                }
-                </ul>
-            }
-
+            
             <ImageUploader setUploadedImage={setUploadedImage} />
 
             <button className="btn btn-success my-3"

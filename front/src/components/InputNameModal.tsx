@@ -14,37 +14,57 @@ export const InputNameModal =  ({show, handleClose, handleFunc} : {show: any, ha
   const setValue = (event: any) => setNameOrId(event.target.value);
 
   const handleAccept = () => {
+    console.log('invocando la funcion handleFunc');
     handleFunc(newOrderType, nameOrId)
     handleClose();
   }
-
+ 
   return (
-  <Modal show={show} onHide={handleClose} centered>
+  <Modal show={show} onHide={handleClose} centered size="lg">
     <Modal.Header closeButton>
-      <Modal.Title>Creá o agregá un nuevo pedido</Modal.Title>
+      <Modal.Title>Completar los datos para generar el informe</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-    <div className="form-check m-2">
-      <input checked={newOrderType == 'new'} className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="new"  onChange={handleCheck}/>
-      <label className="form-check-label"> Nuevo pedido </label>
+    <form>
+  <div className="form-group row">
+    <label className="col-4 col-form-label">Titulo para la tomografia</label> 
+    <div className="col-8">
+      <input 
+      id="text" 
+      name="text" 
+      placeholder="Ingrese un titulo" 
+      type="text" 
+      className="form-control" 
+      value={nameOrId}
+      onChange={setValue}
+      required/>
     </div>
-    <div className="form-check m-2">
-      <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="other" onChange={handleCheck} />
-      <label className="form-check-label"> Pedido ya existente </label>
+  </div>
+  <br/>
+  <div className="form-group row">
+    <label className="col-4 col-form-label" >Paciente</label> 
+    <div className="col-8">
+      <input 
+      id="text1" 
+      name="text1" 
+      placeholder="Ingrese algun dato para identificar al paciente con la tomografia" 
+      type="text" 
+      value={nameOrId}
+      className="form-control"
+      onChange={setValue}
+      required
+      />
     </div>
-
-    <div className="input-group mb-3 mt-3">
-      <input type="text"
-        className="form-control"
-        id="id"
-        name="name" 
-        value={nameOrId}
-        onChange={setValue}
-        required
-        placeholder = {newOrderType == 'new' ? 'Ingresá un nombre para tu pedido' : 'Ingresá el ID de un pedido ya existente'}
-        /> 
-    </div>
+  </div>  
+  <div className="form-group row">
+    <div className="offset-4 col-8">
+    <br/>
     <button disabled={nameOrId.length == 0} type="submit" onClick={handleAccept} className="btn btn-success container"> Aceptar</button>
+    </div>
+  </div>
+</form>
+
+
     </Modal.Body>
   </Modal>
 

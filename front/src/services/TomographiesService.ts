@@ -1,5 +1,7 @@
 import { instance } from "./BaseClient";
 import { Tomography } from "../interfaces/Tomography";
+import { TomographyRequest } from "../interfaces/TomographyRequest";
+import { AxiosResponse } from "axios";
 
 interface TomographyResponse {
     tomographies: Tomography[];
@@ -21,3 +23,13 @@ export const findTomographies = async (): Promise<Tomography[]> => {
     throw error;
   }
 };
+
+
+export const requestReport = async(tomographyRequest: TomographyRequest): Promise<AxiosResponse<{codeReport: string}, any>> => {
+  console.log('hola mundo');
+  return instance.post("tomographies", tomographyRequest, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}
