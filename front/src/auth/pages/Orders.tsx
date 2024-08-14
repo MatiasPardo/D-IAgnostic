@@ -1,26 +1,25 @@
 import { useContext, useEffect, useState } from 'react';
-import { Order } from "../../interfaces/Order";
 import { OrdersContext } from '../../context/OrdersContext';
-import { OrderPage } from './OrderPage';
-// import { OrderRequest } from '../../interfaces/OrderRequest';
 import { InputNameModal } from '../../components/InputNameModal';
 import ImageUploader from '../../components/ImageUploader';
 
 export const Orders = () => {
-    const {orders, getOrders, handleSaveTomography} = useContext(OrdersContext);
+    const { handleSaveTomography } = useContext(OrdersContext);
     const [show, setShow] = useState(false);
-    const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
+    const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null); // El archivo ya está seleccionado y almacenado aquí.
 
     useEffect(() => { 
         const fetch = async () => {
-            // await getOrders();
+            // await getOrders();  // Si necesitas cargar órdenes, descomenta esta línea.
         };
         fetch();
     }, []);
 
-    const handleAcceptModal = async (type: string, nameOrId: string) => {
-        if (type === 'new') await handleSaveTomography({items: [], name: nameOrId});
-        if (type === 'other') await handleSaveTomography({items: [], id: nameOrId});
+    const handleAcceptModal = async (title: string) => {
+        if (uploadedImage) {
+            const tomography = new Blob([uploadedImage], { type: 'image/jpeg' }); 
+            await handleSaveTomography({ title, tomography });
+        }
     };
 
     return (
@@ -31,12 +30,16 @@ export const Orders = () => {
 
             <button className="btn btn-success my-3"
                 onClick={() => setShow(true)}
-                disabled={!uploadedImage}
+                disabled={!uploadedImage} // El botón se habilita solo si hay una imagen cargada.
             >
                 Solicitar informe
             </button>
 
-            <InputNameModal show={show} handleClose={() => setShow(false)} handleFunc={handleAcceptModal} ></InputNameModal>
+            <InputNameModal 
+                show={show} 
+                handleClose={() => setShow(false)} 
+                handleFunc={handleAcceptModal} // La función ahora solo requiere el título.
+            />
         </div>
     );
 };
