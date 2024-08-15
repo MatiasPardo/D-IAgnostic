@@ -13,10 +13,17 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
     return (
         <div className="card m-2">
             <div className="card-body">
-            <h5 className="card-title">{tomography.title}</h5>
-                <p className="card-text">ID: {tomography.codeReport}</p>
+                <h5 className="card-title">{tomography.title}</h5>
+                <p className="card-text"><strong>Codigo de reporte:</strong> {tomography.codeReport}</p>
+                <p className="card-text"><strong>Estado de la tomografia:</strong> {tomography.category}</p>
+                <p className="card-text"><strong>Estado del informe:</strong> {tomography.statusReport}</p>
                 {tomography.tomography && (
-                    <img src={`data:image/jpeg;base64,${tomography.tomography}`} alt="Tomografía" className="card-img-top" />
+                    <img
+                        src={`data:image/jpeg;base64,${tomography.tomography}`}
+                        alt="Tomografía"
+                        className="card-img-top"
+                        style={{ width: '100px', height: '100px', objectFit: 'cover' }} 
+                    />
                 )}
             </div>
         </div>

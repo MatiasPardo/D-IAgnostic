@@ -1,8 +1,7 @@
 export interface Tomography {
     codeReport: string;
     title: string;
-    status: string;
+    category: string;
     tomography: Uint8Array;
     statusReport: string;
-    id: string;
 }
