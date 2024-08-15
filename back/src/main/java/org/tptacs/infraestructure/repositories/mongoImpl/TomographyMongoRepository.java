@@ -4,6 +4,8 @@ package org.tptacs.infraestructure.repositories.mongoImpl;
 import io.github.classgraph.AnnotationInfoList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
@@ -29,7 +31,13 @@ public class TomographyMongoRepository implements ITomographyRepository {
     }
 
     @Override
-    public List<Tomography> findByUserId(String codeReport) {
-        return ITomographyMongoRepository.findByUserId(codeReport);
+    public List<Tomography> findByUserId(String userId) {
+        return ITomographyMongoRepository.findByUserId(userId);
     }
+
+    @Override
+    public Page<Tomography> findByUserId(String userId, Pageable pageable) {
+        return ITomographyMongoRepository.findByUserId(userId, pageable);
+    }
+
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,13 +82,16 @@ public class TomographyController extends BaseController {
                             schema = @Schema(implementation = Void.class)))
     })
     @GetMapping(path = "/report/{codeReport}", produces = "application/json")
-    public ResponseEntity<Tomography> getTomographyStatus(
+    public ResponseEntity<Response> getTomographyStatus(
             @PathVariable String codeReport,
             @RequestHeader("Authorization") String jwtToken) {
 
         logger.info("Consulta de informe para tomografi con codigo: {} - START",codeReport);
         String userId = this.getUserFromJwt().getId();
-        Tomography tomography = tomographyService.getTomographyStatus(codeReport, userId);
+        Tomography tomography = tomographyService.getTomographyStatus(codeReport);
+        if(!tomography.getUserId().equals(userId)){
+            return new ResponseEntity<>(new Response("1005","La tomografia no corresponde con el usuario",LocalDateTime.now()), HttpStatus.OK);
+        }
         logger.info("Consulta de informe - END");
 
         if (tomography != null) {
@@ -97,24 +101,33 @@ public class TomographyController extends BaseController {
         }
     }
 
-    @Operation(summary = "Get tomographies", description = "Gets the status of a tomography by its code report")
+    @Operation(summary = "Get paginated tomographies", description = "Gets paginated tomographies for a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tomographies found",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Tomography.class))),
-            @ApiResponse(responseCode = "404", description = "Tomography not found",
+                            schema = @Schema(implementation = TomographyResponse.class))),
+            @ApiResponse(responseCode = "404", description = "No tomographies found",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Void.class)))
+                            schema = @Schema(implementation = Response.class)))
     })
-    @GetMapping(path = "/", produces = "application/json")
+    @GetMapping( produces = "application/json")
     public ResponseEntity<TomographyResponse> getTomography(
-            @RequestHeader("Authorization") String jwtToken) {
-        logger.info("Consulta de tomografias - START");
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestParam(value = "page",required = false) Integer page,
+            @RequestParam(value = "size",required = false) Integer size) {
+
+        logger.info("Consulta de tomografias paginadas - START");
         String userId = this.getUserFromJwt().getId();
-        List<Tomography> tomography = tomographyService.getTomography(userId);
-        logger.info("Consulta de tomografias - END");
-        if (tomography != null) {
-            return new ResponseEntity<>(new TomographyResponse(tomography,Boolean.TRUE), HttpStatus.OK);
+        List<Tomography> tomographyPage = List.of();
+        if(page == null || size == null){
+            tomographyPage = tomographyService.getTomography(userId, page, size).getContent();
+        }
+        tomographyPage = tomographyService.getTomography(userId);
+
+        logger.info("Consulta de tomografias paginadas - END");
+
+        if (!tomographyPage.isEmpty()) {
+            return new ResponseEntity<>(new TomographyResponse(tomographyPage, Boolean.TRUE), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new TomographyResponse(Boolean.FALSE, "No se encontraron tomografias para ese usuario"), HttpStatus.NOT_FOUND);
         }

@@ -1,6 +1,9 @@
 package org.tptacs.application.useCases;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.tptacs.domain.entities.Tomography;
@@ -33,11 +36,18 @@ public class CreateTomographyUC {
         return codeReport;
     }
 
-    public Tomography getTomographyStatus(String codeReport, String userId) {
+    public Tomography getTomographyStatus(String codeReport) {
         return tomographyRepository.findByCodeReport(codeReport);
     }
 
     public List<Tomography> getTomography(String userId) {
         return tomographyRepository.findByUserId(userId);
     }
+
+    public Page<Tomography> getTomography(String userId, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return tomographyRepository.findByUserId(userId, pageable);
+
+    }
 }
+

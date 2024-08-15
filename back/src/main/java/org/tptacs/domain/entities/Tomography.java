@@ -1,13 +1,15 @@
 package org.tptacs.domain.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.tptacs.presentation.responseModels.Response;
 
+@EqualsAndHashCode(callSuper = true)
 @Document(collection = "Tomographies")
 @Data
-public class Tomography {
-
+public class Tomography extends Response {
     @Id
     private String id;
     private byte[] tomography;
