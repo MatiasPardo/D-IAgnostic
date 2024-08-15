@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from 'styled-components';
 
@@ -49,11 +49,16 @@ const InputGroup = styled.div`
 
 interface ImageUploaderProps {
   setUploadedImage: (image: string | ArrayBuffer | null) => void;
+  handleDelete: (deleteFunc: () => void) => void; // Nueva prop para exponer la función handleDeleteClick
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage, handleDelete }) => {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null);
   const [fileName, setFileName] = useState<string>('');
+
+  useEffect(() => {
+    handleDelete(handleDeleteClick); // Expone la función de eliminación cuando el componente se monta
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -69,11 +74,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage }) => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDeleteClick = () => {
     setImage(null);
     setFileName('');
     setUploadedImage(null);
-    (document.getElementById('imgInp') as HTMLInputElement).value = '';
+    (document.getElementById('imgInp') as HTMLInputElement).value = ''; // Limpia el input file
   };
 
   return (
@@ -88,7 +93,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage }) => {
               </ButtonFile>
             </span>
             <input type="text" className="form-control" value={fileName} readOnly />
-            {fileName && <button className="delete-btn" onClick={handleDelete}>&times;</button>}
+            {fileName && <button className="delete-btn" onClick={handleDeleteClick}>&times;</button>}
             </InputGroup>
           {image && <ImgUpload id='img-upload' src={image as string} alt="uploaded" className="my-3" />}
         </div>

@@ -6,31 +6,34 @@ import ImageUploader from '../../components/ImageUploader';
 export const Orders = () => {
     const { handleSaveTomography } = useContext(OrdersContext);
     const [show, setShow] = useState(false);
-    const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null); // El archivo ya está seleccionado y almacenado aquí.
+    const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
+    const [imageUploaderRef, setImageUploaderRef] = useState<(() => void) | null>(null); // Estado para almacenar la referencia a handleDelete
 
-    useEffect(() => { 
-        const fetch = async () => {
-            // await getOrders();  // Si necesitas cargar órdenes, descomenta esta línea.
-        };
-        fetch();
-    }, []);
-
-    const handleAcceptModal = async (title: string) => {
+    const handleAcceptModal = async (title: string, patientName: string) => {
         if (uploadedImage) {
-            const tomography = new Blob([uploadedImage], { type: 'image/jpeg' }); 
-            await handleSaveTomography({ title, tomography });
+            const tomography = new Blob([uploadedImage], { type: 'image/jpeg' });
+            await handleSaveTomography({ title, patientName, tomography });
+            setUploadedImage(null); // Limpia la imagen del estado después de guardarla
+            if (imageUploaderRef) {
+                imageUploaderRef(); // Llama a handleDelete de ImageUploader para limpiar el input
+            }
         }
+
+        setShow(false);
     };
 
     return (
         <div className="container mt-4">
             <h1 className="mb-4">Solicitar un Informe</h1>
             
-            <ImageUploader setUploadedImage={setUploadedImage} />
+            <ImageUploader 
+                setUploadedImage={setUploadedImage} 
+                handleDelete={(deleteFunc) => setImageUploaderRef(() => deleteFunc)} // Guarda la referencia de handleDelete
+            />
 
             <button className="btn btn-success my-3"
                 onClick={() => setShow(true)}
-                disabled={!uploadedImage} // El botón se habilita solo si hay una imagen cargada.
+                disabled={!uploadedImage}
             >
                 Solicitar informe
             </button>
@@ -38,7 +41,7 @@ export const Orders = () => {
             <InputNameModal 
                 show={show} 
                 handleClose={() => setShow(false)} 
-                handleFunc={handleAcceptModal} // La función ahora solo requiere el título.
+                handleFunc={handleAcceptModal} 
             />
         </div>
     );
