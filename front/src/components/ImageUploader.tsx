@@ -48,58 +48,59 @@ const InputGroup = styled.div`
 `;
 
 interface ImageUploaderProps {
-  setUploadedImage: (image: string | ArrayBuffer | null) => void;
-  handleDelete: (deleteFunc: () => void) => void; // Nueva prop para exponer la función handleDeleteClick
+  setUploadedImage: (image: Blob | null) => void; // Actualiza el tipo aquí
+  handleDelete: (deleteFunc: () => void) => void;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage, handleDelete }) => {
-  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
+export const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage, handleDelete }) => {
+  const [image, setImage] = useState<Blob | null>(null);
   const [fileName, setFileName] = useState<string>('');
 
   useEffect(() => {
-    handleDelete(handleDeleteClick); // Expone la función de eliminación cuando el componente se monta
+      handleDelete(handleDeleteClick);
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        setImage(result);
-        setUploadedImage(result);
-      };
-      reader.readAsDataURL(file);
-      setFileName(file.name);
-    }
+      const file = e.target.files?.[0];
+      if (file) {
+          setFileName(file.name);
+          
+          const reader = new FileReader();
+          reader.onloadend = () => {
+              const result = reader.result as ArrayBuffer;
+              const blob = new Blob([result], { type: file.type });
+              
+              setImage(blob);
+              setUploadedImage(blob);
+          };
+          reader.readAsArrayBuffer(file);
+      }
   };
 
   const handleDeleteClick = () => {
-    setImage(null);
-    setFileName('');
-    setUploadedImage(null);
-    (document.getElementById('imgInp') as HTMLInputElement).value = ''; // Limpia el input file
+      setImage(null);
+      setFileName('');
+      setUploadedImage(null);
+      (document.getElementById('imgInp') as HTMLInputElement).value = '';
   };
 
   return (
-    <div className="">
-      <div className="col-md-6">
-        <div className="form-group">
-          <label>Subir Imagen</label>
-          <InputGroup className="input-group">
-            <span className="input-group-btn">
-              <ButtonFile className="btn btn-info btn-file me-3">
-                Importar... <input type="file" id="imgInp" onChange={handleFileChange} />
-              </ButtonFile>
-            </span>
-            <input type="text" className="form-control" value={fileName} readOnly />
-            {fileName && <button className="delete-btn" onClick={handleDeleteClick}>&times;</button>}
-            </InputGroup>
-          {image && <ImgUpload id='img-upload' src={image as string} alt="uploaded" className="my-3" />}
-        </div>
+      <div className="">
+          <div className="col-md-6">
+              <div className="form-group">
+                  <label>Subir Imagen</label>
+                  <InputGroup className="input-group">
+                      <span className="input-group-btn">
+                          <ButtonFile className="btn btn-info btn-file me-3">
+                              Importar... <input type="file" id="imgInp" onChange={handleFileChange} />
+                          </ButtonFile>
+                      </span>
+                      <input type="text" className="form-control" value={fileName} readOnly />
+                      {fileName && <button className="delete-btn" onClick={handleDeleteClick}>&times;</button>}
+                      {image && <ImgUpload id='img-upload' src={URL.createObjectURL(image)} alt="uploaded" className="my-3" />}
+                  </InputGroup>
+              </div>
+          </div>
       </div>
-    </div>
   );
 };
-
-export default ImageUploader;
