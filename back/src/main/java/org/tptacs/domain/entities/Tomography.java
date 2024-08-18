@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.tptacs.presentation.responseModels.Response;
 
 @EqualsAndHashCode(callSuper = true)
-@Document(collection = "Tomographies")
+@Document(collection = "tomographies")
 @Data
 public class Tomography extends Response {
     @Id

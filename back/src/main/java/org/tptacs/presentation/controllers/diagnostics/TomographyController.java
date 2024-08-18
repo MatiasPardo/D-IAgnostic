@@ -53,24 +53,27 @@ public class TomographyController extends BaseController {
                             schema = @Schema(implementation = String.class)))
     })
     @PostMapping(produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+ // Método para guardar una nueva tomografía
     public ResponseEntity<Response> saveTomography(
             @RequestParam("tomography") MultipartFile tomographyByte,
             @RequestParam("title") String title) throws IOException {
-        logger.info("Reciiendo tomografia...");
+
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
-            return new ResponseEntity<>(new Response("1001","El archivo y el titulo son requeridos", LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Response("1001","El archivo y el título son requeridos", LocalDateTime.now()), HttpStatus.BAD_REQUEST);
         }
+
         tomography.setTomography(tomographyByte.getBytes());
         tomography.setTitle(title);
         tomography.setUserId(this.getUserFromJwt().getId());
-        logger.info("Usuario {}",this.getUserFromJwt().getUsername());
+
         String codeReport = tomographyService.saveTomography(tomography);
         categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
-        logger.info("Fin proceso de recepcion de tomografia...");
-        return ok(new ReportResponse(codeReport,"200","Consulta exitosa"));
+
+        return ResponseEntity.ok(new ReportResponse(codeReport, "200", "Consulta exitosa"));
     }
+
 
     @Operation(summary = "Get tomography status", description = "Gets the status of a tomography by its code report")
     @ApiResponses(value = {
@@ -119,7 +122,7 @@ public class TomographyController extends BaseController {
         logger.info("Consulta de tomografias paginadas - START");
         String userId = this.getUserFromJwt().getId();
         List<Tomography> tomographyPage = List.of();
-        if(page == null || size == null){
+        if(page != null && size != null){
             tomographyPage = tomographyService.getTomography(userId, page, size).getContent();
         }
         tomographyPage = tomographyService.getTomography(userId);
