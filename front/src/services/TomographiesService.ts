@@ -11,17 +11,11 @@ interface TomographyResponse {
     error?: string;
 }
 
-export const fetchTomographyImage = async (id: string): Promise<Blob> => {
-    const response = await axios.get(`/api/tomographies/${id}/image`, {
-        responseType: 'arraybuffer'
-    });
-    return new Blob([response.data], { type: 'image/jpeg' });
-};
-
 export const findTomographies = async (): Promise<Tomography[]> => {
   try {
       const response = await instance.get<TomographyResponse>("tomographies");
-      
+      console.log("Tomografías cargadas:", response);
+
       if (response.data.successful) {
           return response.data.tomographies;
       } else {
@@ -32,6 +26,7 @@ export const findTomographies = async (): Promise<Tomography[]> => {
       throw error;
   }
 };
+
 export const requestReport = async (tomographyRequest: TomographyRequest): Promise<AxiosResponse<{ codeReport: string }, any>> => {
     const formData = new FormData();
     formData.append("tomography", tomographyRequest.tomography);

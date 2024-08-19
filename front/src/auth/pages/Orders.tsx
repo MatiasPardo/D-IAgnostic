@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { OrdersContext } from '../../context/OrdersContext';
 import { InputNameModal } from '../../components/InputNameModal';
 import { ImageUploader } from '../../components/ImageUploader';
-import { fetchTomographyImage } from '../../services/TomographiesService';
+import { findTomographies } from '../../services/TomographiesService';
 
 export const Orders = () => {
     const { handleSaveTomography } = useContext(OrdersContext);
@@ -28,14 +28,19 @@ export const Orders = () => {
 
     useEffect(() => {
         const loadImage = async () => {
-            const imageBlob = await fetchTomographyImage('some-id'); // Replace 'some-id' with the actual ID
-            const url = URL.createObjectURL(imageBlob);
-            setImageUrl(url);
+            try {
+                const tomographies = await findTomographies();
+                if (tomographies.length > 0) {
+                    const selectedTomography = tomographies[0]; // Puedes cambiar la lógica de selección según tu caso
+                    const url = URL.createObjectURL(new Blob([selectedTomography.tomography], { type: 'image/jpeg' }));
+                    setImageUrl(url);
+                }
+            } catch (error) {
+                console.error("Error al cargar las tomografías:", error);
+            }
         };
 
-        loadImage();
 
-        // Clean up the URL object when the component unmounts
         return () => {
             if (imageUrl) {
                 URL.revokeObjectURL(imageUrl);
@@ -72,7 +77,6 @@ export const Orders = () => {
                 handleClose={() => setShow(false)} 
                 handleFunc={handleAcceptModal} 
             />
-
         </div>
     );
 };
