@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.tptacs.application.useCases.CategorizeAndGenerateReportUC;
 import org.tptacs.application.useCases.CreateTomographyUC;
+import org.tptacs.application.useCases.DeleteTomographyUC;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.presentation.controllers.BaseController;
 import org.tptacs.presentation.responseModels.ReportResponse;
@@ -36,6 +37,9 @@ public class TomographyController extends BaseController {
 
     @Autowired
     private CreateTomographyUC tomographyService;
+
+    @Autowired
+    private DeleteTomographyUC deleteTomographyUC;
 
     @Autowired
     private CategorizeAndGenerateReportUC categorizeAndGenerateReportUC;
@@ -86,7 +90,7 @@ public class TomographyController extends BaseController {
             @PathVariable String codeReport,
             @RequestHeader("Authorization") String jwtToken) {
 
-        logger.info("Consulta de informe para tomografi con codigo: {} - START",codeReport);
+        logger.info("Consulta de informe para tomografia con codigo: {} - START",codeReport);
         String userId = this.getUserFromJwt().getId();
         Tomography tomography = tomographyService.getTomographyStatus(codeReport);
         if(!tomography.getUserId().equals(userId)){
@@ -131,5 +135,26 @@ public class TomographyController extends BaseController {
         } else {
             return new ResponseEntity<>(new TomographyResponse(Boolean.FALSE, "No se encontraron tomografias para ese usuario"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Operation(summary = "Get paginated tomographies", description = "Gets paginated tomographies for a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tomographies found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TomographyResponse.class))),
+            @ApiResponse(responseCode = "404", description = "No tomographies found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Response.class)))
+    })
+    @DeleteMapping(path = "/{codeReport}", produces = "application/json")
+    public ResponseEntity<Response> deleteTomography(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable String codeReport) {
+
+        logger.info("Eliminacion de tomografias - START");
+        deleteTomographyUC.deleteTomography(codeReport, this.getUserFromJwt().getId());
+        logger.info("Eliminacion de tomografias - END");
+        return new ResponseEntity<>(new Response(), HttpStatus.OK);
+
     }
 }

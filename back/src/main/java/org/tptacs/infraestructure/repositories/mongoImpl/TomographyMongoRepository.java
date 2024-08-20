@@ -40,4 +40,9 @@ public class TomographyMongoRepository implements ITomographyRepository {
         return ITomographyMongoRepository.findByUserId(userId, pageable);
     }
 
+    @Override
+    public void delete(Tomography tomography) {
+        ITomographyMongoRepository.delete(tomography);
+    }
+
 }

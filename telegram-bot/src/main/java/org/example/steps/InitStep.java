@@ -33,8 +33,8 @@ public class InitStep extends Step {
         var messageBuilder = MessageBuilder.builder();
         return messageBuilder
                 .withLine("Seleccioná una opción")
-                .withLine("1. Ver todos mis pedidos")
-                .withLine("2. Crear un pedido")
+                .withLine("1. Ver todos mis informes")
+                .withLine("2. Solicitar un nuevo informe")
                 .withLine("3. Cerrar sesión")
                 .build();
     }

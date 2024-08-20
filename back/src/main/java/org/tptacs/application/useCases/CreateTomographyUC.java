@@ -33,6 +33,7 @@ public class CreateTomographyUC {
         tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
         tomography.setCategory(Tomography.TomographyCategory.STATELESS);
         tomography.setUpdateDate(LocalDateTime.now());
+        tomography.setActive(Boolean.TRUE);
         tomographyRepository.save(tomography);
 
         return codeReport;
