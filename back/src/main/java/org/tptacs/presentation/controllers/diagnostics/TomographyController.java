@@ -18,6 +18,8 @@ import org.tptacs.application.useCases.CategorizeAndGenerateReportUC;
 import org.tptacs.application.useCases.CreateTomographyUC;
 import org.tptacs.application.useCases.DeleteTomographyUC;
 import org.tptacs.domain.entities.Tomography;
+import org.tptacs.domain.exceptions.NotFoundException;
+import org.tptacs.domain.exceptions.NotFoundTomographyException;
 import org.tptacs.presentation.controllers.BaseController;
 import org.tptacs.presentation.responseModels.ReportResponse;
 import org.tptacs.presentation.responseModels.Response;
@@ -152,7 +154,14 @@ public class TomographyController extends BaseController {
             @PathVariable String codeReport) {
 
         logger.info("Eliminacion de tomografias - START");
-        deleteTomographyUC.deleteTomography(codeReport, this.getUserFromJwt().getId());
+        String userId = this.getUserFromJwt().getId();
+        logger.info("Borrando tomografia con codigo de reporte: {} del usuario: {}", codeReport, userId);
+        try{
+            deleteTomographyUC.deleteTomography(codeReport, userId);
+        }catch(NotFoundTomographyException e){
+            return new ResponseEntity<>(new Response("404","Error al eliminar la imagen solicitada",LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+
+        }
         logger.info("Eliminacion de tomografias - END");
         return new ResponseEntity<>(new Response(), HttpStatus.OK);
 
