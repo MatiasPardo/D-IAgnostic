@@ -6,6 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.tptacs.presentation.responseModels.Response;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "tomographies")
 @Data
@@ -19,7 +22,10 @@ public class Tomography extends Response {
     private StatusReport statusReport;
     private String codeReport;
     private TomographyCategory category;
-
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
+    private Boolean active;
+    private List<String> images;
 
     public enum StatusReport {
         SIN_INFORME,
@@ -34,4 +40,6 @@ public class Tomography extends Response {
         CYST,
         STATELESS,
     }
+
+
 }

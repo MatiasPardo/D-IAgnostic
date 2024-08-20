@@ -5,10 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.tptacs.domain.entities.Tomography;
 import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,19 +18,21 @@ public class CreateTomographyUC {
 
     private final ITomographyRepository tomographyRepository;
 
+    private final S3Service s3Service;
 
-    public CreateTomographyUC(ITomographyRepository tomographyRepository) {
+    public CreateTomographyUC(ITomographyRepository tomographyRepository, S3Service s3Service) {
         this.tomographyRepository = tomographyRepository;
+        this.s3Service = s3Service;
     }
 
     public String saveTomography(Tomography tomography) {
-        // Generate unique code
         String codeReport = UUID.randomUUID().toString().substring(0, 8);
+        String url = s3Service.uploadFile(codeReport, tomography.getTomography());
+        tomography.setImages(List.of(url));
         tomography.setCodeReport(codeReport);
         tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
         tomography.setCategory(Tomography.TomographyCategory.STATELESS);
-
-        // Save Tomography
+        tomography.setUpdateDate(LocalDateTime.now());
         tomographyRepository.save(tomography);
 
         return codeReport;
