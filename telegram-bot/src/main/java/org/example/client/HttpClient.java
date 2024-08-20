@@ -126,10 +126,11 @@ public class HttpClient {
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
-        //return getData(response, TomograpiesResponse.class);
-        TomograpiesResponse tomograpiesResponse = new Gson().fromJson(response.body().string(), TomograpiesResponse.class);
-        System.out.println("Busqueda de tomografrias exitosa: " + tomograpiesResponse);
+        //System.out.println("Busqueda de tomografrias exitosa: " + response.body().string());
+        //TomograpiesResponse tomograpiesResponse = new Gson().fromJson(response.body().string(), TomograpiesResponse.class);
+        //System.out.println("Busqueda de tomografrias exitosa: " + tomograpiesResponse);
+        return getData(response, TomograpiesResponse.class);
 
-        return tomograpiesResponse;
+        //return tomograpiesResponse;
     }
 }

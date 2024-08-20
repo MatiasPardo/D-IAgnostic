@@ -71,7 +71,7 @@ public class ViewTomographiesEventHandler extends EventHandler<ViewOrdersEvent> 
                     .withLine("Estado del reporte: " + r.getStatusReport().getDesc())
                     .withLine("Fecha de solicitud: " + r.getCreateDate())
                     .withLine("Codigo del reporte (seguimiento):" + r.getCodeReport())
-                    .withLine(r.getStatusReport().equals(Tomography.StatusReport.INFORME_GENERADO) ? "Reporte: "+r.getReport():null)
+                    .withLine(r.getStatusReport().equals(Tomography.StatusReport.INFORME_GENERADO) ? "Reporte: "+r.getReport():"")
                     .withLine("------------------");
         });
         return messageBuilder.build();
