@@ -23,6 +23,7 @@ public class ViewTomographiesEventHandler extends EventHandler<ViewOrdersEvent> 
 
         try {
             var response = client.getTomographies(user.getJwt());
+            System.out.println("Tenemos response de tomografias :" +response);
             bot.sendText(event.getUserId(), tomographyToMessage(response));
         } catch (RestException e) {
             bot.sendText(event.getUserId(), "Error al intentar obtener los informes " + e.getMessage());

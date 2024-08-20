@@ -14,7 +14,7 @@ public class InitStep extends Step {
             case "1" -> {
                 var event = new ViewOrdersEvent(update.getMessage().getFrom().getId());
                 EventPublisher.publish(event);
-                return "Buscando tus pedidos...";
+                return "Buscando tus informes...";
             }
             case "2" -> {
                 var createProductStep = createProductStep(update);

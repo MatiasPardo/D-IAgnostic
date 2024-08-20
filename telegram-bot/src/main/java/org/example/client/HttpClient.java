@@ -1,6 +1,7 @@
 package org.example.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -14,6 +15,7 @@ import org.example.client.requests.RegisterResponse;
 import org.example.client.responses.*;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.RestException;
+import org.json.JSONObject;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
@@ -124,6 +126,10 @@ public class HttpClient {
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
-        return getData(response, TomograpiesResponse.class);
+        //return getData(response, TomograpiesResponse.class);
+        TomograpiesResponse tomograpiesResponse = new Gson().fromJson(response.body().string(), TomograpiesResponse.class);
+        System.out.println("Busqueda de tomografrias exitosa: " + tomograpiesResponse);
+
+        return tomograpiesResponse;
     }
 }

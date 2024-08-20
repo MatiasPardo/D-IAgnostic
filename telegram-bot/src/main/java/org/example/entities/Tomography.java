@@ -7,7 +7,6 @@ import java.util.List;
 
 @Getter
 public class Tomography {
-    private byte[] tomography;
     private String title;
     private String report;
     private String userId;
