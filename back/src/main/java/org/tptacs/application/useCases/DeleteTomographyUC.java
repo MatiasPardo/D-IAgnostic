@@ -2,9 +2,7 @@ package org.tptacs.application.useCases;
 
 import org.springframework.stereotype.Service;
 import org.tptacs.domain.entities.Tomography;
-import org.tptacs.domain.exceptions.NotFoundException;
 import org.tptacs.domain.exceptions.NotFoundTomographyException;
-import org.tptacs.domain.exceptions.ValidationException;
 import org.tptacs.infraestructure.repositories.interfaces.ITomographyRepository;
 
 @Service
