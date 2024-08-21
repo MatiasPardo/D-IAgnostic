@@ -26,8 +26,8 @@ public class Tomography {
     @Getter
     public enum StatusReport {
         SIN_INFORME("Sin informe"),
-        GENERACION_EN_PROCESO("Solicitud de informe en proceso"),
-        INFORME_GENERADO("Informe finalizado");
+        GENERACION_EN_PROCESO("Solicitud en proceso"),
+        INFORME_GENERADO("Finalizado");
 
         String desc;
 

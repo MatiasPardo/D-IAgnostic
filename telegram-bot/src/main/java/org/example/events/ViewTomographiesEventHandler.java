@@ -68,10 +68,10 @@ public class ViewTomographiesEventHandler extends EventHandler<ViewOrdersEvent> 
             messageBuilder
                     .withLine("Titulo de la tomografia: " +  r.getTitle())
                     .withLine("Estado la categoria dada por la IA: " + r.getCategory().getDesc())
-                    .withLine("Estado del reporte: " + r.getStatusReport().getDesc())
+                    .withLine("Estado del informe: " + r.getStatusReport().getDesc())
                     .withLine("Fecha de solicitud: " + r.getCreateDate())
-                    .withLine("Codigo del reporte (seguimiento):" + r.getCodeReport())
-                    .withLine(r.getStatusReport().equals(Tomography.StatusReport.INFORME_GENERADO) ? "Reporte: "+r.getReport():"")
+                    .withLine("ID del informe:" + r.getCodeReport())
+                    .withLine(r.getStatusReport().equals(Tomography.StatusReport.INFORME_GENERADO) ? "Informe: "+r.getReport():"")
                     .withLine("------------------");
         });
         return messageBuilder.build();
