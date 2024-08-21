@@ -60,7 +60,7 @@ jobs:
       with:
         host: ${{ secrets.DROPLET_HOST }}
         username: ${{ secrets.DROPLET_USER }}
-        key: ${{ secrets.DROPLET_SSH_KEY }}
+        password: ${{ secrets.DROPLET_PASSWORD }}
         script: |
           # Matar el proceso que ocupa el puerto 8080 (si lo hay)
           sudo fuser -k 8080/tcp || true
