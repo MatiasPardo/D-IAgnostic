@@ -5,16 +5,12 @@ import { OrdersContext } from './OrdersContext'
 export const OrdersProvider = ({children}) => {
 
     const {products, getProducts} = UseProducts()
-    const {orders, getOrders, handleCreateOrder} = UseOrders()
+    const {orders, getOrders, handleSaveTomography} = UseOrders()
 
     return (
         <OrdersContext.Provider value={
             {
-                products,
-                orders,
-                getProducts,
-                getOrders,
-                handleCreateOrder
+                handleSaveTomography
             }
         }>
             {children}

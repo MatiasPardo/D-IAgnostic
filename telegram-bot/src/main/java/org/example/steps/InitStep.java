@@ -14,7 +14,7 @@ public class InitStep extends Step {
             case "1" -> {
                 var event = new ViewOrdersEvent(update.getMessage().getFrom().getId());
                 EventPublisher.publish(event);
-                return "Buscando tus pedidos...";
+                return "Buscando tus informes...";
             }
             case "2" -> {
                 var createProductStep = createProductStep(update);
@@ -33,8 +33,8 @@ public class InitStep extends Step {
         var messageBuilder = MessageBuilder.builder();
         return messageBuilder
                 .withLine("Seleccioná una opción")
-                .withLine("1. Ver todos mis pedidos")
-                .withLine("2. Crear un pedido")
+                .withLine("1. Ver todos mis informes")
+                .withLine("2. Solicitar un nuevo informe")
                 .withLine("3. Cerrar sesión")
                 .build();
     }

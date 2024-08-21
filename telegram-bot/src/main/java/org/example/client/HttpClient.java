@@ -1,6 +1,7 @@
 package org.example.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -11,16 +12,14 @@ import org.example.client.requests.CreateOrderRequest;
 import org.example.client.requests.LoginRequest;
 import org.example.client.requests.RegisterRequest;
 import org.example.client.requests.RegisterResponse;
-import org.example.client.responses.CreateOrderResponse;
-import org.example.client.responses.ErrorResponse;
-import org.example.client.responses.LoginResponse;
-import org.example.client.responses.OrdersResponse;
+import org.example.client.responses.*;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.RestException;
+import org.json.JSONObject;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
-    private String baseUrl= System.getenv("API_URL") + "/api"; //"http://localhost:8080/api";
+    private String baseUrl= "http://localhost:8080/api"; //System.getenv("API_URL") + "/api";
     private MediaType mediaType;
     private ObjectMapper objectMapper;
     public HttpClient() {
@@ -116,5 +115,22 @@ public class HttpClient {
             throw new RestException(error.getMessage());
         }
         return objectMapper.readValue(response.body().bytes(), type);
+    }
+
+    @SneakyThrows
+    public TomograpiesResponse getTomographies(String token) {
+        var request = new Request.Builder()
+                .url(getUrl("tomographies"))
+                .header("Authorization", "Bearer " + token)
+                .get()
+                .build();
+
+        var response = this.okHttpClient.newCall(request).execute();
+        //System.out.println("Busqueda de tomografrias exitosa: " + response.body().string());
+        //TomograpiesResponse tomograpiesResponse = new Gson().fromJson(response.body().string(), TomograpiesResponse.class);
+        //System.out.println("Busqueda de tomografrias exitosa: " + tomograpiesResponse);
+        return getData(response, TomograpiesResponse.class);
+
+        //return tomograpiesResponse;
     }
 }

@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
-  <artifactId>tacs-grupo1</artifactId>
+  <artifactId>diagnostic</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>tacs-grupo1</name>
+  <name>diagnostic</name>
   <url>http://maven.apache.org</url>
 
   <parent>
@@ -21,6 +21,18 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.reactivestreams</groupId>
+      <artifactId>reactive-streams</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.github.mvallim</groupId>
       <artifactId>java-fluent-validator</artifactId>
@@ -43,6 +55,10 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-logging</artifactId>
+    </dependency>
     <!-- Swagger -->
     <dependency>
       <groupId>org.springdoc</groupId>
@@ -102,6 +118,12 @@
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+      <version>2.27.7</version>
+    </dependency>
+
     <!-- Redis -->
     <dependency>
       <groupId>redis.clients</groupId>
@@ -122,7 +144,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>org.tptacs.App</mainClass>
+          <mainClass>org.diagnostic.App</mainClass>
         </configuration>
       </plugin>
     </plugins>

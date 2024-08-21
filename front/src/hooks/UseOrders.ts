@@ -4,6 +4,9 @@ import { createOrder, findOrders, updateOrderShared } from "../services/OrdersSe
 import { Order } from "../interfaces/Order"
 import { OrderRequest } from "../interfaces/OrderRequest"
 import { AlertError, AlertOk } from "../components/SweetAlert"
+import { requestReport } from "../services/TomographiesService"
+import { TomographyRequest } from "../interfaces/TomographyRequest"
+
 
 const initialOrders: Order[] = []
 
@@ -11,7 +14,7 @@ export const UseOrders = () => {
 
   const [orders, dispatch] = useReducer(OrdersReducer, initialOrders)
 
-  const getOrders = async() => {
+/*   const getOrders = async() => {
     const response = await findOrders()
     const allOrders: Order[] = response.orderDtos.map((orderDto: any) => <Order>{
       id: orderDto.orderId,
@@ -27,8 +30,8 @@ export const UseOrders = () => {
       payload: allOrders
     })
   }
-
-  const handleCreateOrder = async(order: OrderRequest) => {
+ */
+/*   const handleCreateOrder = async(order: OrderRequest) => {
     if(!order.id) {
       createOrder(order)
       .then(response => {
@@ -51,12 +54,19 @@ export const UseOrders = () => {
       .catch((e) => AlertError('Pedido', 'Ocurrió un error al actualizar el pedido', e));
 
     }
-    
-  }
+  } */
+
+    const handleSaveTomography = async(tomographyRequest: TomographyRequest) => {
+      try {
+        const response = await requestReport(tomographyRequest);
+        AlertOk('Tomografía', 'La tomografía se subió correctamente');
+      } catch (error) {
+        AlertError('Tomografía', 'Ocurrió un error al subir la tomografía','error');
+      }
+    };
+  
 
   return {
-    orders,
-    getOrders,
-    handleCreateOrder
+    handleSaveTomography
   }
 }

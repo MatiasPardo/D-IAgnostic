@@ -1,54 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import { findAll } from '../services/ProductsService';
-import { ItemOrder } from "../interfaces/ItemOrder"
 
-export const InputNameModal =  ({show, handleClose, handleFunc} : {show: any, handleClose: any, handleFunc: (type: string, nameOrId: string) => void}) => {
-  const [newOrderType, setNewOrderType] = useState('new');
-  const [nameOrId, setNameOrId] = useState('')
+export const InputNameModal = ({ show, handleClose, handleFunc }: { show: any, handleClose: any, handleFunc: (title: string, patientName: string) => void }) => {
+    const [title, setTitle] = useState('');
+    const [patientName, setPatientName] = useState('');
 
-  const handleCheck = (event: any) => {
-    setNewOrderType(event.target.value);
-  }
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(event.target.value);
+    }
 
-  const setValue = (event: any) => setNameOrId(event.target.value);
+    const handlePatientNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPatientName(event.target.value);
+    }
 
-  const handleAccept = () => {
-    handleFunc(newOrderType, nameOrId)
-    handleClose();
-  }
+    const handleAccept = () => {
+        if (title && patientName) {
+            handleFunc(title, patientName);
+            handleClose();
+        }
+    }
 
-  return (
-  <Modal show={show} onHide={handleClose} centered>
-    <Modal.Header closeButton>
-      <Modal.Title>Creá o agregá un nuevo pedido</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-    <div className="form-check m-2">
-      <input checked={newOrderType == 'new'} className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="new"  onChange={handleCheck}/>
-      <label className="form-check-label"> Nuevo pedido </label>
-    </div>
-    <div className="form-check m-2">
-      <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="other" onChange={handleCheck} />
-      <label className="form-check-label"> Pedido ya existente </label>
-    </div>
-
-    <div className="input-group mb-3 mt-3">
-      <input type="text"
-        className="form-control"
-        id="id"
-        name="name" 
-        value={nameOrId}
-        onChange={setValue}
-        required
-        placeholder = {newOrderType == 'new' ? 'Ingresá un nombre para tu pedido' : 'Ingresá el ID de un pedido ya existente'}
-        /> 
-    </div>
-    <button disabled={nameOrId.length == 0} type="submit" onClick={handleAccept} className="btn btn-success container"> Aceptar</button>
-    </Modal.Body>
-  </Modal>
-
-
+    return (
+        <Modal show={show} onHide={handleClose} centered size="lg">
+            <Modal.Header closeButton>
+                <Modal.Title>Completar los datos para generar el informe</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <form>
+                    <div className="form-group row">
+                        <label className="col-4 col-form-label">Título para la tomografía</label> 
+                        <div className="col-8">
+                            <input 
+                                id="text" 
+                                name="text" 
+                                placeholder="Ingrese un título" 
+                                type="text" 
+                                className="form-control" 
+                                value={title}
+                                onChange={handleTitleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    <br/>
+                    <div className="form-group row">
+                        <label className="col-4 col-form-label">Nombre del paciente</label> 
+                        <div className="col-8">
+                            <input 
+                                id="patientName" 
+                                name="patientName" 
+                                placeholder="Ingrese el nombre del paciente" 
+                                type="text" 
+                                className="form-control" 
+                                value={patientName}
+                                onChange={handlePatientNameChange}
+                                required
+                            />
+                        </div>
+                    </div>  
+                    <div className="form-group row">
+                        <div className="offset-4 col-8">
+                            <br/>
+                            <button 
+                                disabled={!title || !patientName} 
+                                type="button" 
+                                onClick={handleAccept} 
+                                className="btn btn-success container"
+                            >
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </Modal.Body>
+        </Modal>
     );
-  };
-
+};
