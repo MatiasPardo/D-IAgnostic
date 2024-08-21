@@ -68,4 +68,5 @@ jobs:
           # scp target/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/${{ secrets.DROPLET_USER }}/*.jar
           # Ejecutar el JAR
           # nohup java -jar /home/${{ secrets.DROPLET_USER }}/*.jar > /dev/back 2>&1 &
+          echo "Funciona conexion" > /home/funcionaacceso.txt
           cat /home/funcionaacceso.txt
