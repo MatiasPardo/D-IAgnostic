@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
-  <artifactId>tacs-grupo1</artifactId>
+  <artifactId>diagnostic</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>tacs-grupo1</name>
+  <name>diagnostic</name>
   <url>http://maven.apache.org</url>
 
   <parent>
@@ -144,7 +144,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>org.tptacs.App</mainClass>
+          <mainClass>org.diagnostic.App</mainClass>
         </configuration>
       </plugin>
     </plugins>
