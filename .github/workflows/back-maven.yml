@@ -63,9 +63,9 @@ jobs:
         password: ${{ secrets.DROPLET_PASSWORD }}
         script: |
           # Matar el proceso que ocupa el puerto 8080 (si lo hay)
-          # sudo fuser -k 8080/tcp || true
+          sudo fuser -k 8080/tcp || true
           # Copiar el JAR al Droplet
-          # scp target/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/${{ secrets.DROPLET_USER }}/*.jar
+          scp -o StrictHostKeyChecking=no backend-app/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/${{ secrets.DROPLET_USER }}/*.jar
           # Ejecutar el JAR
           # nohup java -jar /home/${{ secrets.DROPLET_USER }}/*.jar > /dev/back 2>&1 &
           echo "Funciona conexion" > /home/funcionaacceso.txt
