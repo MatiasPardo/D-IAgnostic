@@ -56,7 +56,9 @@ jobs:
         name: backend-app
         
     - name: Install sshpass
-      run: sudo apt-get install -y sshpass
+      run: |
+        sudo apt-get install -y sshpass
+        sshpass -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no backend-app/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/
 
     - name: Deploy to DigitalOcean Droplet
       uses: appleboy/ssh-action@v0.1.5
@@ -67,9 +69,7 @@ jobs:
         script: |
           # Matar el proceso que ocupa el puerto 8080 (si lo hay)
           sudo fuser -k 8080/tcp || true
-          # Copiar el JAR al Droplet
-          sshpass -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no backend-app/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/
           # Ejecutar el JAR
-          # nohup java -jar /home/${{ secrets.DROPLET_USER }}/*.jar > /dev/back 2>&1 &
+          nohup java -jar /home/*.jar > /dev/back 2>&1 &
           echo "Funciona conexion" > /home/funcionaacceso.txt
           cat /home/funcionaacceso.txt
