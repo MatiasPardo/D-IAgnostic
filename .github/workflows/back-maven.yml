@@ -59,7 +59,7 @@ jobs:
       run: |
         sudo apt-get install -y sshpass
         ls -R /home/runner/work/D-IAgnostic/
-        sshpass -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no /home/runner/work/D-IAgnostic/backend-app/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/
+        sshpass -p ${{ secrets.DROPLET_PASSWORD }} scp -o StrictHostKeyChecking=no /home/runner/work/D-IAgnostic/D-IAgnostic/*.jar ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}:/home/
 
     - name: Deploy to DigitalOcean Droplet
       uses: appleboy/ssh-action@v0.1.5
