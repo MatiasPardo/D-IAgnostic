@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+back/target/classes/data/mocks/ItemsRepository.json
+back/target/classes/data/mocks/ItemsData.json
+back/target/classes/application.properties
