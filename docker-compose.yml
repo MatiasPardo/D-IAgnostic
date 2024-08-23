@@ -1,101 +1,17 @@
 version: '3.8'
 
 services:
-  frontend:
-    image: frontend
-    container_name: front_container
-    build:
-      context: front
-      args:
-        - REACT_APP_API_URL=${API_URL}
-    #environment:
-      #- REACT_APP_API_URL=${API_URL}
-    ports:
-      - 3000:80
-    restart: always
-    depends_on:
-      - backend
-    networks:
-      - front-end
-
   backend:
     image: backend
     container_name: back_container
-    build:
-      context: back
+    # build:
+    #   context: back
     environment:
       - JWT_SECRET=${JWT_SECRET}
-      - MONGO_HOST=${MONGO_HOST}
-      - MONGO_PORT=${MONGO_PORT}
-      - MONGO_USERNAME=${MONGO_USERNAME}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_USER=${REDIS_USER}
-      - REDIS_PASS=${REDIS_PASS}
+      - MONGO_URL=${MONGO_URL}
+      - MONGO_DB=${MONGO_DB}
     ports:
       - 8080:8080
     restart: always
-    depends_on:
-      - db
-      - redis
-    networks:
-      - front-end
-      - back-end
-
-  db:
-    image: mongodb/mongodb-community-server
-    container_name: db_container
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGODB_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-    ports:
-      - ${MONGO_PORT}:${MONGO_PORT}
-    restart: always
-    hostname: ${MONGO_HOST}
-    networks:
-      - back-end
-      - interface
-
-  mongo-interface:
-    image: mongo-express
-    container_name: mongo_interface_container
-    environment:
-      - ME_CONFIG_MONGODB_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}
-    ports:
-      - 8081:8081
-    depends_on:
-      - db
-    networks:
-      - interface
-      
-  redis:
-    image: redis:6.2-alpine
-    container_name: redis_container
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
-    restart: always
-    hostname: ${REDIS_HOST}
-    networks:
-      - back-end
-
-  boti:
-    image: boti
-    container_name: boti_container
-    build:
-      context: telegram-bot
-    environment:
-      - BOT_KEY=${BOT_KEY}
-      - API_URL=${API_URL}
-    restart: always
-    depends_on:
-      - backend
-    network_mode: host
-#    networks:
-#      - back-end
-
-
-networks:
-  back-end:
-  interface:
-  front-end:
+    env_file:
+       - .env

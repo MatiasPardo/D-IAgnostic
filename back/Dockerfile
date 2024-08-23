@@ -1,12 +1,15 @@
-FROM maven:3.8-openjdk-17-slim as builder
+#deploy del backend con image 
+FROM openjdk:17
 
-WORKDIR /diagnostic
-COPY . .
-RUN mvn package -DskipTests
-
-FROM eclipse-temurin:17-jre-alpine
-
-COPY --from=builder /tp-tacs /app
 WORKDIR /app
+
+ADD ./target/diagnostic-1.0-SNAPSHOT.jar target/diagnostic-1.0-SNAPSHOT.jar
+
+ENV MONGO_URL ${MONGO_STRING_CONECTION}
+ENV MONGO_DB ${MONGO_DB}
+ENV JWT_KEY ${JWT_KEY}
+
 EXPOSE 8080
-CMD ["java", "-jar", "target/diagnostic-1.0-SNAPSHOT.jar"]
+
+ENTRYPOINT ["java", "-jar","/app/target/diagnostic-1.0-SNAPSHOT.jar"]
+
