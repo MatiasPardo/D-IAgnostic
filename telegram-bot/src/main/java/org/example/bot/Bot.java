@@ -13,12 +13,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class Bot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
-        return "TACS_G1_BOT";
+        return "diagnostic_usr_bot";
     }
 
     @Override
     public String getBotToken() {
-        return System.getenv("BOT_KEY"); //"6836802718:AAEWae_ZBwSzX2Qc0GeSpDCbnWseI2fH7Uk";
+        return "7050546445:AAEEtUcGHhu1emCgV0XTGzaJZpKseOd-5Vc"; //"6836802718:AAEWae_ZBwSzX2Qc0GeSpDCbnWseI2fH7Uk";
     }
 
     @Override
