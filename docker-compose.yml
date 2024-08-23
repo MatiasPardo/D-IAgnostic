@@ -5,10 +5,10 @@ services:
     container_name: back_container
     build:
       context: back
-    environment:
-      - JWT_SECRET=${JWT_SECRET}
-      - MONGO_URL=${MONGO_URL}
-      - MONGO_DB=${MONGO_DB}
+    # environment:
+    #   - JWT_KEY=${JWT_SECRET}
+    #   - MONGO_URL=${MONGO_URL}
+    #   - MONGO_DB=${MONGO_DB}
     ports:
       - 8080:8080
     restart: always
