@@ -39,14 +39,6 @@ jobs:
         tags: |
           ebloemer/diagnostic-backend:${{ github.sha }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-        
     - name: Deploy to DigitalOcean Droplet
       uses: appleboy/ssh-action@v0.1.5
       with:
