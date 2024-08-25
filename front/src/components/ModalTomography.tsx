@@ -52,7 +52,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
           <div className="row">
             <div className="col-md-6 border p-3 bg-white">
               <img
-                src={`data:image/jpeg;base64,${tomography.tomography}`}
+                src={tomography.images[0]}
                 alt="Tomografía"
                 className="img-fluid"
               />

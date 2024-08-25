@@ -11,10 +11,10 @@ interface TomographyResponse {
     error?: string;
 }
 
-export const findTomographies = async (): Promise<Tomography[]> => {
-  try {
-      const response = await instance.get<TomographyResponse>("tomographies");
-      console.log("Tomografías cargadas:", response);
+export const findTomographies = async (page: number, size: number): Promise<Tomography[]> => {
+    try {
+        const response = await instance.get<TomographyResponse>(`tomographies?page=${page}&size=${size}`);
+        console.log("Tomografías cargadas:", response);
 
       if (response.data.successful) {
           return response.data.tomographies;

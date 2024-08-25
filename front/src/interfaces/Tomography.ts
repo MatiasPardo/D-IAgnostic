@@ -1,7 +1,9 @@
+import { Url } from "url";
+
 export interface Tomography {
     codeReport: string;
     title: string;
     category: string;
-    tomography: Blob;
+    images: string[];
     statusReport: string;
 }
