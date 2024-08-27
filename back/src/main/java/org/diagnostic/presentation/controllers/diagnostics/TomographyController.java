@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -124,15 +125,21 @@ public class TomographyController extends BaseController {
         logger.info("Consulta de tomografias paginadas - START");
         String userId = this.getUserFromJwt().getId();
         List<Tomography> tomographyPage = List.of();
+        long pageTotal = 0;
+        long sizeTotal = 0;
         if(page != null && size != null){
-            tomographyPage = tomographyService.getTomography(userId, page, size).getContent();
+            Page<Tomography> tomography = tomographyService.getTomography(userId, page, size);
+            pageTotal = tomography.getPageable().getPageSize();
+            sizeTotal = tomography.getTotalElements();
+            tomographyPage = tomography.getContent();
+        }else {
+            tomographyPage = tomographyService.getTomography(userId);
         }
-        tomographyPage = tomographyService.getTomography(userId);
 
         logger.info("Consulta de tomografias paginadas - END");
 
         if (!tomographyPage.isEmpty()) {
-            return new ResponseEntity<>(new TomographyResponse(tomographyPage, Boolean.TRUE), HttpStatus.OK);
+            return new ResponseEntity<>(new TomographyResponse(tomographyPage, Boolean.TRUE, pageTotal, sizeTotal), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new TomographyResponse(Boolean.FALSE, "No se encontraron tomografias para ese usuario"), HttpStatus.NOT_FOUND);
         }

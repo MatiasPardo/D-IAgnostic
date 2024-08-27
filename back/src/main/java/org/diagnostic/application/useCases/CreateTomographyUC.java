@@ -27,13 +27,14 @@ public class CreateTomographyUC {
 
     public String saveTomography(Tomography tomography) {
         String codeReport = UUID.randomUUID().toString().substring(0, 8);
-        String url = s3Service.uploadFile(codeReport, tomography.getTomography());
+        String url = s3Service.uploadFile(UUID.randomUUID().toString(), tomography.getTomography());
         tomography.setImages(List.of(url));
         tomography.setCodeReport(codeReport);
         tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
         tomography.setCategory(Tomography.TomographyCategory.STATELESS);
         tomography.setUpdateDate(LocalDateTime.now());
         tomography.setActive(Boolean.TRUE);
+        tomography.setTomography(null);
         tomographyRepository.save(tomography);
 
         return codeReport;
