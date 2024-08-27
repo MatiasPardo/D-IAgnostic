@@ -8,7 +8,6 @@ import org.example.entities.User;
 import org.example.exceptions.InvalidOptionException;
 import org.example.messages.MessageBuilder;
 import org.example.repositories.UserRepository;
-import org.glassfish.jersey.client.ClientAsyncExecutor;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
@@ -21,7 +20,10 @@ import java.util.List;
 public class CreateTomographyStep extends Step {
     private int step = 1;
     private String titleOrId;
-    private boolean sharedOrder;
+
+    public CreateTomographyStep(String titleOrId) {
+        this.titleOrId = titleOrId;
+    }
 
     public String executeStep(Update update) {
         var userId = update.getMessage().getFrom().getId();
@@ -44,25 +46,16 @@ public class CreateTomographyStep extends Step {
                 return message;
             }
             case 3 -> {
-                this.titleOrId = update.getMessage().getText();
-                this.addStepPhoto(userId);
+                titleOrId = update.getMessage().getText();
+                this.addStepPhoto(userId, titleOrId);
                 var message = getMessage();
                 step++;
                 return message;
             }
             case 4 -> {
-                var codeReport = this.saveTomography(update, userId);
-                var message = getMessage().concat("\n Codigo del informe: " + codeReport);
-                step++;
-                return message;
-            }
-            case 5 -> {
-                this.titleOrId = update.getMessage().getText();
-                this.resetStep(userId);
-                //var event = new Tomography(this.titleOrId,);
-                //EventPublisher.publish(event);
+                this.saveTomography(update, userId);
                 var message = getMessage();
-                step++;
+                this.resetStep(userId);
                 return message;
             }
         }
@@ -84,15 +77,20 @@ public class CreateTomographyStep extends Step {
                         .build();
             }
             case 2 -> {
-
                 return  "Ingresá el titulo para el diagnostico";
             }
             case 3 -> {
                 return "Ingrese una imagen para analizar";
             }
-            case 4 -> {
-
-                return "Cuando se finalice en analisis se enviara el estudio, si pierde la sesion puede recuperar el informe desde la opcion de ver todos mis informes";
+            case 4 ->{
+                var message = MessageBuilder.builder();
+                return message
+                        .withLine("Cuando se finalice en analisis se enviara el estudio, si pierde la sesion puede recuperar el informe desde la opcion de ver todos mis informes")
+                        .withLine("Seleccioná una opción")
+                        .withLine("1. Ver todos mis informes")
+                        .withLine("2. Solicitar un nuevo informe")
+                        .withLine("3. Cerrar sesión")
+                        .build();
             }
         }
         throw new RuntimeException("Opción no válida");
