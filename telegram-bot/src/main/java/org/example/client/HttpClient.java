@@ -13,9 +13,12 @@ import org.example.client.requests.LoginRequest;
 import org.example.client.requests.RegisterRequest;
 import org.example.client.requests.RegisterResponse;
 import org.example.client.responses.*;
+import org.example.entities.Tomography;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.RestException;
 import org.json.JSONObject;
+
+import static org.apache.http.client.methods.RequestBuilder.post;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
@@ -132,5 +135,34 @@ public class HttpClient {
         return getData(response, TomograpiesResponse.class);
 
         //return tomograpiesResponse;
+    }
+
+    @SneakyThrows
+    public Tomography getTomographyReport(String token, String codeReport) {
+        var request = new Request.Builder()
+                .url(getUrl("tomographies/report/"+codeReport))
+                .header("Authorization", "Bearer " + token)
+                .get()
+                .build();
+
+        var response = this.okHttpClient.newCall(request).execute();
+        System.out.println("Busqueda de tomografria con codigo de reporte "+codeReport+": " + response);
+        return getData(response, Tomography.class);
+
+    }
+
+    @SneakyThrows
+    public String saveTomography(String token, String title, byte[] tac) {
+        var body = RequestBody.create(getBody(new Tomography(title, tac)), mediaType);
+
+        var request = new Request.Builder()
+                .url(getUrl("tomographies"))
+                .header("Authorization", "Bearer " + token)
+                .post(body)
+                .build();
+
+        var response = this.okHttpClient.newCall(request).execute();
+        return getData(response, String.class);
+
     }
 }
