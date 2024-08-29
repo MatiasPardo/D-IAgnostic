@@ -3,6 +3,7 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { AlertError } from '../../components/SweetAlert';
 import AppLogo from '../../components/AppLogo';
+import '../../styles/globalStyles.css'
 
 import './login.css';
 
@@ -46,7 +47,7 @@ export const Login = () => {
     
 
     return (
-        <div className="login-container">
+        <div className="login-container" style={{ backgroundColor: 'var(--primary-color-2)'}}>
             <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div className="col-md-6">
@@ -83,7 +84,7 @@ export const Login = () => {
                                         />
                                     </div>
                                     <div className="d-grid">
-                                        <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
+                                        <button type="submit" className="btn" style={{backgroundColor: 'var(--primary-color-1)', color: 'var(--text-color-2)'}}>Iniciar Sesión</button>
                                     </div>
                                 </form>
                             </div>

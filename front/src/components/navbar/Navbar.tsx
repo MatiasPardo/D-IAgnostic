@@ -15,7 +15,7 @@ export const Navbar = () => {
 
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
-            <Link className="navbar-brand text-info" to="/">Home</Link>
+            <Link className="navbar-brand" to="/" style={{color: 'var(--primary-color-2)'}}>Home</Link>
             <div className="navbar-collapse">
                 <div className="navbar-nav">
                     <NavLink className="nav-item nav-link" to="/tomographies">Tomografias</NavLink>
@@ -36,7 +36,11 @@ export const Navbar = () => {
                             </button>
                         </> 
                         :
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <NavLink className="nav-item nav-link btn" to="/register">Registro</NavLink>
+                            <div style={{color: 'var(--primary-color-2)'}}> / </div>
                             <NavLink className="nav-item nav-link btn" to="/login">Login</NavLink>
+                        </div>
                     }
                 </ul>
             </div>
