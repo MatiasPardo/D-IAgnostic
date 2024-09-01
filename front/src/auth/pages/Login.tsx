@@ -3,7 +3,6 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { AlertError } from '../../components/SweetAlert';
 import AppLogo from '../../components/AppLogo';
-import '../../styles/globalStyles.css'
 
 import './login.css';
 

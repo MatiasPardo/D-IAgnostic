@@ -5,7 +5,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AlertError, AlertOk } from "../../components/SweetAlert";
 import AppLogo from '../../components/AppLogo';
 
-import '../../styles/globalStyles.css'
 import './register.css';
 
 export const Register = () => {

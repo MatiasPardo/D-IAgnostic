@@ -14,7 +14,7 @@ export const Navbar = () => {
     }
 
     return (
-        <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2" style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000 }}>
             <Link className="navbar-brand" to="/" style={{color: 'var(--primary-color-2)'}}>Home</Link>
             <div className="navbar-collapse">
                 <div className="navbar-nav">
