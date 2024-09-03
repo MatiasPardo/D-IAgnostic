@@ -25,19 +25,19 @@ public class CreateTomographyUC {
         this.s3Service = s3Service;
     }
 
-    public String saveTomography(Tomography tomography) {
+    public Tomography saveAndGenerateUrlTomography(Tomography tomography) {
         String codeReport = UUID.randomUUID().toString().substring(0, 8);
-        String url = s3Service.uploadFile(UUID.randomUUID().toString(), tomography.getTomography());
-        tomography.setImages(List.of(url));
         tomography.setCodeReport(codeReport);
-        tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
-        tomography.setCategory(Tomography.TomographyCategory.STATELESS);
-        tomography.setUpdateDate(LocalDateTime.now());
-        tomography.setActive(Boolean.TRUE);
-        tomography.setTomography(null);
-        tomographyRepository.save(tomography);
+        String url = uploadFile(codeReport, tomography.getTomography());
+        return saveUrl(tomography, url, codeReport);
+    }
 
-        return codeReport;
+    public Tomography saveUrl(Tomography tomography, String url, String codeReport) {
+        tomography.setTomography(null);
+        tomography.addImagesUrl(url);
+        tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
+        tomography.setUpdateDate(LocalDateTime.now());
+        return tomographyRepository.save(tomography);
     }
 
     public Tomography getTomographyStatus(String codeReport) {
@@ -52,6 +52,10 @@ public class CreateTomographyUC {
         Pageable pageable = PageRequest.of(page, size);
         return tomographyRepository.findByUserId(userId, pageable);
 
+    }
+
+    public String uploadFile(String codeReport, byte[] tomography) {
+        return s3Service.uploadFile(codeReport, tomography);
     }
 }
 

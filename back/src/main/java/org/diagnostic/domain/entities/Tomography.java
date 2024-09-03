@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.diagnostic.presentation.responseModels.Response;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.List; 
 
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "tomographies")
@@ -21,11 +21,10 @@ public class Tomography extends Response {
     private String userId;
     private StatusReport statusReport;
     private String codeReport;
-    private TomographyCategory category;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private Boolean active;
-    private List<String> images;
+    private List<TomographyDetail> tomographyDetail;
 
     public enum StatusReport {
         SIN_INFORME,
@@ -33,13 +32,20 @@ public class Tomography extends Response {
         INFORME_GENERADO
     }
 
-    public enum TomographyCategory {
-        STONE,
-        NORMAL,
-        TUMOR,
-        CYST,
-        STATELESS,
+
+    public void addImagesUrl(TomographyDetail tomographyDetail){
+        if (this.tomographyDetail != null)
+            this.tomographyDetail.add(tomographyDetail);
+        else
+            this.tomographyDetail = List.of(tomographyDetail);
     }
 
+    public void addImagesUrl(String url){
+        if (this.tomographyDetail != null)
+            this.tomographyDetail.add(new TomographyDetail(TomographyCategory.STATELESS, url));
+
+        else
+            this.tomographyDetail = List.of(new TomographyDetail(TomographyCategory.STATELESS, url));
+    }
 
 }

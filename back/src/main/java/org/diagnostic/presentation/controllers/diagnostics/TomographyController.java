@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.diagnostic.domain.entities.TomographyCategory;
+import org.diagnostic.domain.entities.TomographyDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.diagnostic.presentation.responseModels.TomographyResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -57,9 +60,9 @@ public class TomographyController extends BaseController {
     })
     @PostMapping(produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Response> saveTomography(
-            @RequestParam("tomography") MultipartFile tomographyByte,
-            @RequestParam("title") String title) throws IOException {
-
+            @RequestParam(value = "tomography") MultipartFile tomographyByte,
+            @RequestParam(value = "title") String title,
+            @RequestParam(value = "codeReport",required = false) String codeReport) throws IOException {
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
@@ -71,8 +74,17 @@ public class TomographyController extends BaseController {
         tomography.setTitle(title);
         tomography.setUserId(this.getUserFromJwt().getId());
 
-        String codeReport = tomographyService.saveTomography(tomography);
-        categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
+
+
+        if(codeReport != null){
+            Tomography tomographyExist = tomographyService.getTomographyStatus(codeReport);
+            tomographyService.saveUrl(tomographyExist,tomographyService.uploadFile(UUID.randomUUID().toString(),tomography.getTomography()), codeReport);
+        }else{
+            Tomography tomographySaved = tomographyService.saveAndGenerateUrlTomography(tomography);
+            categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomographySaved);
+            codeReport = tomographySaved.getCodeReport();
+        }
+
 
         return ResponseEntity.ok(new ReportResponse(codeReport, "200", "Consulta exitosa"));
     }
