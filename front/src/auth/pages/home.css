@@ -1,0 +1,35 @@
+
+.container {
+    padding: 2rem;
+  }
+  
+  .hero {
+    background-color: var(--primary);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  
+  .features {
+    display: flex;
+    justify-content: space-around;
+    padding: 2rem 0;
+  }
+  
+  .feature-item {
+    max-width: 300px;
+    text-align: center;
+  }
+  
+  .testimonials {
+    background-color: var(--lightGray);
+    padding: 2rem 0;
+    text-align: center;
+  }
+  
+  .footer {
+    background-color: var(--primary);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+  }
