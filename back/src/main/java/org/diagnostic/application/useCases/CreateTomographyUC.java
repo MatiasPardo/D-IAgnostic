@@ -1,12 +1,12 @@
 package org.diagnostic.application.useCases;
 
 
+import org.diagnostic.domain.entities.Tomography;
+import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.diagnostic.domain.entities.Tomography;
-import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,19 +25,19 @@ public class CreateTomographyUC {
         this.s3Service = s3Service;
     }
 
-    public String saveTomography(Tomography tomography) {
+    public Tomography saveAndGenerateUrlTomography(Tomography tomography, byte[] tomographyImage) {
         String codeReport = UUID.randomUUID().toString().substring(0, 8);
-        String url = s3Service.uploadFile(UUID.randomUUID().toString(), tomography.getTomography());
-        tomography.setImages(List.of(url));
         tomography.setCodeReport(codeReport);
-        tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
-        tomography.setCategory(Tomography.TomographyCategory.STATELESS);
-        tomography.setUpdateDate(LocalDateTime.now());
-        tomography.setActive(Boolean.TRUE);
-        tomography.setTomography(null);
-        tomographyRepository.save(tomography);
+        String url = uploadFile(codeReport + tomography.getTomographyDetail().size(), tomographyImage);
+        return saveUrl(tomography, url, codeReport);
+    }
 
-        return codeReport;
+    public Tomography saveUrl(Tomography tomography, String url, String codeReport) {
+        tomography.setTomography(null);
+        tomography.addImagesUrl(url);
+        tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
+        tomography.setUpdateDate(LocalDateTime.now());
+        return tomographyRepository.save(tomography);
     }
 
     public Tomography getTomographyStatus(String codeReport) {
@@ -52,6 +52,10 @@ public class CreateTomographyUC {
         Pageable pageable = PageRequest.of(page, size);
         return tomographyRepository.findByUserId(userId, pageable);
 
+    }
+
+    public String uploadFile(String codeReport, byte[] tomography) {
+        return s3Service.uploadFile(codeReport, tomography);
     }
 }
 

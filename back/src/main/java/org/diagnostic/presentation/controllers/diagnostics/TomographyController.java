@@ -6,15 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.diagnostic.application.useCases.CategorizeAndGenerateReportUC;
 import org.diagnostic.application.useCases.CreateTomographyUC;
 import org.diagnostic.application.useCases.DeleteTomographyUC;
@@ -24,10 +15,20 @@ import org.diagnostic.presentation.controllers.BaseController;
 import org.diagnostic.presentation.responseModels.ReportResponse;
 import org.diagnostic.presentation.responseModels.Response;
 import org.diagnostic.presentation.responseModels.TomographyResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -57,9 +58,10 @@ public class TomographyController extends BaseController {
     })
     @PostMapping(produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Response> saveTomography(
-            @RequestParam("tomography") MultipartFile tomographyByte,
-            @RequestParam("title") String title) throws IOException {
-
+            @RequestParam(value = "tomography") MultipartFile tomographyByte,
+            @RequestParam(value = "title") String title,
+            @RequestParam(value = "codeReport",required = false) String codeReport,
+            @RequestParam(value = "lastImage",required = false) Boolean lastImage) throws IOException {
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
@@ -67,12 +69,22 @@ public class TomographyController extends BaseController {
         }
 
         tomography.setCreateDate(LocalDateTime.now());
-        tomography.setTomography(tomographyByte.getBytes());
         tomography.setTitle(title);
         tomography.setUserId(this.getUserFromJwt().getId());
 
-        String codeReport = tomographyService.saveTomography(tomography);
-        categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
+        if(codeReport != null){
+            tomography = tomographyService.getTomographyStatus(codeReport);
+            tomography.setTomography(tomographyByte.getBytes());
+            tomographyService.saveUrl(tomography,tomographyService.uploadFile(UUID.randomUUID().toString() + tomography.getTomographyDetail().size(),tomography.getTomography()), codeReport);
+        }else{
+            tomography = tomographyService.saveAndGenerateUrlTomography(tomography, tomographyByte.getBytes());
+            codeReport = tomography.getCodeReport();
+        }
+
+        if(lastImage != null && lastImage.equals(Boolean.TRUE)){
+            categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
+        }
+
 
         return ResponseEntity.ok(new ReportResponse(codeReport, "200", "Consulta exitosa"));
     }
@@ -101,7 +113,7 @@ public class TomographyController extends BaseController {
         logger.info("Consulta de informe - END");
 
         if (tomography != null) {
-            return new ResponseEntity<>(tomography, HttpStatus.OK);
+            return new ResponseEntity<>(tomography.dto(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

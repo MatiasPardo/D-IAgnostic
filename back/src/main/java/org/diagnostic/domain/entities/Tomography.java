@@ -1,18 +1,17 @@
 package org.diagnostic.domain.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.diagnostic.presentation.responseModels.TomographyDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.diagnostic.presentation.responseModels.Response;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Document(collection = "tomographies")
 @Data
-public class Tomography extends Response {
+public class Tomography{
     @Id
     private String id;
     private byte[] tomography;
@@ -21,11 +20,23 @@ public class Tomography extends Response {
     private String userId;
     private StatusReport statusReport;
     private String codeReport;
-    private TomographyCategory category;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private Boolean active;
-    private List<String> images;
+    private List<TomographyDetail> tomographyDetail;
+
+    public TomographyDTO dto() {
+        TomographyDTO tomographyDTO = new TomographyDTO();
+        if(this.tomographyDetail != null) tomographyDTO.setImages(tomographyDetail.stream().map(TomographyDetail::getUrl).toList());
+        tomographyDTO.setCodeReport(this.codeReport);
+        tomographyDTO.setTitle(this.title);
+        tomographyDTO.setStatusReport(this.statusReport);
+        tomographyDTO.setCreateDate(this.createDate);
+        tomographyDTO.setUpdateDate(this.updateDate);
+        tomographyDTO.setReport(this.report);
+        tomographyDTO.setUserId(this.userId);
+        return tomographyDTO;
+    }
 
     public enum StatusReport {
         SIN_INFORME,
@@ -33,13 +44,20 @@ public class Tomography extends Response {
         INFORME_GENERADO
     }
 
-    public enum TomographyCategory {
-        STONE,
-        NORMAL,
-        TUMOR,
-        CYST,
-        STATELESS,
+
+    public List<TomographyDetail> getTomographyDetail(){
+        if (this.tomographyDetail != null)
+            return this.tomographyDetail;
+        else
+            return new LinkedList<TomographyDetail>();
     }
 
+    public void addImagesUrl(String url){
+        if (this.tomographyDetail != null)
+            this.tomographyDetail.add(new TomographyDetail(TomographyCategory.STATELESS, url));
+
+        else
+            this.tomographyDetail = List.of(new TomographyDetail(TomographyCategory.STATELESS, url));
+    }
 
 }
