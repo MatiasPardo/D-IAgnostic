@@ -1,5 +1,6 @@
 package org.diagnostic.application.useCases;
 
+import lombok.extern.slf4j.Slf4j;
 import org.diagnostic.domain.entities.TomographyCategory;
 import org.diagnostic.domain.entities.TomographyDetail;
 import org.springframework.stereotype.Service;
