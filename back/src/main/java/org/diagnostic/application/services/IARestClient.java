@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -44,10 +43,13 @@ public class IARestClient {
         String apiUrl = IARESTCLIENTREPORT + "generate";
         ReportIAResponse response = null;
         try{
-             response = restTemplate.postForObject(
+
+            String prompt = imageCategorizationSummary.summary(tomography.getTomographyDetail());
+            log.info("Prompt para generar informe para tomografia con codeReport {}: {}",tomography.getCodeReport(), prompt);
+            response = restTemplate.postForObject(
                     apiUrl, "{ " +
                             "\"model\": \"d-iag-model\", " +
-                            "\"prompt\": \"" + imageCategorizationSummary.summary(tomography.getTomographyDetail())  + "\", "+
+                            "\"prompt\": \"" + prompt + "\", "+
                             "\"stream\": false " +
                             "}",
                      ReportIAResponse.class);
