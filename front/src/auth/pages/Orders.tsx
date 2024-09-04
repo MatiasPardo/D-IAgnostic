@@ -29,10 +29,10 @@ export const Orders = () => {
     useEffect(() => {
         const loadImage = async () => {
             try {
-                const tomographies = await findTomographies();
+                const tomographies = await findTomographies(1, 1);
                 if (tomographies.length > 0) {
                     const selectedTomography = tomographies[0]; // Puedes cambiar la lógica de selección según tu caso
-                    const url = URL.createObjectURL(new Blob([selectedTomography.tomography], { type: 'image/jpeg' }));
+                    const url = null;
                     setImageUrl(url);
                 }
             } catch (error) {

@@ -3,7 +3,6 @@ package org.example.bot;
 import org.example.entities.User;
 import org.example.exceptions.InvalidOptionException;
 import org.example.repositories.UserRepository;
-import org.example.steps.InitStep;
 import org.example.steps.LoginStep;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,7 +17,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "7050546445:AAEEtUcGHhu1emCgV0XTGzaJZpKseOd-5Vc"; //"6836802718:AAEWae_ZBwSzX2Qc0GeSpDCbnWseI2fH7Uk";
+        return "6836802718:AAEWae_ZBwSzX2Qc0GeSpDCbnWseI2fH7Uk"; //"6836802718:AAEWae_ZBwSzX2Qc0GeSpDCbnWseI2fH7Uk";
     }
 
     @Override
@@ -26,7 +25,6 @@ public class Bot extends TelegramLongPollingBot {
         var msg = update.getMessage();
         var user = msg.getFrom();
         analyzeText(user.getId(), update);
-
         System.out.println(user.getFirstName() + " wrote " + msg.getText() );
     }
 

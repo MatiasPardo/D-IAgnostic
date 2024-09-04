@@ -20,4 +20,11 @@ public abstract class Step {
         UserRepository.saveOrUpdate(user);
         return user.getLastStep();
     }
+
+    public Step addStepPhoto(Long userId, String titleOrId) {
+        var user = UserRepository.get(userId);
+        user.addStep(new CreateTomographyStep(titleOrId));
+        UserRepository.saveOrUpdate(user);
+        return user.getLastStep();
+    }
 }

@@ -12,15 +12,18 @@ import java.util.List;
 @AllArgsConstructor
 public class TomographyResponse {
 
-    private List<Tomography> tomographies;
+    private List<TomographyDTO> tomographies;
 
     private boolean successful;
 
     private String error;
 
-    public TomographyResponse(List<Tomography> tomography, Boolean aTrue) {
-        this.tomographies = tomography;
+    private PageTomography pagination;
+
+    public TomographyResponse(List<Tomography> tomography, Boolean aTrue, long totalPage, long totalSize) {
+        this.tomographies = tomography.stream().map(Tomography::dto).toList();
         this.successful = aTrue;
+        if(totalPage > 0 || totalSize > 0) this.pagination = new PageTomography(totalPage, totalSize);
     }
 
     public TomographyResponse(Boolean successful, String error) {

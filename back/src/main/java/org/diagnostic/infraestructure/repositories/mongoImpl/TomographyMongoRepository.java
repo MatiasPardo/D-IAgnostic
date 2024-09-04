@@ -20,8 +20,8 @@ public class TomographyMongoRepository implements ITomographyRepository {
     private ITomographyMongoRepository ITomographyMongoRepository;
 
     @Override
-    public void save(Tomography tomography) {
-        ITomographyMongoRepository.save(tomography);
+    public Tomography save(Tomography tomography) {
+        return ITomographyMongoRepository.save(tomography);
     }
 
     @Override

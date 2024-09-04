@@ -24,7 +24,7 @@ public class LoginUserEventHandler extends EventHandler<LoginUserEvent> {
         try {
             var response = client.login(loginRequest);
             user.setJwt(response.getToken());
-            bot.sendText(event.getUserId(), "Login exitoso - token: " + response.getToken());
+            System.out.println("User ID: " + event.getUserId() + "\nLogin exitoso - token: " + response.getToken());
             message = user.getLastStep().resetStep(event.getUserId()).getMessage();
             bot.sendText(event.getUserId(), message);
         } catch (RestException e) {

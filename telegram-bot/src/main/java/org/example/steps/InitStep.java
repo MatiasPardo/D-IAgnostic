@@ -18,6 +18,7 @@ public class InitStep extends Step {
             }
             case "2" -> {
                 var createProductStep = createProductStep(update);
+
                 return createProductStep.executeStep(update);
             }
             case "3" -> {
@@ -40,10 +41,12 @@ public class InitStep extends Step {
     }
 
     private Step createProductStep(Update update) {
-        var createProductStep = new CreateOrderStep();
+        var createProductStep = new CreateTomographyStep(null);
         var user = UserRepository.get(update.getMessage().getFrom().getId());
         user.addStep(createProductStep);
         UserRepository.saveOrUpdate(user);
         return createProductStep;
     }
 }
+
+
