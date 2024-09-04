@@ -1,12 +1,12 @@
 package org.diagnostic.application.useCases;
 
 
+import org.diagnostic.domain.entities.Tomography;
+import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.diagnostic.domain.entities.Tomography;
-import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,11 +1,9 @@
 package org.diagnostic.domain.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.diagnostic.presentation.responseModels.TomographyDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.diagnostic.presentation.responseModels.Response;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
