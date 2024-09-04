@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TomographyResponse {
 
-    private List<Tomography> tomographies;
+    private List<TomographyDTO> tomographies;
 
     private boolean successful;
 
@@ -21,7 +21,7 @@ public class TomographyResponse {
     private PageTomography pagination;
 
     public TomographyResponse(List<Tomography> tomography, Boolean aTrue, long totalPage, long totalSize) {
-        this.tomographies = tomography;
+        this.tomographies = tomography.stream().map(Tomography::dto).toList();
         this.successful = aTrue;
         if(totalPage > 0 || totalSize > 0) this.pagination = new PageTomography(totalPage, totalSize);
     }

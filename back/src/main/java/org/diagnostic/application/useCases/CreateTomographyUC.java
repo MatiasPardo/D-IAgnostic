@@ -25,10 +25,10 @@ public class CreateTomographyUC {
         this.s3Service = s3Service;
     }
 
-    public Tomography saveAndGenerateUrlTomography(Tomography tomography) {
+    public Tomography saveAndGenerateUrlTomography(Tomography tomography, byte[] tomographyImage) {
         String codeReport = UUID.randomUUID().toString().substring(0, 8);
         tomography.setCodeReport(codeReport);
-        String url = uploadFile(codeReport, tomography.getTomography());
+        String url = uploadFile(codeReport + tomography.getTomographyDetail().size(), tomographyImage);
         return saveUrl(tomography, url, codeReport);
     }
 

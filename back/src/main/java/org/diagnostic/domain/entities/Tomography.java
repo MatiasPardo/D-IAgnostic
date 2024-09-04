@@ -2,17 +2,18 @@ package org.diagnostic.domain.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.diagnostic.presentation.responseModels.TomographyDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.diagnostic.presentation.responseModels.Response;
 
 import java.time.LocalDateTime;
-import java.util.List; 
+import java.util.LinkedList;
+import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Document(collection = "tomographies")
 @Data
-public class Tomography extends Response {
+public class Tomography{
     @Id
     private String id;
     private byte[] tomography;
@@ -26,6 +27,19 @@ public class Tomography extends Response {
     private Boolean active;
     private List<TomographyDetail> tomographyDetail;
 
+    public TomographyDTO dto() {
+        TomographyDTO tomographyDTO = new TomographyDTO();
+        if(this.tomographyDetail != null) tomographyDTO.setImages(tomographyDetail.stream().map(TomographyDetail::getUrl).toList());
+        tomographyDTO.setCodeReport(this.codeReport);
+        tomographyDTO.setTitle(this.title);
+        tomographyDTO.setStatusReport(this.statusReport);
+        tomographyDTO.setCreateDate(this.createDate);
+        tomographyDTO.setUpdateDate(this.updateDate);
+        tomographyDTO.setReport(this.report);
+        tomographyDTO.setUserId(this.userId);
+        return tomographyDTO;
+    }
+
     public enum StatusReport {
         SIN_INFORME,
         GENERACION_EN_PROCESO,
@@ -33,11 +47,11 @@ public class Tomography extends Response {
     }
 
 
-    public void addImagesUrl(TomographyDetail tomographyDetail){
+    public List<TomographyDetail> getTomographyDetail(){
         if (this.tomographyDetail != null)
-            this.tomographyDetail.add(tomographyDetail);
+            return this.tomographyDetail;
         else
-            this.tomographyDetail = List.of(tomographyDetail);
+            return new LinkedList<TomographyDetail>();
     }
 
     public void addImagesUrl(String url){

@@ -5,6 +5,7 @@ import org.diagnostic.application.services.IARestClient;
 import org.diagnostic.domain.entities.Tomography;
 import org.diagnostic.domain.entities.TomographyDetail;
 import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
+import org.diagnostic.presentation.responseModels.ReportIAResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,10 +41,10 @@ public class CategorizeAndGenerateReportUC {
             tomographyRepository.save(tomography);
         }
 
-        String report = iARestClient.findReport(tomography);
+        ReportIAResponse report = iARestClient.findReport(tomography);
         if (report != null) {
             tomography.setStatusReport(Tomography.StatusReport.INFORME_GENERADO);
-            tomography.setReport(report);
+            tomography.setReport(report.getResponse());
             tomographyRepository.save(tomography);
         }
 

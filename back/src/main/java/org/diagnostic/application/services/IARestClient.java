@@ -7,6 +7,7 @@ import org.diagnostic.domain.entities.TomographyCategory;
 import org.diagnostic.domain.entities.TomographyDetail;
 import org.diagnostic.presentation.requestModels.TomographyRequest;
 import org.diagnostic.presentation.responseModels.PredictionResponse;
+import org.diagnostic.presentation.responseModels.ReportIAResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -21,14 +22,16 @@ import java.util.Map;
 @Slf4j
 public class IARestClient {
 
-    @Value("${ia.rest.client}")
-    private String IARESTCLIENT;
+    @Value("${ia.rest.client.category}")
+    private String IARESTCLIENTCATEGORY;
+
+    @Value("${ia.rest.client.report}")
+    private String IARESTCLIENTREPORT;
 
     @Autowired
     private final RestTemplate restTemplate;
 
     private final ImageCategorizationSummary imageCategorizationSummary;
-
 
     public IARestClient(RestTemplate restTemplate, ImageCategorizationSummary imageCategorizationSummary) {
         this.restTemplate = restTemplate;
@@ -37,29 +40,30 @@ public class IARestClient {
 
 
 
-    public String findReport(Tomography tomography) {
-        String apiUrl = IARESTCLIENT + "/api/generate";
-        String response = null;
+    public ReportIAResponse findReport(Tomography tomography) {
+        String apiUrl = IARESTCLIENTREPORT + "generate";
+        ReportIAResponse response = null;
         try{
              response = restTemplate.postForObject(
                     apiUrl, "{ " +
                             "\"model\": \"d-iag-model\", " +
-                            "\"prompt\": " + imageCategorizationSummary.summary(tomography.getTomographyDetail())  +
+                            "\"prompt\": \"" + imageCategorizationSummary.summary(tomography.getTomographyDetail())  + "\", "+
                             "\"stream\": false " +
                             "}",
-                    String.class);
+                     ReportIAResponse.class);
 
 
             //String respone = restTemplate.postForObject(apiUrl, "{ \"model\": \"d-iag-model\", \"prompt\":" + tomography.getCategory().name() + " , \"stream\": false }", String.class);
             log.info("Generando informe para la tomografia {}, api:{} - Respuesta: {}", tomography.getCodeReport(), apiUrl, response);
         }catch (Exception e){
-            log.error("Error al buscar la categoria de la tomografia {}",tomography.getCodeReport());
+            log.error("Error al buscar el informe de la tomografia {}",tomography.getCodeReport());
+            log.error("Error: {}", e.getMessage());
         }
         return response;
     }
 
     public List<TomographyDetail> categorizeTomography(Tomography tomography) {
-        String apiUrlpath = IARESTCLIENT + "/predicted";
+        String apiUrlpath = IARESTCLIENTCATEGORY + "/predicted";
         try {
             if(tomography.getTomographyDetail() == null){
                 throw new RuntimeException("No se puede enviar la tomografia con codeReport: " + tomography.getCodeReport());
@@ -80,6 +84,7 @@ public class IARestClient {
                             )
                     )
             );
+            log.info("Detalle de tomografia con codeReport: {} se mapeo de la siguiente forma: {}", tomography.getCodeReport(), tomographyDetails);
 
             return tomographyDetails;
         } catch (Exception e) {

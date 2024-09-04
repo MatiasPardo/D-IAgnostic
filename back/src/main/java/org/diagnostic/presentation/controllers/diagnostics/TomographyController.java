@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.diagnostic.domain.entities.TomographyCategory;
-import org.diagnostic.domain.entities.TomographyDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +60,8 @@ public class TomographyController extends BaseController {
     public ResponseEntity<Response> saveTomography(
             @RequestParam(value = "tomography") MultipartFile tomographyByte,
             @RequestParam(value = "title") String title,
-            @RequestParam(value = "codeReport",required = false) String codeReport) throws IOException {
+            @RequestParam(value = "codeReport",required = false) String codeReport,
+            @RequestParam(value = "lastImage",required = false) Boolean lastImage) throws IOException {
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
@@ -70,19 +69,20 @@ public class TomographyController extends BaseController {
         }
 
         tomography.setCreateDate(LocalDateTime.now());
-        tomography.setTomography(tomographyByte.getBytes());
         tomography.setTitle(title);
         tomography.setUserId(this.getUserFromJwt().getId());
 
-
-
         if(codeReport != null){
-            Tomography tomographyExist = tomographyService.getTomographyStatus(codeReport);
-            tomographyService.saveUrl(tomographyExist,tomographyService.uploadFile(UUID.randomUUID().toString(),tomography.getTomography()), codeReport);
+            tomography = tomographyService.getTomographyStatus(codeReport);
+            tomography.setTomography(tomographyByte.getBytes());
+            tomographyService.saveUrl(tomography,tomographyService.uploadFile(UUID.randomUUID().toString() + tomography.getTomographyDetail().size(),tomography.getTomography()), codeReport);
         }else{
-            Tomography tomographySaved = tomographyService.saveAndGenerateUrlTomography(tomography);
-            categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomographySaved);
-            codeReport = tomographySaved.getCodeReport();
+            tomography = tomographyService.saveAndGenerateUrlTomography(tomography, tomographyByte.getBytes());
+            codeReport = tomography.getCodeReport();
+        }
+
+        if(lastImage != null && lastImage.equals(Boolean.TRUE)){
+            categorizeAndGenerateReportUC.categorizeAndGenerateReport(tomography);
         }
 
 
@@ -113,7 +113,7 @@ public class TomographyController extends BaseController {
         logger.info("Consulta de informe - END");
 
         if (tomography != null) {
-            return new ResponseEntity<>(tomography, HttpStatus.OK);
+            return new ResponseEntity<>(tomography.dto(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
