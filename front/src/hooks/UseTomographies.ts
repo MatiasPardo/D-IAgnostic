@@ -8,16 +8,15 @@ const initialTomographies: Tomography[] = [];
 export const UseTomographies = () => {
   const [tomographies, dispatch] = useReducer(TomographiesReducer, initialTomographies);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 1;
+  const pageSize = 5;
 
-  const getTomographies = async (page: number = 1) => {
+  const getTomographies = async (page: number) => {
     try {
-      const response = await findTomographies(page, pageSize);
+      const response = await findTomographies(page - 1, pageSize); 
       dispatch({
         type: 'LOAD_TOMOGRAPHIES',
-        payload: response
+        payload: response, 
       });
-      setCurrentPage(page); 
     } catch (error) {
       console.error("Error al obtener tomografías:", error);
     }
@@ -27,6 +26,6 @@ export const UseTomographies = () => {
     tomographies,
     getTomographies,
     currentPage,
-    setCurrentPage
+    setCurrentPage,
   };
 };

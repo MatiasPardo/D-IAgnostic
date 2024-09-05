@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { Tomography } from '../interfaces/Tomography';
 
 interface ModelTomographyProps {
   isModalOpen: boolean;
   closeModal: () => void;
-  tomography: Tomography;
+  tomography: Tomography | null; // Updated to handle possible null
 }
 
 const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeModal, tomography }) => {
   const [showErrorSection, setShowErrorSection] = useState(false);
   const [selectedErrors, setSelectedErrors] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState<string>('');
 
   const handleNoClick = () => {
     setShowErrorSection(true);
@@ -38,34 +39,41 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     closeModal();
   };
 
+  const images = tomography?.images ?? []; // Default to empty array if null
+
   return (
     <Modal
       show={isModalOpen}
+      onHide={closeModal}
       dialogClassName="modal-lg"
       aria-labelledby="model-tomography-modal"
     >
       <Modal.Header closeButton onClick={(e: React.SyntheticEvent) => { e.stopPropagation(); closeModal(); }}>
-        <Modal.Title id="model-tomography-modal">Detalles de la tomografia</Modal.Title>
+        <Modal.Title id="model-tomography-modal">Detalles de la tomografía</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="container">
           <div className="row">
             <div className="col-md-6 border p-3 bg-white">
-              <img
-                src={tomography.images[0]}
-                alt="Tomografía"
-                className="img-fluid"
-              />
+              {images.length > 0 ? (
+                <img
+                  src={images[0]}
+                  alt="Tomografía"
+                  className="img-fluid"
+                />
+              ) : (
+                <p>No image available</p>
+              )}
             </div>
 
             <div className="col-md-6">
               <div className="border p-3 mb-4 bg-white">
                 <h3>Composición</h3>
-                <p> "No data available"</p>
+                <p> "Dato no disponible"</p>
                 <h3>Tamaño</h3>
-                <p>"No data available"</p>
+                <p> "Dato no disponible"</p>
                 <h3>Diagnóstico</h3>
-                <p> "No data available"</p>
+                <p> "Dato no disponible"</p>
               </div>
 
               <div className="border p-3 bg-white">
@@ -104,6 +112,16 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                       Diagnóstico
                     </Button>
                   </div>
+                  <Form.Group className="mt-3">
+                    <Form.Label>Feedback Informe</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Escriba su feedback aquí..."
+                    />
+                  </Form.Group>
                 </div>
               )}
             </div>
@@ -111,10 +129,10 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
         </div>
       </Modal.Body>
       <Modal.Footer>
-      <Button
+        <Button
           variant="success"
           className="mt-3"
-          onClick={(e: React.MouseEvent<HTMLElement>) => {  // Changed to HTMLElement
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation();
             handleCloseWithErrors();
           }}

@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { TomographyCard } from "../components/TomographyCard";
 import { TomographiesContext } from "../context/TomographiesContext";
 import { Tomography } from "../interfaces/Tomography";
-import Filter from "../components/filters/Filter"; // Make sure to import the filter component
+import Filter from "../components/filters/Filter"; 
+import { findTomographies } from "../services/TomographiesService";
+import { TomographiesReducer } from "../reducers/TomographiesReducer";
 
 export const Tomographies = () => {
     const { tomographies, getTomographies } = useContext(TomographiesContext);
     const [filteredTomographies, setFilteredTomographies] = useState<Tomography[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 3; // You can adjust the number of items per page
+    const pageSize = 5; 
 
     type Filters = {
         title: string;
@@ -22,12 +24,10 @@ export const Tomographies = () => {
         statusReport: ""
     });
 
-    // Fetch tomographies when the component mounts or when the currentPage changes
     useEffect(() => {
-        getTomographies(currentPage); // Pass the current page to getTomographies
+        getTomographies(currentPage); 
     }, [getTomographies, currentPage]);
 
-    // Apply filters to the tomographies
     useEffect(() => {
         setFilteredTomographies(
             tomographies.filter((tomo: Tomography) => 
@@ -38,12 +38,10 @@ export const Tomographies = () => {
         );
     }, [filters, tomographies]);
 
-    // Update filters when the filter component changes
     const handleFilterChange = (newFilters: Filters) => {
         setFilters(newFilters);
     };
 
-    // Handlers for pagination
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
     };
@@ -55,7 +53,7 @@ export const Tomographies = () => {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-5">
             <h1>Tomografías</h1>
             <Filter onFilterChange={handleFilterChange} />
             <hr />
@@ -67,15 +65,52 @@ export const Tomographies = () => {
                     />
                 ))}
             </div>
-            <div className="pagination-controls">
-                <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                    Previous
-                </button>
-                <span>Page {currentPage}</span>
-                <button onClick={handleNextPage} disabled={filteredTomographies.length < pageSize}>
-                    Next
-                </button>
+            <div className="d-flex justify-content-center mt-4">
+                <div className="btn-group">
+                    <button
+                        className="btn btn-primary me-2"
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                    >
+                        Anterior
+                    </button>
+                    <span className="d-flex align-items-center mx-2">
+                        Página {currentPage}
+                    </span>
+                    <button
+                        className="btn btn-primary ms-2"
+                        onClick={handleNextPage}
+                        disabled={filteredTomographies.length < pageSize}
+                    >
+                        Siguiente
+                    </button>
+                </div>
             </div>
         </div>
     );
+};
+
+export const UseTomographies = () => {
+  const [tomographies, dispatch] = useReducer(TomographiesReducer, findTomographies);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const pageSize = 4;
+
+  const getTomographies = async (page: number) => {
+    try {
+      const response = await findTomographies(page - 1, pageSize); 
+      dispatch({
+        type: 'LOAD_TOMOGRAPHIES',
+        payload: response
+      });
+    } catch (error) {
+      console.error("Error al obtener tomografías:", error);
+    }
+  };
+
+  return {
+    tomographies,
+    getTomographies,
+    currentPage,
+    setCurrentPage
+  };
 };
