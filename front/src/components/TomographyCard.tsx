@@ -23,37 +23,42 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
 
     const openModal = () => {
         setIsModalOpen(true);
+        console.log("Modal opened");
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
+        console.log("Modal closed");
     };
 
     return (
         <div className="card m-1" style={{ cursor: "pointer" }} onClick={openModal}>
             <div className="card-body">
-                <h5 className="card-title">{tomography.title}</h5>
-                <p className="card-text"><strong>Código de reporte:</strong> {tomography.codeReport}</p>
-                <p className="card-text"><strong>Estado de la tomografía:</strong> {tomography.category}</p>
-                <p className="card-text"><strong>Estado del informe:</strong> {tomography.statusReport}</p>
+            <h5 className="card-title" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
+                    {tomography.title}
+                </h5>
+                <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}><strong>Código de reporte:</strong> {tomography.codeReport}</p>
+                <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}><strong>Estado de la tomografía:</strong> {tomography.category}</p>
+                <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}><strong>Estado del informe:</strong> {tomography.statusReport}</p>
 
                 {imageUrl ? (
-                    <img
+                        <img
                         src={imageUrl}
                         alt="Tomografía"
-                        className="card-img-top"
+                        className="img-thumbnail"
                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
                 ) : (
                     <p>No se puede mostrar la imagen</p>
                 )}
             </div>
-
-            <ModelTomography
-                isModalOpen={isModalOpen}
-                closeModal={closeModal}
-                tomography={tomography}
-            />
+            {isModalOpen && (
+                <ModelTomography
+                    isModalOpen={isModalOpen}
+                    closeModal={closeModal}
+                    tomography={tomography}
+                />
+            )}
         </div>
     );
 };
