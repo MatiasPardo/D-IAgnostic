@@ -1,16 +1,14 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TomographyCard } from "../components/TomographyCard";
 import { TomographiesContext } from "../context/TomographiesContext";
 import { Tomography } from "../interfaces/Tomography";
-import Filter from "../components/filters/Filter"; 
-import { findTomographies } from "../services/TomographiesService";
-import { TomographiesReducer } from "../reducers/TomographiesReducer";
+import Filter from "../components/filters/Filter";
 
 export const Tomographies = () => {
     const { tomographies, getTomographies } = useContext(TomographiesContext);
     const [filteredTomographies, setFilteredTomographies] = useState<Tomography[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 5; 
+    const pageSize = 5;
 
     type Filters = {
         title: string;
@@ -25,20 +23,40 @@ export const Tomographies = () => {
     });
 
     useEffect(() => {
-        getTomographies(currentPage); 
+        getTomographies(currentPage);
     }, [getTomographies, currentPage]);
 
     useEffect(() => {
-        setFilteredTomographies(
-            tomographies.filter((tomo: Tomography) => 
-                (filters.title === "" || tomo.title.toLowerCase().includes(filters.title.toLowerCase())) &&
-                (filters.category === "" || tomo.category.toLowerCase().includes(filters.category.toLowerCase())) &&
-                (filters.statusReport === "" || tomo.statusReport.toLowerCase().includes(filters.statusReport.toLowerCase()))
-            )
-        );
+        console.log('Filters:', filters);
+        console.log('Tomographies:', tomographies);
+
+        const filtered = tomographies.filter((tomo: Tomography) => {
+            const title = tomo.title?.toLowerCase() || '';
+            const category = tomo.codeReport?.toLowerCase() || '';
+            const statusReport = tomo.statusReport?.toLowerCase() || '';
+
+            const filterTitle = filters.title.toLowerCase();
+            const filterCategory = filters.category.toLowerCase();
+            const filterStatusReport = filters.statusReport.toLowerCase();
+
+            console.log('Filtering:', {
+                title, category, statusReport,
+                filterTitle, filterCategory, filterStatusReport
+            });
+
+            return (
+                (filterTitle === "" || title.includes(filterTitle)) &&
+                (filterCategory === "" || category.includes(filterCategory)) &&
+                (filterStatusReport === "" || statusReport.includes(filterStatusReport))
+            );
+        });
+
+        console.log('Filtered Tomographies:', filtered);
+        setFilteredTomographies(filtered);
     }, [filters, tomographies]);
 
     const handleFilterChange = (newFilters: Filters) => {
+        console.log('Handle Filter Change:', newFilters);
         setFilters(newFilters);
     };
 
@@ -88,29 +106,4 @@ export const Tomographies = () => {
             </div>
         </div>
     );
-};
-
-export const UseTomographies = () => {
-  const [tomographies, dispatch] = useReducer(TomographiesReducer, findTomographies);
-  const [currentPage, setCurrentPage] = useState(1); 
-  const pageSize = 4;
-
-  const getTomographies = async (page: number) => {
-    try {
-      const response = await findTomographies(page - 1, pageSize); 
-      dispatch({
-        type: 'LOAD_TOMOGRAPHIES',
-        payload: response
-      });
-    } catch (error) {
-      console.error("Error al obtener tomografías:", error);
-    }
-  };
-
-  return {
-    tomographies,
-    getTomographies,
-    currentPage,
-    setCurrentPage
-  };
 };
