@@ -6,45 +6,51 @@ interface FilterProps {
 }
 
 const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
-    const [filters, setFilters] = useState<Filters>({
-        title: "",
-        category: "",
-        statusReport: ""
-    });
+    const [selectedProperty, setSelectedProperty] = useState<string>("Titulo");
+    const [filterValue, setFilterValue] = useState<string>("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        const updatedFilters = { ...filters, [name]: value };
-        setFilters(updatedFilters);
+    const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedProperty(e.target.value);
+    };
+
+    const handleFilterValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setFilterValue(value);
+
+        const updatedFilters: Filters = {
+            title: selectedProperty === "Titulo" ? value : "",
+            category: selectedProperty === "Codigo De Reporte" ? value : "",
+            statusReport: selectedProperty === "Estado de informe" ? value : ""
+        };
+
         onFilterChange(updatedFilters);
     };
 
     return (
         <div className="mb-3">
-            <input
-                type="text"
-                name="title"
-                placeholder="Filtrar por titulo"
-                value={filters.title}
-                onChange={handleChange}
-                className="form-control mb-2"
-            />
-            <input
-                type="text"
-                name="category"
-                placeholder="Filtrar por estado de la tomografia"
-                value={filters.category}
-                onChange={handleChange}
-                className="form-control mb-2"
-            />
-            <input
-                type="text"
-                name="statusReport"
-                placeholder="Filtrar por estado del informe"
-                value={filters.statusReport}
-                onChange={handleChange}
-                className="form-control mb-2"
-            />
+            <div className="row g-2">
+                <div className="col-12 col-md-4">
+                    <select
+                        value={selectedProperty}
+                        onChange={handlePropertyChange}
+                        className="form-select"
+                    >
+                        <option value="titulo">Titulo</option>
+                        <option value="Codigo De Reporte">Codigo De Reporte</option>
+                        <option value="Estado de informe">Estado de Informe</option>
+                    </select>
+                </div>
+
+                <div className="col-12 col-md-8">
+                    <input
+                        type="text"
+                        placeholder={`Filtrado por ${selectedProperty}`}
+                        value={filterValue}
+                        onChange={handleFilterValueChange}
+                        className="form-control"
+                    />
+                </div>
+            </div>
         </div>
     );
 };
