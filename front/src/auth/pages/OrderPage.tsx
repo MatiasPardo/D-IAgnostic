@@ -63,10 +63,10 @@ export const OrderPage = (order: Order) => {
       <div className="d-flex justify-content-between align-items-center">
         <div>
           <p className="mb-1"><strong>Nombre:</strong> {order.name}</p>
-          <div className="d-flex align-items-center"> {/* Agregamos un contenedor flex para alinear el botón junto a order.id */}
+          <div className="d-flex align-items-center"> 
             <p className="mb-1"><strong>Orden:</strong> {order.id}</p>
               <button
-                className="btn btn-secondary mx-2" // Reducimos el espacio entre el texto y el botón
+                className="btn btn-secondary mx-2" 
                 onClick={copyToClipboard}
               >
               <Clipboard/> Copiar
