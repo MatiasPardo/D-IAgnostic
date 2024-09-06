@@ -13,7 +13,7 @@ export const Orders = () => {
 
     const handleAcceptModal = async (title: string, patientName: string) => {
         if (uploadedImage) {
-            await handleSaveTomography({ title, patientName, tomography: uploadedImage });
+            await handleSaveTomography({ title, patientName, tomography: uploadedImage, lastImage: true  });
             setUploadedImage(null);
             if (imageUploaderRef) {
                 imageUploaderRef();
@@ -31,7 +31,7 @@ export const Orders = () => {
             try {
                 const tomographies = await findTomographies(1, 1);
                 if (tomographies.length > 0) {
-                    const selectedTomography = tomographies[0]; // Puedes cambiar la lógica de selección según tu caso
+                    const selectedTomography = tomographies[0];
                     const url = null;
                     setImageUrl(url);
                 }

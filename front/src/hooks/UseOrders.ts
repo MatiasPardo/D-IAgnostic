@@ -58,6 +58,7 @@ export const UseOrders = () => {
 
     const handleSaveTomography = async(tomographyRequest: TomographyRequest) => {
       try {
+        console.log(tomographyRequest);
         const response = await requestReport(tomographyRequest);
         AlertOk('Tomografía', 'La tomografía se subió correctamente');
       } catch (error) {
