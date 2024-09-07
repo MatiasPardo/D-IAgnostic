@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Modal, Button, Form, Card } from 'react-bootstrap';
 import { Tomography } from '../interfaces/Tomography';
+import axios from 'axios';
+import { instance } from '../services/BaseClient';
 
 interface ModelTomographyProps {
   isModalOpen: boolean;
   closeModal: () => void;
-  tomography: Tomography | null; // Updated to handle possible null
+  tomography: Tomography | null;
 }
 
 const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeModal, tomography }) => {
   const [showErrorSection, setShowErrorSection] = useState(false);
   const [selectedErrors, setSelectedErrors] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
+  const [showReport, setShowReport] = useState(false); // New state to control "Ver informe +"
+  const [reportContent, setReportContent] = useState<string>(''); // State to store report
+
+  useEffect(() => {
+    if (showReport && tomography?.codeReport) {
+      const fetchReport = async () => {
+        try {
+          const response = await instance.get(`tomographies/report/${tomography.codeReport}`);
+          console.log("HOLAAAAAA",response.data.report)
+          setReportContent(response.data.report); 
+        } catch (error) {
+          console.error('Error al cargarReporte:', error);
+        }
+      };
+
+      fetchReport();
+    }
+  }, [showReport, tomography?.codeReport]);
 
   const handleNoClick = () => {
     setShowErrorSection(true);
@@ -126,6 +146,21 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
               )}
             </div>
           </div>
+          <div className="mt-4">
+          <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
+            {showReport ? 'Ocultar informe' : 'Ver informe +'}
+          </Button>
+            {showReport && (
+              <Card className="mt-3">
+                <Card.Body>
+                  <h4 className="text-center">Informe</h4>
+                  <p className="text-muted">
+                    {reportContent || "Cargando informe..."} 
+                  </p>
+                </Card.Body>
+              </Card>
+            )}
+          </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
@@ -145,3 +180,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
 };
 
 export default ModelTomography;
+function setReportContent(report: any) {
+  throw new Error('Function not implemented.');
+}
+
