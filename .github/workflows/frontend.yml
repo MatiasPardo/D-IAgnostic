@@ -28,5 +28,5 @@ jobs:
         username: ${{ secrets.DROPLET_USER }}
         password: ${{ secrets.DROPLET_PASSWORD }}
         script: |
-          /root/sistemas/PrimerPrueba/D-IAgnostic/front
+          /root/sistemas/PrimerPrueba/D-IAgnostic
           git pull origin main
