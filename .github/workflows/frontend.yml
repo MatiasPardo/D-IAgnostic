@@ -1,0 +1,32 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'front/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'front/**'  
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to DigitalOcean Droplet
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.DROPLET_HOST }}
+        username: ${{ secrets.DROPLET_USER }}
+        password: ${{ secrets.DROPLET_PASSWORD }}
+        script: |
+          /root/sistemas/PrimerPrueba/D-IAgnostic/front
+          git pull origin main
