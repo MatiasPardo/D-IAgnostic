@@ -25,7 +25,8 @@ export const Tomographies = () => {
     useEffect(() => {
         getTomographies(currentPage);
     }, [getTomographies, currentPage]);
-
+        //revisar recursividad
+        
     useEffect(() => {
         console.log('Filters:', filters);
         console.log('Tomographies:', tomographies);
@@ -75,7 +76,7 @@ export const Tomographies = () => {
             <h1>Tomografías</h1>
             <Filter onFilterChange={handleFilterChange} />
             <hr />
-            <div className="row rows-cols-1 row-cols-md-6">
+            <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around">
                 {filteredTomographies.map((tomo: Tomography) => (
                     <TomographyCard
                         key={tomo.codeReport}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
 import { Tomography } from '../interfaces/Tomography';
-import axios from 'axios';
+// import axios from 'axios';
 import { instance } from '../services/BaseClient';
 
 interface ModelTomographyProps {
@@ -16,6 +16,8 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [feedback, setFeedback] = useState<string>('');
   const [showReport, setShowReport] = useState(false); // New state to control "Ver informe +"
   const [reportContent, setReportContent] = useState<string>(''); // State to store report
+  const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); // New state to disable boton "Enviar"
+  const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); // New state to disable boton "Enviar"
 
   useEffect(() => {
     if (showReport && tomography?.codeReport) {
@@ -35,10 +37,14 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
 
   const handleNoClick = () => {
     setShowErrorSection(true);
+    setIsAnswerNoSelected(true);
+    setIsAnswerYesSelected(false);
   };
 
   const handleYesClick = () => {
     setShowErrorSection(false);
+    setIsAnswerYesSelected(true);
+    setIsAnswerNoSelected(false);
   };
 
   const handleErrorOptionChange = (option: string) => {
@@ -69,7 +75,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
       aria-labelledby="model-tomography-modal"
     >
       <Modal.Header closeButton onClick={(e: React.SyntheticEvent) => { e.stopPropagation(); closeModal(); }}>
-        <Modal.Title id="model-tomography-modal">Detalles de la tomografía</Modal.Title>
+        <Modal.Title id="model-tomography-modal">{tomography?.title || 'Detalle de la Tomografía'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="container">
@@ -88,62 +94,13 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
 
             <div className="col-md-6">
               <div className="border p-3 mb-4 bg-white">
-                <h3>Composición</h3>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Composición</h3>
                 <p> "Dato no disponible"</p>
-                <h3>Tamaño</h3>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Tamaño</h3>
                 <p> "Dato no disponible"</p>
-                <h3>Diagnóstico</h3>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Diagnóstico</h3>
                 <p> "Dato no disponible"</p>
               </div>
-
-              <div className="border p-3 bg-white">
-                <h3>¿Este informe es Correcto?</h3>
-                <Button variant="outline-primary" onClick={handleYesClick}>
-                  Sí
-                </Button>
-                <Button variant="outline-danger" onClick={handleNoClick}>
-                  No
-                </Button>
-              </div>
-
-              {showErrorSection && (
-                <div className="border p-3 bg-white mt-3">
-                  <h3>Por favor indique la/s sección/es con errores:</h3>
-                  <div className="btn-group">
-                    <Button
-                      variant="outline-dark"
-                      className={selectedErrors.includes('Composición') ? 'active' : ''}
-                      onClick={() => handleErrorOptionChange('Composición')}
-                    >
-                      Composición
-                    </Button>
-                    <Button
-                      variant="outline-dark"
-                      className={selectedErrors.includes('Tamaño') ? 'active' : ''}
-                      onClick={() => handleErrorOptionChange('Tamaño')}
-                    >
-                      Tamaño
-                    </Button>
-                    <Button
-                      variant="outline-dark"
-                      className={selectedErrors.includes('Diagnóstico') ? 'active' : ''}
-                      onClick={() => handleErrorOptionChange('Diagnóstico')}
-                    >
-                      Diagnóstico
-                    </Button>
-                  </div>
-                  <Form.Group className="mt-3">
-                    <Form.Label>Feedback Informe</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      value={feedback}
-                      onChange={(e) => setFeedback(e.target.value)}
-                      placeholder="Escriba su feedback aquí..."
-                    />
-                  </Form.Group>
-                </div>
-              )}
             </div>
           </div>
           <div className="mt-4">
@@ -153,27 +110,83 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             {showReport && (
               <Card className="mt-3">
                 <Card.Body>
-                  <h4 className="text-center">Informe</h4>
+                  <h4 className="text-center" style={{color: 'var(--primary-color-1)'}}>Informe</h4>
                   <p className="text-muted">
                     {reportContent || "Cargando informe..."} 
                   </p>
                 </Card.Body>
               </Card>
             )}
+          {showReport && (
+            <div className="border p-3 bg-white">
+            <h3>¿Este informe es Correcto?</h3>
+            <Button variant="outline-primary" onClick={handleYesClick}>
+              Sí
+            </Button>
+            <Button variant="outline-danger" onClick={handleNoClick} className="ms-2">
+              No
+            </Button>
+          </div>)}
+          <br/>
+          {showReport && showErrorSection && (
+            <div className="border p-3 bg-white mt-3">
+              <h3>Por favor indique la/s sección/es con errores:</h3>
+              <div className="btn-group">
+                <Button
+                  variant="outline-dark"
+                  className={selectedErrors.includes('Composición') ? 'active' : ''}
+                  onClick={() => handleErrorOptionChange('Composición')}
+                >
+                  Composición
+                </Button>
+                <Button
+                  variant="outline-dark"
+                  className={selectedErrors.includes('Tamaño') ? 'active' : ''}
+                  onClick={() => handleErrorOptionChange('Tamaño')}
+                >
+                  Tamaño
+                </Button>
+                <Button
+                  variant="outline-dark"
+                  className={selectedErrors.includes('Diagnóstico') ? 'active' : ''}
+                  onClick={() => handleErrorOptionChange('Diagnóstico')}
+                >
+                  Diagnóstico
+                </Button>
+              </div>
+              <Form.Group className="mt-3">
+                <Form.Label>Feedback Informe</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  placeholder="Escriba su feedback aquí..."
+                />
+              </Form.Group>
+            </div>
+          )}
+          {showReport && (
+          <div className="text-end">
+            <Button
+              variant="success"
+              className="mt-3"
+              onClick={(e: React.MouseEvent<HTMLElement>) => {
+                e.stopPropagation();
+                handleCloseWithErrors();
+              }}
+              disabled={!(isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback?.length > 0))}
+            >
+              Enviar
+            </Button>
+          </div>
+          )}
+
           </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="success"
-          className="mt-3"
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.stopPropagation();
-            handleCloseWithErrors();
-          }}
-        >
-          Enviar
-        </Button>
+
       </Modal.Footer>
     </Modal>
   );
