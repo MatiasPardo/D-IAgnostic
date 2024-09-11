@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 
-export const InputNameModal = ({ show, handleClose, handleFunc }: { show: any, handleClose: any, handleFunc: (title: string, patientName: string) => void }) => {
+export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolean, handleClose: () => void, handleFunc: (title: string, patientName: string) => void }) => {
     const [title, setTitle] = useState('');
     const [patientName, setPatientName] = useState('');
 
@@ -14,6 +14,8 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: any, h
     }
 
     const handleAccept = () => {
+        console.log('Title:', title);
+        console.log('Patient Name:', patientName);
         if (title && patientName) {
             handleFunc(title, patientName);
             handleClose();
