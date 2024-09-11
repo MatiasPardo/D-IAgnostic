@@ -3,11 +3,13 @@ import { TomographyCard } from "../components/TomographyCard";
 import { TomographiesContext } from "../context/TomographiesContext";
 import { Tomography } from "../interfaces/Tomography";
 import Filter from "../components/filters/Filter";
+import { instance } from '../services/BaseClient';
 
 export const Tomographies = () => {
     const { tomographies, getTomographies } = useContext(TomographiesContext);
     const [filteredTomographies, setFilteredTomographies] = useState<Tomography[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalTomographies, setTotalTomographies] = useState(0); // Total count of items
     const pageSize = 5;
 
     type Filters = {
@@ -15,7 +17,7 @@ export const Tomographies = () => {
         category: string;
         statusReport: string;
     };
-    
+
     const [filters, setFilters] = useState<Filters>({
         title: "",
         category: "",
@@ -23,14 +25,22 @@ export const Tomographies = () => {
     });
 
     useEffect(() => {
+        const fetchReport = async () => {
+            try {
+                const response = await instance.get(`tomographies`);
+                setTotalTomographies(response.data.tomographies.length); 
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            }
+        };
+        fetchReport();
+    }, []);
+
+    useEffect(() => {
         getTomographies(currentPage);
     }, [getTomographies, currentPage]);
-        //revisar recursividad
-        
-    useEffect(() => {
-        console.log('Filters:', filters);
-        console.log('Tomographies:', tomographies);
 
+    useEffect(() => {
         const filtered = tomographies.filter((tomo: Tomography) => {
             const title = tomo.title?.toLowerCase() || '';
             const category = tomo.codeReport?.toLowerCase() || '';
@@ -40,11 +50,6 @@ export const Tomographies = () => {
             const filterCategory = filters.category.toLowerCase();
             const filterStatusReport = filters.statusReport.toLowerCase();
 
-            console.log('Filtering:', {
-                title, category, statusReport,
-                filterTitle, filterCategory, filterStatusReport
-            });
-
             return (
                 (filterTitle === "" || title.includes(filterTitle)) &&
                 (filterCategory === "" || category.includes(filterCategory)) &&
@@ -52,13 +57,12 @@ export const Tomographies = () => {
             );
         });
 
-        console.log('Filtered Tomographies:', filtered);
         setFilteredTomographies(filtered);
     }, [filters, tomographies]);
 
     const handleFilterChange = (newFilters: Filters) => {
-        console.log('Handle Filter Change:', newFilters);
         setFilters(newFilters);
+        setCurrentPage(1);  
     };
 
     const handleNextPage = () => {
@@ -71,9 +75,11 @@ export const Tomographies = () => {
         }
     };
 
+    const isLastPage = filteredTomographies.length < pageSize;
+
     return (
         <div className="p-5">
-            <h1>Tomografías</h1>
+            <h1 className="mt-3 mb-3">Tomografías</h1>
             <Filter onFilterChange={handleFilterChange} />
             <hr />
             <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around">
@@ -99,7 +105,7 @@ export const Tomographies = () => {
                     <button
                         className="btn btn-primary ms-2"
                         onClick={handleNextPage}
-                        disabled={filteredTomographies.length < pageSize}
+                        disabled={isLastPage || currentPage * pageSize >= totalTomographies}
                     >
                         Siguiente
                     </button>
