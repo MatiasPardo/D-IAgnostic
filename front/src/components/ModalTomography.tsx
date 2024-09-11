@@ -14,10 +14,10 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [showErrorSection, setShowErrorSection] = useState(false);
   const [selectedErrors, setSelectedErrors] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
-  const [showReport, setShowReport] = useState(false); // New state to control "Ver informe +"
-  const [reportContent, setReportContent] = useState<string>(''); // State to store report
-  const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); // New state to disable boton "Enviar"
-  const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); // New state to disable boton "Enviar"
+  const [showReport, setShowReport] = useState(false);
+  const [reportContent, setReportContent] = useState<string>(''); 
+  const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
+  const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
 
   useEffect(() => {
     if (showReport && tomography?.codeReport) {
@@ -64,7 +64,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     closeModal();
   };
 
-  const images = tomography?.images ?? []; // Default to empty array if null
+  const images = tomography?.images ?? [];
 
   return (
     <Modal
