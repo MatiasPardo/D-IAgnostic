@@ -24,7 +24,6 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
       const fetchReport = async () => {
         try {
           const response = await instance.get(`tomographies/report/${tomography.codeReport}`);
-          console.log("HOLAAAAAA",response.data.report)
           setReportContent(response.data.report); 
         } catch (error) {
           console.error('Error al cargarReporte:', error);

@@ -14,8 +14,6 @@ interface TomographyResponse {
 export const findTomographies = async (page: number, size: number): Promise<Tomography[]> => {
     try {
         const response = await instance.get<TomographyResponse>(`tomographies?page=${page}&size=${size}`);
-        console.log("Tomografías cargadas:", response);
-
       if (response.data.successful) {
           return response.data.tomographies;
       } else {
