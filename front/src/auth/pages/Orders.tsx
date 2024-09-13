@@ -3,6 +3,7 @@ import { OrdersContext } from '../../context/OrdersContext';
 import { InputNameModal } from '../../components/InputNameModal';
 import { ImageUploader } from '../../components/ImageUploader';
 import { findTomographies } from '../../services/TomographiesService';
+import './orders.css'
 
 export const Orders = () => {
     const { handleSaveTomography } = useContext(OrdersContext);
@@ -54,96 +55,84 @@ export const Orders = () => {
     }, [imageUrl]);
 
     return (
-        <div className="container mt-4 bg-doctor" 
-            style={{ 
-                backgroundImage: 'url("/images/medic3.png")', 
-                backgroundSize: 'cover', 
-                backgroundPosition: 'center', 
-                backgroundRepeat: 'no-repeat', 
-                height: '100vh', 
-                padding: '20px', 
-                borderRadius: '10px'
-            }}
-        >
-            <div className="progress mb-4">
-                <div 
-                    className="progress-bar" 
-                    role="progressbar" 
-                    style={{ width: `${step === 1 ? 50 : 100}%` }}
-                    aria-valuenow={step === 1 ? 50 : 100} 
-                    aria-valuemin={0} 
-                    aria-valuemax={100}
-                >
-                    {step === 1 ? 'Paso 1 de 2' : 'Paso 2 de 2'}
-                </div>
+<div className="container mt-5 bg-doctor">
+    <div className="background-overlay"></div> {/* Capa de fondo separada */}
+    <div className="content">
+        <div className="progress mb-4">
+            <div 
+                className="progress-bar" 
+                role="progressbar" 
+                style={{ width: `${step === 1 ? 50 : 100}%` }}
+                aria-valuenow={step === 1 ? 50 : 100} 
+                aria-valuemin={0} 
+                aria-valuemax={100}
+            >
+                {step === 1 ? 'Paso 1 de 2' : 'Paso 2 de 2'}
             </div>
+        </div>
 
-            <h1 className="display-1 mb-4">Solicitar un Informe</h1>
+        <h1 className="display-1 mb-4">Solicitar un Informe</h1>
 
-            {step === 1 && (
-                <div 
-                    className="card p-4" 
-                    style={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.7)', 
-                        border: '1px solid rgba(0, 0, 0, 0.1)', 
-                    }}
+        {step === 1 && (
+            <div className="card p-4 content-card">
+                <h2 className="h4 mb-3">1): Subir la imagen de la tomografía</h2>
+                <ImageUploader 
+                    setUploadedImage={handleFileUpload} 
+                    handleDelete={(deleteFunc: any) => setImageUploaderRef(() => deleteFunc)} 
+                />
+
+                {imageUrl && (
+                    <div className="my-3">
+                        <h3>Imagen seleccionada:</h3>
+                        <img
+                            src={imageUrl}
+                            alt="Tomografía"
+                            className="img-fluid"
+                        />
+                    </div>
+                )}
+
+                <button 
+                    className="btn btn-sm mt-3" 
+                    style={{ margin: '0px 50% 0px 0px', backgroundColor: 'var(--primary-color-1)', color: 'var(--text-color-2)'}}
+                    disabled={!uploadedImage}
+                    onClick={() => setStep(2)}
                 >
-                    <h2 className="h4 mb-3">1): Subir la imagen de la tomografía en formato .dicom</h2>
-                    <ImageUploader 
-                        setUploadedImage={handleFileUpload} 
-                        handleDelete={(deleteFunc: any) => setImageUploaderRef(() => deleteFunc)} 
-                    />
+                    Continuar al siguiente paso
+                </button>
 
-                    {imageUrl && (
-                        <div className="my-3">
-                            <h3>Imagen seleccionada:</h3>
-                            <img
-                                src={imageUrl}
-                                alt="Tomografía"
-                                className="img-fluid"
-                            />
-                        </div>
-                    )}
+            </div>
+        )}
 
-<button 
-    className="btn btn-primary btn-sm mt-3" 
-    style={{ margin: '0px 50% 0px 0px'}}
-    disabled={!uploadedImage}
-    onClick={() => setStep(2)}
->
-    Continuar al siguiente paso
-</button>
-
-                </div>
-            )}
-
-            {step === 2 && (
-                <div className="card p-4"                     style={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)', 
-                    border: '1px solid rgba(0, 0, 0, 0.1)', 
-                }}>
-                    <h2 className="h4 mb-3">2): Completar los datos del nombre del paciente</h2>
-                    <button className="btn btn-success my-3" style={{ margin: '0px 50% 0px 0px'}}
-                        onClick={() => setShow(true)}
-                        disabled={!uploadedImage}
-                    >
-                        Solicitar Informe
-                    </button>
+        {step === 2 && (
+            <div className="card p-4 content-card">
+                <h2 className="h4 mb-3">2): Completar los datos del nombre del paciente</h2>
+                <div className="d-flex justify-content-between">
                     <button 
-                        style={{ margin: '0px 50% 0px 0px'}}
-                        className="btn btn-secondary mt-3"
+                        className="btn btn-secondary my-3"
                         onClick={() => setStep(1)}
                     >
                         Volver al paso anterior
                     </button>
+                    <button 
+                        className="btn my-3"
+                        style={{backgroundColor: 'var(--primary-color-1)', color: 'var(--text-color-2)'}}
+                        onClick={() => setShow(true)}
+                        disabled={!uploadedImage}
+                    >
+                        Completar Datos y Solicitar Informe
+                    </button>
                 </div>
-            )}
+            </div>
+        )}
+        
+        <InputNameModal 
+            show={show} 
+            handleClose={() => setShow(false)} 
+            handleFunc={handleAcceptModal} 
+        />
+    </div>
+</div>
 
-            <InputNameModal 
-                show={show} 
-                handleClose={() => setShow(false)} 
-                handleFunc={handleAcceptModal} 
-            />
-        </div>
     );
 };
