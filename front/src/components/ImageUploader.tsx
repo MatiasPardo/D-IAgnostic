@@ -91,7 +91,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage, 
                   <label>Subir Imagen</label>
                   <InputGroup className="input-group">
                       <span className="input-group-btn">
-                          <ButtonFile className="btn btn-info btn-file me-3">
+                          <ButtonFile className="btn btn-file me-3" style={{backgroundColor:'var(--accent-color)'}}>
                               Importar... <input type="file" id="imgInp" onChange={handleFileChange} />
                           </ButtonFile>
                       </span>
