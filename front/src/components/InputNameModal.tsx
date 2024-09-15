@@ -59,17 +59,17 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                                 required
                             />
                         </div>
-                    </div>  
+                    </div>  <br/>
                     <div className="form-group row">
-                        <div className="offset-4 col-8">
-                            <br/>
+                        <div className="col-12 d-flex justify-content-end">
                             <button 
                                 disabled={!title || !patientName} 
                                 type="button" 
                                 onClick={handleAccept} 
-                                className="btn btn-success container"
+                                className="btn"
+                                style={{backgroundColor:'var(--accent-color)'}}
                             >
-                                Aceptar
+                                Solicitar Informe
                             </button>
                         </div>
                     </div>
