@@ -14,8 +14,6 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
     }
 
     const handleAccept = () => {
-        console.log('Title:', title);
-        console.log('Patient Name:', patientName);
         if (title && patientName) {
             handleFunc(title, patientName);
             handleClose();

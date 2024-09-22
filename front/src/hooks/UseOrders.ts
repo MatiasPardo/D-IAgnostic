@@ -14,59 +14,22 @@ export const UseOrders = () => {
 
   const [orders, dispatch] = useReducer(OrdersReducer, initialOrders)
 
-/*   const getOrders = async() => {
-    const response = await findOrders()
-    const allOrders: Order[] = response.orderDtos.map((orderDto: any) => <Order>{
-      id: orderDto.orderId,
-      name: orderDto.name,
-      items: [],
-      userId: orderDto.userId,
-      status: orderDto.status,
-      hasItems: orderDto.hasItems
-    })
-
-    dispatch({
-      type: 'LOAD_ORDERS',
-      payload: allOrders
-    })
-  }
- */
-/*   const handleCreateOrder = async(order: OrderRequest) => {
-    if(!order.id) {
-      createOrder(order)
-      .then(response => {
-        dispatch({
-          type: 'UPDATE_ORDERS',
-          payload: response.data.orderId
-        });
-        AlertOk('Pedido', 'El pedido se creó correctamente');
-      })
-      .catch(e => AlertError('Pedido', 'Ocurrió un error al crear el pedido', e));
-    } else {
-      updateOrderShared(order.id)
-      .then(response => {
-        dispatch({
-          type: 'UPDATE_ORDERS',
-          payload: response.data.orderId
-        });
-        AlertOk('Pedido', 'El pedido se agrego correctamente');
-      })
-      .catch((e) => AlertError('Pedido', 'Ocurrió un error al actualizar el pedido', e));
-
-    }
-  } */
-
-    const handleSaveTomography = async(tomographyRequest: TomographyRequest) => {
+    const handleSaveTomography = async (tomographyRequest: TomographyRequest) => {
       try {
-        console.log(tomographyRequest);
-        const response = await requestReport(tomographyRequest);
-        AlertOk('Tomografía', 'La tomografía se subió correctamente');
+          const response = await requestReport(tomographyRequest);
+          
+          if (response.data && response.data.codeReport) {
+              AlertOk('Tomografía', 'La tomografía se subió correctamente');
+              return response;
+          } else {
+              AlertError('Tomografía', 'No se recibió el código de informe', 'error');
+              throw new Error('Missing codeReport');
+          }
       } catch (error) {
-        AlertError('Tomografía', 'Ocurrió un error al subir la tomografía','error');
+          AlertError('Tomografía', 'Ocurrió un error al subir la tomografía', 'error');
+          throw error; 
       }
-    };
-  
-
+  };
   return {
     handleSaveTomography
   }

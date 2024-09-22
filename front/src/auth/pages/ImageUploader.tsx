@@ -13,11 +13,10 @@ export const ImageUploader = ({ setUploadedImage, handleDelete }: { setUploadedI
     const handleDeleteClick = () => {
         setUploadedImage(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = ''; // Ensure this is only called if the ref is not null
+            fileInputRef.current.value = '';
         }
     };
 
-    // Pass the delete function to the parent component
     handleDelete(handleDeleteClick);
 
     return (
