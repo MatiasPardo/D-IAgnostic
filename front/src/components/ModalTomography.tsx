@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
 import { Tomography } from '../interfaces/Tomography';
-// import axios from 'axios';
 import { instance } from '../services/BaseClient';
+import TextReport from './TextReport';
 
 interface ModelTomographyProps {
   isModalOpen: boolean;
@@ -26,7 +26,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
           const response = await instance.get(`tomographies/report/${tomography.codeReport}`);
           setReportContent(response.data.report); 
         } catch (error) {
-          console.error('Error al cargarReporte:', error);
+          console.error('Error al cargar el reporte:', error);
         }
       };
 
@@ -73,7 +73,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
       dialogClassName="modal-lg"
       aria-labelledby="model-tomography-modal"
     >
-      <Modal.Header closeButton onClick={(e: React.SyntheticEvent) => { e.stopPropagation(); closeModal(); }}>
+      <Modal.Header closeButton>
         <Modal.Title id="model-tomography-modal">{tomography?.title || 'Detalle de la Tomografía'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -103,96 +103,88 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             </div>
           </div>
           <div className="mt-4">
-          <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
-            {showReport ? 'Ocultar informe' : 'Ver informe +'}
-          </Button>
+            <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
+              {showReport ? 'Ocultar informe' : 'Ver informe +'}
+            </Button>
             {showReport && (
               <Card className="mt-3">
                 <Card.Body>
                   <h4 className="text-center" style={{color: 'var(--primary-color-1)'}}>Informe</h4>
-                  <p className="text-muted">
-                    {reportContent || "Cargando informe..."} 
-                  </p>
+                  <TextReport report={reportContent} />
                 </Card.Body>
               </Card>
             )}
-          {showReport && (
-            <div className="border p-3 bg-white">
-            <h3>¿Este informe es Correcto?</h3>
-            <Button variant="outline-primary" onClick={handleYesClick}>
-              Sí
-            </Button>
-            <Button variant="outline-danger" onClick={handleNoClick} className="ms-2">
-              No
-            </Button>
-          </div>)}
-          <br/>
-          {showReport && showErrorSection && (
-            <div className="border p-3 bg-white mt-3">
-              <h3>Por favor indique la/s sección/es con errores:</h3>
-              <div className="btn-group">
-                <Button
-                  variant="outline-dark"
-                  className={selectedErrors.includes('Composición') ? 'active' : ''}
-                  onClick={() => handleErrorOptionChange('Composición')}
-                >
-                  Composición
+            {showReport && (
+              <div className="border p-3 bg-white">
+                <h3>¿Este informe es Correcto?</h3>
+                <Button variant="outline-primary" onClick={handleYesClick}>
+                  Sí
                 </Button>
-                <Button
-                  variant="outline-dark"
-                  className={selectedErrors.includes('Tamaño') ? 'active' : ''}
-                  onClick={() => handleErrorOptionChange('Tamaño')}
-                >
-                  Tamaño
-                </Button>
-                <Button
-                  variant="outline-dark"
-                  className={selectedErrors.includes('Diagnóstico') ? 'active' : ''}
-                  onClick={() => handleErrorOptionChange('Diagnóstico')}
-                >
-                  Diagnóstico
+                <Button variant="outline-danger" onClick={handleNoClick} className="ms-2">
+                  No
                 </Button>
               </div>
-              <Form.Group className="mt-3">
-                <Form.Label>Feedback Informe</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Escriba su feedback aquí..."
-                />
-              </Form.Group>
-            </div>
-          )}
-          {showReport && (
-          <div className="text-end">
-            <Button
-              variant="success"
-              className="mt-3"
-              onClick={(e: React.MouseEvent<HTMLElement>) => {
-                e.stopPropagation();
-                handleCloseWithErrors();
-              }}
-              disabled={!(isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback?.length > 0))}
-            >
-              Enviar
-            </Button>
-          </div>
-          )}
-
+            )}
+            <br/>
+            {showReport && showErrorSection && (
+              <div className="border p-3 bg-white mt-3">
+                <h3>Por favor indique la/s sección/es con errores:</h3>
+                <div className="btn-group">
+                  <Button
+                    variant="outline-dark"
+                    className={selectedErrors.includes('Composición') ? 'active' : ''}
+                    onClick={() => handleErrorOptionChange('Composición')}
+                  >
+                    Composición
+                  </Button>
+                  <Button
+                    variant="outline-dark"
+                    className={selectedErrors.includes('Tamaño') ? 'active' : ''}
+                    onClick={() => handleErrorOptionChange('Tamaño')}
+                  >
+                    Tamaño
+                  </Button>
+                  <Button
+                    variant="outline-dark"
+                    className={selectedErrors.includes('Diagnóstico') ? 'active' : ''}
+                    onClick={() => handleErrorOptionChange('Diagnóstico')}
+                  >
+                    Diagnóstico
+                  </Button>
+                </div>
+                <Form.Group className="mt-3">
+                  <Form.Label>Feedback Informe</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Escriba su feedback aquí..."
+                  />
+                </Form.Group>
+              </div>
+            )}
+            {showReport && (
+              <div className="text-end">
+                <Button
+                  variant="success"
+                  className="mt-3"
+                  onClick={(e: React.MouseEvent<HTMLElement>) => {
+                    e.stopPropagation();
+                    handleCloseWithErrors();
+                  }}
+                  disabled={!(isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))}
+                >
+                  Enviar
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </Modal.Body>
-      <Modal.Footer>
-
-      </Modal.Footer>
+      <Modal.Footer />
     </Modal>
   );
 };
 
 export default ModelTomography;
-function setReportContent(report: any) {
-  throw new Error('Function not implemented.');
-}
-

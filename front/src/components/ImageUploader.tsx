@@ -48,59 +48,73 @@ const InputGroup = styled.div`
 `;
 
 interface ImageUploaderProps {
-  setUploadedImage: (image: Blob | null) => void; // Actualiza el tipo aquí
+  setUploadedImages: (images: Blob[]) => void; 
   handleDelete: (deleteFunc: () => void) => void;
 }
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImage, handleDelete }) => {
-  const [image, setImage] = useState<Blob | null>(null);
-  const [fileName, setFileName] = useState<string>('');
+export const ImageUploader: React.FC<ImageUploaderProps> = ({ setUploadedImages, handleDelete }) => {
+  const [images, setImages] = useState<Blob[]>([]);
+  const [fileNames, setFileNames] = useState<string[]>([]);
 
   useEffect(() => {
-      handleDelete(handleDeleteClick);
+    handleDelete(handleDeleteClick);
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-          setFileName(file.name);
-          
-          const reader = new FileReader();
-          reader.onloadend = () => {
-              const result = reader.result as ArrayBuffer;
-              const blob = new Blob([result], { type: file.type });
-              
-              setImage(blob);
-              setUploadedImage(blob);
-          };
-          reader.readAsArrayBuffer(file);
-      }
+    const files = e.target.files;
+    if (files) {
+      const newImages: Blob[] = [];
+      const newFileNames: string[] = [];
+
+      Array.from(files).forEach((file) => {
+        newFileNames.push(file.name);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as ArrayBuffer;
+          const blob = new Blob([result], { type: file.type });
+          newImages.push(blob);
+
+          setImages([...images, blob]); 
+          setUploadedImages([...images, blob]); 
+        };
+        reader.readAsArrayBuffer(file);
+      });
+
+      setFileNames([...fileNames, ...newFileNames]); 
+    }
   };
 
   const handleDeleteClick = () => {
-      setImage(null);
-      setFileName('');
-      setUploadedImage(null);
-      (document.getElementById('imgInp') as HTMLInputElement).value = '';
-  };
+    setImages([]); 
+    setFileNames([]); 
+    setUploadedImages([]); 
+
+    const inputElement = document.getElementById('imgInp') as HTMLInputElement;
+    if (inputElement) {
+        inputElement.value = ''; 
+    }
+};
+
 
   return (
-      <div className="">
-          <div className="col-md-6">
-              <div className="form-group">
-                  <label>Subir Imagen</label>
-                  <InputGroup className="input-group">
-                      <span className="input-group-btn">
-                          <ButtonFile className="btn btn-file me-3" style={{backgroundColor:'var(--accent-color)'}}>
-                              Importar... <input type="file" id="imgInp" onChange={handleFileChange} />
-                          </ButtonFile>
-                      </span>
-                      <input type="text" className="form-control" value={fileName} readOnly />
-                      {fileName && <button className="delete-btn" onClick={handleDeleteClick}>&times;</button>}
-                      {image && <ImgUpload id='img-upload' src={URL.createObjectURL(image)} alt="uploaded" className="my-3" />}
-                  </InputGroup>
-              </div>
-          </div>
+    <div className="">
+      <div className="col-md-6">
+        <div className="form-group">
+          <label>Subir Imagen</label>
+          <InputGroup className="input-group">
+            <span className="input-group-btn">
+              <ButtonFile className="btn btn-file me-3" style={{ backgroundColor: 'var(--accent-color)' }}>
+                Importar... <input type="file" id="imgInp" onChange={handleFileChange} multiple />
+              </ButtonFile>
+            </span>
+            <input type="text" className="form-control" value={fileNames.join(', ')} readOnly />
+            {fileNames.length > 0 && <button className="delete-btn" onClick={handleDeleteClick}>&times;</button>}
+            {images.map((image, index) => (
+              <ImgUpload key={index} src={URL.createObjectURL(image)} alt="uploaded" className="my-3" />
+            ))}
+          </InputGroup>
+        </div>
       </div>
+    </div>
   );
 };
