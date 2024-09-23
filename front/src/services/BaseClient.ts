@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/` : 'http://d-iagnostic.com.ar:8080/api/'
+const BASE_URL = process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}/api/` : 'http://134.122.16.32:8080/api/'
 
 export const instance = axios.create({
   baseURL: BASE_URL,
