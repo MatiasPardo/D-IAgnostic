@@ -37,8 +37,12 @@ export const Tomographies = () => {
     }, []);
 
     useEffect(() => {
-        getTomographies(currentPage);
-    }, [getTomographies, currentPage]);
+        const fetchTomographies = async () => {
+            await getTomographies(currentPage);
+        };
+    
+        fetchTomographies();
+    }, [currentPage]);
 
     useEffect(() => {
         const filtered = tomographies.filter((tomo: Tomography) => {
@@ -82,7 +86,7 @@ export const Tomographies = () => {
             <h1 className="mt-3 mb-3">Tomografías</h1>
             <Filter onFilterChange={handleFilterChange} />
             <hr />
-            <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around">
+            <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around" style={{ marginRight: '15%' }}>
                 {filteredTomographies.map((tomo: Tomography) => (
                     <TomographyCard
                         key={tomo.codeReport}
