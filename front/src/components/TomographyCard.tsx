@@ -13,9 +13,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
 
     useEffect(() => {
         if (tomography && tomography.images && tomography.images.length > 0) {
-            console.log("Image String before encoding:", tomography.images[0]); 
             const encodedImageUrl = encodeURI(tomography.images[0]);
-            console.log("Encoded Image URL:", encodedImageUrl);
             setImageUrl(encodedImageUrl);
         } else {
             setImageUrl(null);
