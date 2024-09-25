@@ -7,6 +7,7 @@ import org.diagnostic.domain.entities.Tomography;
 
 import java.util.List;
 
+
 public interface ITomographyMongoRepository extends MongoRepository<Tomography, String> {
     Tomography findByCodeReport(String codeReport);
     List<Tomography> findByUserId(String userId);
