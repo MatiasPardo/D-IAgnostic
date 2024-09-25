@@ -84,6 +84,9 @@ export const Tomographies = () => {
     return (
         <div className="p-5">
             <h1 className="mt-3 mb-3">Tomografías</h1>
+            <p>Aquí usted puede visualizar todos los informes que ha solicitado, y buscar por título, nombre del paciente, historia clínica, etc.</p>
+            {/* @TODO: componentizar */}
+            
             <Filter onFilterChange={handleFilterChange} />
             <hr />
             <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around" style={{ marginRight: '15%' }}>

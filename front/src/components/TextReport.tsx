@@ -2,8 +2,8 @@ import React from 'react';
 
 const formatBoldedWords = (text: string) => {
     return text
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')// Bold formatting
-        .replace(/\n\n/g, '<br />'); 
+        .replace(/\*\*(.*?)\*\*/g, '<br/><strong>$1</strong>')// Bold formatting
+        .replace(/\n\n/g, '<br/>'); 
 };
 
 const TextReport: React.FC<{ report: string }> = ({ report }) => {
@@ -13,7 +13,7 @@ const TextReport: React.FC<{ report: string }> = ({ report }) => {
         <>
             <p className="text-muted" dangerouslySetInnerHTML={{ __html: formattedReport }} />
         </>
-    );
+    );  
 };
 
 export default TextReport;

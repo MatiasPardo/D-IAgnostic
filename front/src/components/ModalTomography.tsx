@@ -85,6 +85,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                   src={images[0]}
                   alt="Tomografía"
                   className="img-fluid"
+                  style={{width:"100%"}}
                 />
               ) : (
                 <p>No image available</p>
@@ -100,7 +101,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                 <h3 style={{color: 'var(--primary-color-1)'}}>Diagnóstico</h3>
                 <p> "Dato no disponible"</p>
               </div>
-            </div>
+            </div>  
           </div>
           <div className="mt-4">
             <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
@@ -114,6 +115,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                 </Card.Body>
               </Card>
             )}
+            <br/>
             {showReport && (
               <div className="border p-3 bg-white">
                 <h3>¿Este informe es Correcto?</h3>

@@ -6,4 +6,6 @@ export interface Tomography {
     category: string;
     images: string[];
     statusReport: string;
+    createDate: string[];
+    // @TODO agregar --> clinicHistory: string; 
 }
