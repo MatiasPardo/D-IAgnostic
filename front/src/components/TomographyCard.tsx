@@ -38,7 +38,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
             }
         }}
     >
-        <div className="card-body">
+        <div className="card-body .card">
             <h5 className="card-title h4" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px', color: 'var(--primary-color-1)' }}>
                 {tomography.title}
             </h5>
