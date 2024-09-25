@@ -9,8 +9,8 @@ export const Tomographies = () => {
     const { tomographies, getTomographies } = useContext(TomographiesContext);
     const [filteredTomographies, setFilteredTomographies] = useState<Tomography[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalTomographies, setTotalTomographies] = useState(0); // Total count of items
-    const pageSize = 5;
+    const [totalTomographies, setTotalTomographies] = useState(0); 
+    const pageSize = 3;
 
     type Filters = {
         title: string;

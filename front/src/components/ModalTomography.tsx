@@ -110,7 +110,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
               <Card className="mt-3">
                 <Card.Body>
                   <h4 className="text-center" style={{color: 'var(--primary-color-1)'}}>Informe</h4>
-                  <TextReport report={reportContent} />
+                    {reportContent ? <TextReport report={reportContent} /> : "Cargando informe..."}
                 </Card.Body>
               </Card>
             )}
