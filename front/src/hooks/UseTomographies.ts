@@ -8,7 +8,7 @@ const initialTomographies: Tomography[] = [];
 export const UseTomographies = () => {
   const [tomographies, dispatch] = useReducer(TomographiesReducer, initialTomographies);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 3;
 
   const getTomographies = async (page: number) => {
     try {
