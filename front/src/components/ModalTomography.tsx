@@ -4,6 +4,7 @@ import { Tomography } from '../interfaces/Tomography';
 import { instance } from '../services/BaseClient';
 import TextReport from './TextReport';
 import { FeedbackModal } from './FeedbackModal';
+import { UseFeedback } from "../hooks/UseFeedback";
 
 //change
 import { OrdersContext } from '../../src/context/OrdersContext';
@@ -30,15 +31,15 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   
 
   const handleAcceptModal = async () => {
+    const { handleSendFeedback } = UseFeedback();
+
     if ((isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))) { 
         try {
             await handleSendFeedback({
-                codeReport: tomography?.codeReport, 
-                userId: tomography?.userId,
-                isAnswerYesSelected,
-                isAnswerNoSelected,
-                selectedErrors,
-                feedback,
+                codeReport: tomography?.codeReport  ||  " " , 
+                isRight: true,
+                sectionError: "COMPOSITION",
+                feedback:"prueba"
             });
 
         } catch (error) {
