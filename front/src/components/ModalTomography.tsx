@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
 import { Tomography } from '../interfaces/Tomography';
 import { instance } from '../services/BaseClient';
 import TextReport from './TextReport';
+import { FeedbackModal } from './FeedbackModal';
+
+//change
+import { OrdersContext } from '../../src/context/OrdersContext';
+
 
 interface ModelTomographyProps {
   isModalOpen: boolean;
@@ -15,14 +20,39 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [selectedErrors, setSelectedErrors] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
   const [showReport, setShowReport] = useState(false);
+  const [show, setShow] = useState(false);
   const [reportContent, setReportContent] = useState<string>(''); 
   const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
   const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
+
+  //change
+  const { handleSendFeedback } = useContext(OrdersContext);
+  
+
+  const handleAcceptModal = async () => {
+    if ((isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))) { 
+        try {
+            await handleSendFeedback({
+                codeReport: tomography?.codeReport, 
+                userId: tomography?.userId,
+                isAnswerYesSelected,
+                isAnswerNoSelected,
+                selectedErrors,
+                feedback,
+            });
+
+        } catch (error) {
+            console.error("Error al enviar el Feedback:", error);
+        }
+    }
+    setShow(false);
+};
 
   useEffect(() => {
     if (showReport && tomography?.codeReport) {
       const fetchReport = async () => {
         try {
+          console.log(tomography)
           const response = await instance.get(`tomographies/report/${tomography.codeReport}`);
           setReportContent(response.data.report); 
         } catch (error) {
@@ -44,6 +74,8 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     setShowErrorSection(false);
     setIsAnswerYesSelected(true);
     setIsAnswerNoSelected(false);
+    setFeedback('');
+    setSelectedErrors([]);
   };
 
   const handleErrorOptionChange = (option: string) => {
@@ -85,6 +117,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                   src={images[0]}
                   alt="Tomografía"
                   className="img-fluid"
+                  style={{width:"100%"}}
                 />
               ) : (
                 <p>No image available</p>
@@ -100,7 +133,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                 <h3 style={{color: 'var(--primary-color-1)'}}>Diagnóstico</h3>
                 <p> "Dato no disponible"</p>
               </div>
-            </div>
+            </div>  
           </div>
           <div className="mt-4">
             <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
@@ -114,6 +147,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                 </Card.Body>
               </Card>
             )}
+            <br/>
             {showReport && (
               <div className="border p-3 bg-white">
                 <h3>¿Este informe es Correcto?</h3>
@@ -171,7 +205,8 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                   className="mt-3"
                   onClick={(e: React.MouseEvent<HTMLElement>) => {
                     e.stopPropagation();
-                    handleCloseWithErrors();
+                    //handleCloseWithErrors();
+                    setShow(true);
                   }}
                   disabled={!(isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))}
                 >
@@ -181,9 +216,21 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             )}
           </div>
         </div>
+        <FeedbackModal 
+          show={show} 
+          handleClose={() => setShow(false)} 
+          handleFunc={handleAcceptModal} 
+          feedback={feedback}
+          codeReport={tomography!?.codeReport}
+          userId={tomography!?.userId}
+          isAnswerYesSelected={isAnswerYesSelected}
+          isAnswerNoSelected={isAnswerNoSelected}
+          selectedErrors={selectedErrors}
+        />
       </Modal.Body>
       <Modal.Footer />
     </Modal>
+    
   );
 };
 
