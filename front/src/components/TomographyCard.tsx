@@ -15,7 +15,6 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
         if (tomography && tomography.images && tomography.images.length > 0) {
             const encodedImageUrl = encodeURI(tomography.images[0]);
             setImageUrl(encodedImageUrl);
-            console.log(tomography)
         } else {
             setImageUrl(null);
         }
@@ -50,11 +49,15 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
                 <strong>Estado de la tomografía:</strong> {tomography.category}
             </p> */}
             <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
-                <strong>Estado del informe:</strong> {tomography.statusReport}
+                <strong>Estado del informe: </strong> 
+                <span className={`badge ${tomography.statusReport === 'INFORME_GENERADO' ? 
+                    'text-bg-success' : 'text-bg-danger'}`}>
+                    {tomography.statusReport.replace("_", " ")}
+                </span>
             </p>
             <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
                 <strong>Fecha de creación:</strong> {tomography.createDate[2]}/{tomography.createDate[1]}/{tomography.createDate[0]}
-                {/* @TODO por favor envienme la fecha bien */}
+                {/* @TODO: por favor envienme la fecha bien */}
             </p>
     
             {imageUrl ? (

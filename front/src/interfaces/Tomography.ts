@@ -1,5 +1,3 @@
-import { Url } from "url";
-
 export interface Tomography {
     codeReport: string;
     title: string;
@@ -7,5 +5,6 @@ export interface Tomography {
     images: string[];
     statusReport: string;
     createDate: string[];
+    userId: string;
     // @TODO agregar --> clinicHistory: string; 
 }
