@@ -12,6 +12,7 @@ import java.util.List;
 @Document(collection = "tomographies")
 @Data
 public class Tomography{
+
     @Id
     private String id;
     private byte[] tomography;
@@ -24,6 +25,7 @@ public class Tomography{
     private LocalDateTime updateDate;
     private Boolean active;
     private List<TomographyDetail> tomographyDetail;
+    private Patient patient;
 
     public TomographyDTO dto() {
         TomographyDTO tomographyDTO = new TomographyDTO();
@@ -35,6 +37,7 @@ public class Tomography{
         tomographyDTO.setUpdateDate(this.updateDate);
         tomographyDTO.setReport(this.report);
         tomographyDTO.setUserId(this.userId);
+        tomographyDTO.setPatient(this.patient);
         return tomographyDTO;
     }
 

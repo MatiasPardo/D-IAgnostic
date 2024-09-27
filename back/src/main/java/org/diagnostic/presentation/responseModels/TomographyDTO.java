@@ -1,8 +1,8 @@
 package org.diagnostic.presentation.responseModels;
 
 import lombok.Data;
+import org.diagnostic.domain.entities.Patient;
 import org.diagnostic.domain.entities.Tomography;
-import org.diagnostic.domain.entities.TomographyDetail;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,5 +19,6 @@ public class TomographyDTO extends Response{
     private LocalDateTime updateDate;
     private Boolean active;
     private List<String> images;
+    private Patient patient;
 
 }

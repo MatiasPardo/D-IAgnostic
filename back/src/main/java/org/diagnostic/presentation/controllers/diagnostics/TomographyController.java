@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.diagnostic.application.useCases.CategorizeAndGenerateReportUC;
 import org.diagnostic.application.useCases.CreateTomographyUC;
 import org.diagnostic.application.useCases.DeleteTomographyUC;
+import org.diagnostic.domain.entities.Patient;
 import org.diagnostic.domain.entities.Tomography;
+import org.diagnostic.domain.entities.TypeDocument;
 import org.diagnostic.domain.exceptions.NotFoundTomographyException;
 import org.diagnostic.presentation.controllers.BaseController;
 import org.diagnostic.presentation.responseModels.ReportResponse;
@@ -19,9 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,7 +65,18 @@ public class TomographyController extends BaseController {
             @RequestParam(value = "tomography") MultipartFile tomographyByte,
             @RequestParam(value = "title") String title,
             @RequestParam(value = "codeReport",required = false) String codeReport,
-            @RequestParam(value = "lastImage",required = false) Boolean lastImage) throws IOException {
+            @RequestParam(value = "lastImage",required = false) Boolean lastImage,
+            // Datos del paciente
+            @RequestParam(value = "document",required = false) String document,
+            @RequestParam(value = "typeDocument",required = false) TypeDocument typeDocument,
+            @RequestParam(value = "hospital",required = false) String hospital,
+            @RequestParam(value = "name",required = false) String name,
+            @RequestParam(value = "lastName",required = false) String lastName,
+            @RequestParam(value = "email",required = false) String email,
+            @RequestParam(value = "clinicHistory",required = false) String clinicHistory,
+            @RequestParam(value = "detail",required = false) String detail,
+            @RequestParam(value = "birthdate",required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime birthdate) throws IOException {
         Tomography tomography = new Tomography();
 
         if (tomographyByte.getBytes().length == 0 || title == null || title.isEmpty()) {
@@ -77,6 +92,16 @@ public class TomographyController extends BaseController {
             tomography.setTomography(tomographyByte.getBytes());
             tomographyService.saveUrl(tomography,tomographyService.uploadFile(UUID.randomUUID().toString() + tomography.getTomographyDetail().size(),tomography.getTomography()), codeReport);
         }else{
+            Patient patient = new Patient();
+            patient.setBirthdate(birthdate);
+            patient.setDetail(detail);
+            patient.setEmail(email);
+            patient.setHospital(hospital);
+            patient.setDocument(document);
+            patient.setName(name);
+            patient.setClinicHistory(clinicHistory);
+            patient.setLastName(lastName);
+            tomography.setPatient(patient);
             tomography = tomographyService.saveAndGenerateUrlTomography(tomography, tomographyByte.getBytes());
             codeReport = tomography.getCodeReport();
         }

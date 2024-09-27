@@ -10,16 +10,13 @@ import org.diagnostic.application.useCases.CreateFeedbackUC;
 import org.diagnostic.domain.enums.Section;
 import org.diagnostic.presentation.controllers.BaseController;
 import org.diagnostic.presentation.dto.feedback.Feedback;
-import org.diagnostic.presentation.responseModels.ReportResponse;
 import org.diagnostic.presentation.responseModels.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
