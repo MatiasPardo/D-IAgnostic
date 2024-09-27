@@ -7,7 +7,7 @@ export const UseFeedback = () => {
     const handleSendFeedback = async (feedbackRequest: FeedbackRequest) => {
       try {
           const response = await requestFeedback(feedbackRequest);
-          if (response.data && response.data.codeReport) {
+          if (response.data) {
               AlertOk('Feedback', 'El Feedback se ha enviado correctamente.');
               return response;
           } else {

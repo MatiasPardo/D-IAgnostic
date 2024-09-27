@@ -6,7 +6,6 @@ import TextReport from './TextReport';
 import { FeedbackModal } from './FeedbackModal';
 import { UseFeedback } from "../hooks/UseFeedback";
 
-// change
 import { OrdersContext } from '../../src/context/OrdersContext';
 
 interface ModelTomographyProps {
@@ -25,11 +24,9 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
   const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
 
-  // State for navigating images
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = tomography?.images ?? [];
 
-  // change
   const { handleSendFeedback } = useContext(OrdersContext);
 
   const handleAcceptModal = async () => {
@@ -38,11 +35,12 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     if ((isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))) { 
       try {
         await handleSendFeedback({
-          codeReport: tomography?.codeReport || " ", 
-          isRight: true,
-          sectionError: "COMPOSITION",
-          feedback: "prueba"
+          codeReport: tomography?.codeReport || '', 
+          isRight: isAnswerYesSelected || isAnswerNoSelected,
+          sectionError: selectedErrors.join(", "),
+          feedback:feedback
         });
+
       } catch (error) {
         console.error("Error al enviar el Feedback:", error);
       }
@@ -97,7 +95,6 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     closeModal();
   };
 
-  // Handlers for navigating images
   const nextImage = () => {
     if (currentImageIndex < images.length - 1) {
       setCurrentImageIndex(currentImageIndex + 1);
@@ -134,10 +131,10 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                   />
                   <div className="mt-3">
                     <Button onClick={prevImage} disabled={currentImageIndex === 0}>
-                      Previous
+                      Anterior
                     </Button>
                     <Button onClick={nextImage} disabled={currentImageIndex === images.length - 1}>
-                      Next
+                      Siguiente
                     </Button>
                   </div>
                   <p>

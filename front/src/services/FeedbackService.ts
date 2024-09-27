@@ -3,16 +3,17 @@ import { FeedbackRequest } from "../interfaces/FeedbackRequest";
 import { AxiosResponse } from "axios";
 
 
-export const requestFeedback = async (feedbackRequest: FeedbackRequest): Promise<AxiosResponse<{ codeReport: string }, any>> => {
+export const requestFeedback = async (feedbackRequest: FeedbackRequest): Promise<AxiosResponse<any>> => {
     const formData = new FormData();
-    formData.append("codeReport", feedbackRequest.codeReport);
-    formData.append("isRight", feedbackRequest.isRight.toString());
-    formData.append("feedback", feedbackRequest.feedback);
-    formData.append("sectionError", feedbackRequest.sectionError); 
-    console.log("codeReport in formData:", formData.get("codeReport"));
+    formData.append("feedback", "pruebaaaa");
+    formData.append("codeReport", "4e8aab13");
+    formData.append("isRight", "false");
+    formData.append("sectionError", "REPORT");
+
     return instance.post("feedback", formData, {
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data;'
         }
     });
+    
 };
