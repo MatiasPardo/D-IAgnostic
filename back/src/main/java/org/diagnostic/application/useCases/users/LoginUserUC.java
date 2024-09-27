@@ -1,5 +1,6 @@
 package org.diagnostic.application.useCases.users;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.diagnostic.presentation.responseModels.LoginResponse;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class LoginUserUC {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -29,6 +31,7 @@ public class LoginUserUC {
     @Autowired
     private JwtUtils jwtUtils;
     public LoginResponse login(LoginRequest loginRequest) {
+        log.info("Iniciando sesion para el usuario: {}", loginRequest.getUserName());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
 
@@ -37,6 +40,7 @@ public class LoginUserUC {
 
         User userDetails = (User) authentication.getPrincipal();
         Rol rol = Rol.valueOf(Objects.requireNonNull(userDetails.getAuthorities().stream().findFirst().orElse(null)).getAuthority());
+        log.info("Respuesta del login para el usuario: {}, jwt: {}", loginRequest.getUserName(), jwt);
 
         return new LoginResponse(jwt,
                 userDetails.getId(),
