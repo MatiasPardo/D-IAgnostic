@@ -22,7 +22,6 @@ export const Home = () => {
         maxValueUsersQuantity = r.usersQuantity;
       })
       .catch((e) => {
-        console.log(e);
       })
       .finally(() => {
         const interval1 = setInterval(() => {
