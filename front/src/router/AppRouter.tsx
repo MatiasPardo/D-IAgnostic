@@ -10,7 +10,6 @@ import { TomographiesProvider } from '../context/TomographiesProvider';
 class ProtectedRoute extends React.Component<{ element: any }> {
     render() {
         let {element} = this.props;
-        //console.log('token: ', localStorage.getItem('token'));
         if (localStorage.getItem('token') !== null) {
             return element;
         } else {

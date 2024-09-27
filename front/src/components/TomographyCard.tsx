@@ -22,12 +22,10 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
 
     const openModal = () => {
         setIsModalOpen(true);
-        console.log("Modal opened");
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        console.log("Modal closed");
     };
 
     return (
