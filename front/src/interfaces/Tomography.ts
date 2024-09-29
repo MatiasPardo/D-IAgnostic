@@ -4,7 +4,13 @@ export interface Tomography {
     category: string;
     images: string[];
     statusReport: string;
-    createDate: string[];
+    createDate: string;
     userId: string;
-    // @TODO agregar --> clinicHistory: string; 
+    patient: Patient; 
+}
+
+export interface Patient {
+    clinicHistory?: string;
+    document?: string;
+    birthdate?: string; 
 }

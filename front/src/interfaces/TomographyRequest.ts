@@ -4,4 +4,7 @@ export interface TomographyRequest {
     codeReport?: string;
     patientName?: string;
     lastImage?: boolean;
+    birthDate?: string;
+    clinicalHistory?: string;
+    dni?: string;
 }

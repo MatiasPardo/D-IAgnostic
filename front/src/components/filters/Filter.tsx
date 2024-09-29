@@ -20,7 +20,10 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
         const updatedFilters: Filters = {
             title: selectedProperty === "Titulo" ? value : "",
             category: selectedProperty === "Codigo De Reporte" ? value : "",
-            statusReport: selectedProperty === "Estado de informe" ? value : ""
+            statusReport: selectedProperty === "Estado de informe" ? value : "",
+            document: "",
+            clinicHistory: "",
+            date: ""
         };
 
         onFilterChange(updatedFilters);

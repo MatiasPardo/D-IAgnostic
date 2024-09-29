@@ -25,7 +25,9 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
     };
 
     const handleBirthDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBirthDate(event.target.value);
+        const dateValue = event.target.value;
+        console.log("asdfasdfasdf",dateValue);
+        setBirthDate(dateValue); 
     };
 
     const handleAccept = () => {
