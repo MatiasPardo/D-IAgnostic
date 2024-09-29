@@ -31,8 +31,20 @@ export const requestReport = async (tomographyRequest: TomographyRequest): Promi
     formData.append("title", tomographyRequest.title);
     if (tomographyRequest.codeReport) {
         formData.append("codeReport", tomographyRequest.codeReport);
-    }    
+    }
+    if (tomographyRequest.clinicalHistory) {
+        formData.append("clinicHistory", tomographyRequest.clinicalHistory);
+    }  
+    if (tomographyRequest.dni) {
+        formData.append("document", tomographyRequest.dni);
+    }
+    if (tomographyRequest.birthDate) {
+        const birthDateISO = `${tomographyRequest.birthDate}T00:00:00Z`;
+        formData.append("birthdate", birthDateISO);
+    }
+    
     formData.append("lastImage", tomographyRequest.lastImage ? "true" : "false");
+
     return instance.post("tomographies", formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
