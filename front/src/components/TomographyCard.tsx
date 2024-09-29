@@ -41,6 +41,11 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
                 {tomography.title}
             </h5><hr/>
             <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
+                <strong>Numero Documento:</strong> {tomography.patient?.document || ''}
+            </p>
+            <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
+                <strong>Historia Clinica:</strong> {tomography.patient?.clinicHistory || ''}
+            </p>            <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
                 <strong>Código de reporte:</strong> {tomography.codeReport}
             </p>
             {/* <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>

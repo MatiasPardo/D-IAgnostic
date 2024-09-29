@@ -13,12 +13,17 @@ export const Orders = () => {
     const [imageUploaderRef, setImageUploaderRef] = useState<(() => void) | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-    const handleAcceptModal = async (title: string, patientName: string) => {
+    const handleAcceptModal = async (title: string, patientName: string, clinicalHistory: string,
+        dni: string, birthDate: string
+    ) => {
         if (uploadedImages.length > 0) { 
             try {
                 const firstResponse = await handleSaveTomography({
                     title,
                     patientName,
+                    clinicalHistory,
+                    dni,
+                    birthDate,
                     tomography: uploadedImages[0],
                     lastImage: uploadedImages.length === 1
                 });
@@ -29,6 +34,9 @@ export const Orders = () => {
                         codeReport, 
                         title,
                         patientName,
+                        clinicalHistory,
+                        dni,
+                        birthDate,
                         tomography: uploadedImages[i],
                         lastImage: i === uploadedImages.length - 1
                     });
@@ -47,7 +55,7 @@ export const Orders = () => {
     
 
     const handleFileUpload = (images: Blob[]) => {
-        setUploadedImages(images); // Update state with multiple images
+        setUploadedImages(images);
     };
 
     useEffect(() => {
