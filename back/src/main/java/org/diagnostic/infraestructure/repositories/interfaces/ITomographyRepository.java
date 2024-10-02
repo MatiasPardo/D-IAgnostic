@@ -10,8 +10,8 @@ public interface ITomographyRepository {
 
     Tomography save(Tomography tomography);
     Tomography findByCodeReport(String codeReport);
-    List<Tomography> findByUserId(String codeReport);
-    Page<Tomography> findByUserId(String codeReport, Pageable pageable);
+    List<Tomography> findByUserId(String codeReport, String dni, String hc);
+    Page<Tomography> findByUserId(String codeReport, String dni, String hc, Pageable pageable);
     void delete(Tomography tomography);
 
 }

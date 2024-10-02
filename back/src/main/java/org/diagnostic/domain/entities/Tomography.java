@@ -44,7 +44,8 @@ public class Tomography{
     public enum StatusReport {
         SIN_INFORME,
         GENERACION_EN_PROCESO,
-        INFORME_GENERADO
+        INFORME_GENERADO,
+        NO_CORRESPONDE_INFORME;
     }
 
 

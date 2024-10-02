@@ -18,9 +18,9 @@ public class ImageCategorizationSummary {
                 .filter(detail -> detail.getTomographyCategory().equals(TomographyCategory.Stone))
                 .toList();
 
-        List<TomographyDetail> normal = tomographyDetails.stream()
+/*        List<TomographyDetail> normal = tomographyDetails.stream()
                 .filter(detail -> detail.getTomographyCategory().equals(TomographyCategory.Normal))
-                .toList();
+                .toList();*/
 
         List<TomographyDetail> tumor = tomographyDetails.stream()
                 .filter(detail -> detail.getTomographyCategory().equals(TomographyCategory.Tumor))
@@ -45,7 +45,7 @@ public class ImageCategorizationSummary {
                     .append(cyst.size())
                     .append(" imagen(es) con presencia de quistes.");
         } else if (stone.isEmpty() && tumor.isEmpty() && cyst.isEmpty()) {
-            summaryBuilder.append("al visualizar las imágenes no se encontró ningún problema.");
+            summaryBuilder.append("al visualizar las imágenes no se encontró ningúna patologia.");
         } else {
             if (!stone.isEmpty()) {
                 summaryBuilder.append("al visualizar las imágenes se encontró al menos ")

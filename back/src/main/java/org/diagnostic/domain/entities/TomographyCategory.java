@@ -6,4 +6,5 @@ public enum TomographyCategory {
     Tumor,
     Cyst,
     STATELESS,
+    OTHER;
 }
