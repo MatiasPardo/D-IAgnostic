@@ -3,10 +3,12 @@ package org.diagnostic.application.useCases;
 import lombok.extern.slf4j.Slf4j;
 import org.diagnostic.application.services.IARestClient;
 import org.diagnostic.domain.entities.Tomography;
+import org.diagnostic.domain.entities.TomographyCategory;
 import org.diagnostic.domain.entities.TomographyDetail;
 import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
 import org.diagnostic.presentation.responseModels.ReportIAResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +18,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class CategorizeAndGenerateReportUC {
+
+    @Value("${report.other}")
+    private String reportOther;
 
     @Autowired
     private final RestTemplate restTemplate;
@@ -41,11 +46,17 @@ public class CategorizeAndGenerateReportUC {
             tomographyRepository.save(tomography);
         }
 
-        ReportIAResponse report = iARestClient.findReport(tomography);
-        if (report != null) {
-            tomography.setStatusReport(Tomography.StatusReport.INFORME_GENERADO);
-            tomography.setReport(report.getResponse());
+        if(tomographyCategory != null && tomographyCategory.stream().anyMatch(t-> t.getTomographyCategory().equals(TomographyCategory.OTHER))){
+            tomography.setStatusReport(Tomography.StatusReport.NO_CORRESPONDE_INFORME);
+            tomography.setReport(reportOther);
             tomographyRepository.save(tomography);
+        }else{
+            ReportIAResponse report = iARestClient.findReport(tomography);
+            if (report != null) {
+                tomography.setStatusReport(Tomography.StatusReport.INFORME_GENERADO);
+                tomography.setReport(report.getResponse());
+                tomographyRepository.save(tomography);
+            }
         }
 
     }

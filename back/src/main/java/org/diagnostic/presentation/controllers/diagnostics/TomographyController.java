@@ -156,6 +156,8 @@ public class TomographyController extends BaseController {
     @GetMapping( produces = "application/json")
     public ResponseEntity<TomographyResponse> getTomography(
             @RequestHeader("Authorization") String jwtToken,
+            @RequestParam(value = "document",required = false) String dni,
+            @RequestParam(value = "clinicHistory",required = false) String clinicHistory,
             @RequestParam(value = "page",required = false) Integer page,
             @RequestParam(value = "size",required = false) Integer size) {
 
@@ -165,12 +167,12 @@ public class TomographyController extends BaseController {
         long pageTotal = 0;
         long sizeTotal = 0;
         if(page != null && size != null){
-            Page<Tomography> tomography = tomographyService.getTomography(userId, page, size);
+            Page<Tomography> tomography = tomographyService.getTomography(userId, dni, clinicHistory, page, size);
             pageTotal = tomography.getPageable().getPageSize();
             sizeTotal = tomography.getTotalElements();
             tomographyPage = tomography.getContent();
         }else {
-            tomographyPage = tomographyService.getTomography(userId);
+            tomographyPage = tomographyService.getTomography(userId, dni, clinicHistory);
         }
 
         logger.info("Consulta de tomografias paginadas - END");
