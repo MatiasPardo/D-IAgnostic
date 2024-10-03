@@ -16,5 +16,4 @@ public class TomographyDetail {
 
     private String url;
 
-
 }
