@@ -85,7 +85,7 @@ public class CreateTomographyStep extends Step {
             case 4 ->{
                 var message = MessageBuilder.builder();
                 return message
-                        .withLine("Cuando se finalice en analisis se enviara el estudio, si pierde la sesion puede recuperar el informe desde la opcion de ver todos mis informes")
+                        .withLine("Cuando se finalice el analisis se enviara el estudio, si pierde la sesion puede recuperar el informe desde la opcion de ver todos mis informes")
                         .withLine("Seleccioná una opción")
                         .withLine("1. Ver todos mis informes")
                         .withLine("2. Solicitar un nuevo informe")

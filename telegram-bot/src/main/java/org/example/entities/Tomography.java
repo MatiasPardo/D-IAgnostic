@@ -1,7 +1,6 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,20 +12,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tomography {
+
+    private byte[] image;
     private String title;
     private String report;
     private String userId;
-    private byte[] image;
     private StatusReport statusReport;
     private String codeReport;
-    private TomographyCategory category;
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDate;
     private Boolean active;
-    private List<String> images;
+    private List<TomographyDetail> tomographyDetail;
 
     public Tomography(String title, byte[] tac) {
         this.title = title;
