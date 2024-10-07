@@ -1,8 +1,10 @@
 package org.diagnostic.presentation.responseModels;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.diagnostic.domain.entities.Patient;
 import org.diagnostic.domain.entities.Tomography;
+import org.diagnostic.domain.entities.TomographyDetail;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,10 +17,12 @@ public class TomographyDTO extends Response{
     private String userId;
     private Tomography.StatusReport statusReport;
     private String codeReport;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy HH:mm:ss")
     private LocalDateTime createDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy HH:mm:ss")
     private LocalDateTime updateDate;
     private Boolean active;
-    private List<String> images;
+    private List<TomographyDetail> images;
     private Patient patient;
 
 }

@@ -1,7 +1,6 @@
 package org.example.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import okhttp3.*;
@@ -16,7 +15,7 @@ import org.example.exceptions.RestException;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
-    private String baseUrl= "http://localhost:8080/api"; //System.getenv("API_URL") + "/api";
+    private String baseUrl = "http://147.182.128.216:8080/api"; //System.getenv("API_URL") + "/api";
     private MediaType mediaType;
     private ObjectMapper objectMapper;
     public HttpClient() {
@@ -35,6 +34,7 @@ public class HttpClient {
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
+        System.out.println("Login response: " + response);
         return getData(response, LoginResponse.class);
     }
 
@@ -111,8 +111,10 @@ public class HttpClient {
             var error = objectMapper.readValue(response.body().bytes(), ErrorResponse.class);
             throw new RestException(error.getMessage());
         }
+        //T responseString = objectMapper.readValue(response.body().bytes(), type);
         T responseString = objectMapper.readValue(response.body().bytes(), type);
-        return (T) new Gson().fromJson((String) responseString, JsonObject.class).getAsJsonObject("codeReport").getAsString();
+        System.out.println("Response: "+ responseString);
+        return responseString;
     }
 
     @SneakyThrows
@@ -161,6 +163,7 @@ public class HttpClient {
         HttpUrl url = HttpUrl.parse(getUrl("tomographies"))
                 .newBuilder()
                 .addQueryParameter("title", title)
+                .addQueryParameter("lastImage", Boolean.TRUE.toString())
                 .build();
 
         Request request = new Request.Builder()
@@ -170,7 +173,7 @@ public class HttpClient {
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
-        return getData(response, String.class);
+        return getData(response, JsonObject.class).getAsJsonObject("codeReport").getAsString();
 
     }
 }

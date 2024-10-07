@@ -1,19 +1,20 @@
-FROM node:20-alpine as builder
+# Usa una imagen base ligera de Node.js
+FROM node:18-alpine
 
+# Crea el directorio de trabajo en el contenedor
 WORKDIR /app
-COPY package.json .
-COPY package-lock.json .
+
+# Copia los archivos package.json y package-lock.json
+COPY package*.json ./
+
+# Instala las dependencias
 RUN npm install
+
+# Copia el resto del código fuente
 COPY . .
 
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
+# Expone el puerto que usa la aplicación
+EXPOSE 3000
 
-RUN npm run build
-
-FROM nginx:alpine-slim
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Comando para iniciar la aplicación
+CMD ["npm", "start"]

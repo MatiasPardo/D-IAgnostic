@@ -29,7 +29,7 @@ public class Tomography{
 
     public TomographyDTO dto() {
         TomographyDTO tomographyDTO = new TomographyDTO();
-        if(this.tomographyDetail != null) tomographyDTO.setImages(tomographyDetail.stream().map(TomographyDetail::getUrl).toList());
+        if(this.tomographyDetail != null) tomographyDTO.setImages(tomographyDetail);
         tomographyDTO.setCodeReport(this.codeReport);
         tomographyDTO.setTitle(this.title);
         tomographyDTO.setStatusReport(this.statusReport);
@@ -45,7 +45,7 @@ public class Tomography{
         SIN_INFORME,
         GENERACION_EN_PROCESO,
         INFORME_GENERADO,
-        NO_CORRESPONDE_INFORME;
+        NO_CORRESPONDE_INFORME
     }
 
 
