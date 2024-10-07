@@ -29,14 +29,15 @@ public class CreateTomographyUC {
         String codeReport = UUID.randomUUID().toString().substring(0, 8);
         tomography.setCodeReport(codeReport);
         String url = uploadFile(codeReport + tomography.getTomographyDetail().size(), tomographyImage);
-        return saveUrl(tomography, url, codeReport);
+        return saveUrl(tomography, url);
     }
 
-    public Tomography saveUrl(Tomography tomography, String url, String codeReport) {
+    public Tomography saveUrl(Tomography tomography, String url) {
         tomography.setTomography(null);
         tomography.addImagesUrl(url);
         tomography.setStatusReport(Tomography.StatusReport.SIN_INFORME);
         tomography.setUpdateDate(LocalDateTime.now());
+        tomography.setActive(Boolean.TRUE);
         return tomographyRepository.save(tomography);
     }
 
