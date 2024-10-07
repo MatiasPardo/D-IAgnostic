@@ -33,7 +33,7 @@ public class Tomography{
         tomographyDTO.setCodeReport(this.codeReport);
         tomographyDTO.setTitle(this.title);
         tomographyDTO.setStatusReport(this.statusReport);
-        tomographyDTO.setCreateDate(this.createDate);
+        tomographyDTO.setCreatedDate(this.createDate);
         tomographyDTO.setUpdateDate(this.updateDate);
         tomographyDTO.setReport(this.report);
         tomographyDTO.setUserId(this.userId);
