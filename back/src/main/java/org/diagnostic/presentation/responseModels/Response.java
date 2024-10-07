@@ -1,11 +1,11 @@
 package org.diagnostic.presentation.responseModels;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.time.LocalDateTime;
 
 public class Response {
 	
@@ -18,7 +18,8 @@ public class Response {
 	private String message;
 	
 	@Schema(description = "Response Date")
-	@JsonProperty("date") 
+	@JsonProperty("date")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime date;
 
 	@JsonCreator

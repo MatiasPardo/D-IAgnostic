@@ -90,7 +90,7 @@ public class TomographyController extends BaseController {
         if(codeReport != null){
             tomography = tomographyService.getTomographyStatus(codeReport);
             tomography.setTomography(tomographyByte.getBytes());
-            tomographyService.saveUrl(tomography,tomographyService.uploadFile(UUID.randomUUID().toString() + tomography.getTomographyDetail().size(),tomography.getTomography()), codeReport);
+            tomographyService.saveUrl(tomography,tomographyService.uploadFile(UUID.randomUUID().toString() + tomography.getTomographyDetail().size(),tomography.getTomography()));
         }else{
             Patient patient = new Patient();
             patient.setBirthdate(birthdate);

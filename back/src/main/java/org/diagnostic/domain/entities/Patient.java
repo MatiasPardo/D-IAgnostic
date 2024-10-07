@@ -1,5 +1,6 @@
 package org.diagnostic.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class Patient {
 
     private String detail;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime birthdate;
 
 }
