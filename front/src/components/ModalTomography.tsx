@@ -82,7 +82,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             <div className="col-md-6 border p-3 bg-white">
               {images.length > 0 ? (
                 <img
-                  src={images[0]}
+                  src={images[0].url}
                   alt="Tomografía"
                   className="img-fluid"
                 />
@@ -93,12 +93,16 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
 
             <div className="col-md-6">
               <div className="border p-3 mb-4 bg-white">
-                <h3 style={{color: 'var(--primary-color-1)'}}>Composición</h3>
-                <p> "Dato no disponible"</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Tamaño</h3>
-                <p> "Dato no disponible"</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Diagnóstico</h3>
-                <p> "Dato no disponible"</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Clasificacion de la tomografia</h3>
+                <p>{images.length > 0 ? images[0].tomographyCategory : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Estado del informe</h3>
+                <p>{tomography?.statusReport != null ? tomography.statusReport : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Codigo del reporte</h3>
+                <p>{tomography?.codeReport != null ? tomography.codeReport : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Documento del paciente</h3>
+                <p>{tomography?.patient != null ? tomography.patient.document : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Numero de historia clinica del paciente</h3>
+                <p>{tomography?.patient != null ? tomography.patient.clinicHistory : "Dato no disponible"}</p>
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -63,8 +64,12 @@ public class TomographyMongoRepository implements ITomographyRepository {
             query.addCriteria(Criteria.where("patient.clinicHistory").is(historiaClinica));
         }
 
+        // Aplicar el ordenamiento por la fecha de creación
+        query = applySorting(query);
+
         return mongoTemplate.find(query, Tomography.class);
     }
+
 
     public Page<Tomography> findByUserIdDniAndHistoriaClinica(String userId, String dni, String historiaClinica, Pageable pageable) {
         Query query = new Query();
@@ -82,6 +87,9 @@ public class TomographyMongoRepository implements ITomographyRepository {
             query.addCriteria(Criteria.where("patient.clinicHistory").is(historiaClinica));
         }
 
+        // Aplicar el ordenamiento por la fecha de creación
+        query = applySorting(query);
+
         // Establecer la paginación
         query.with(pageable);
 
@@ -94,4 +102,13 @@ public class TomographyMongoRepository implements ITomographyRepository {
         // Crear el objeto Page para devolver resultados paginados
         return new PageImpl<>(tomographies, pageable, count);
     }
+
+
+    private Query applySorting(Query query) {
+        // Ordenar por la fecha de creación en orden descendente (la más reciente primero)
+        query.with(Sort.by(Sort.Direction.DESC, "createDate"));
+        return query;
+    }
+
+
 }
