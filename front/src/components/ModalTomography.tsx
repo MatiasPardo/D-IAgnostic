@@ -27,8 +27,6 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = tomography?.images ?? [];
 
-  const { handleSendFeedback } = useContext(OrdersContext);
-
   const handleAcceptModal = async () => {
     const { handleSendFeedback } = UseFeedback();
 
@@ -123,7 +121,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             <div className="col-md-6 border p-3 bg-white">
               {images.length > 0 ? (
                 <img
-                  src={images[0]}
+                  src={images[0].url}
                   alt="Tomografía"
                   className="img-fluid"
                   style={{ width: '100%' }}

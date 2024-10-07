@@ -7,6 +7,8 @@ export interface Tomography {
     images: TomographyImage[];
     statusReport: string;
     patient: Patient;
+    userId: string;
+    createdDate: string;
 }
 
 export interface TomographyImage {
