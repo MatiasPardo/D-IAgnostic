@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
 import { Tomography } from '../interfaces/Tomography';
 import { instance } from '../services/BaseClient';
@@ -20,22 +20,20 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [feedback, setFeedback] = useState<string>('');
   const [showReport, setShowReport] = useState(false);
   const [show, setShow] = useState(false);
-  const [reportContent, setReportContent] = useState<string>(''); 
+  const [reportContent, setReportContent] = useState<string>('');
   const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
   const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = tomography?.images ?? [];
 
-  const { handleSendFeedback } = useContext(OrdersContext);
-
   const handleAcceptModal = async () => {
     const { handleSendFeedback } = UseFeedback();
 
-    if ((isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))) { 
+    if ((isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))) {
       try {
         await handleSendFeedback({
-          codeReport: tomography?.codeReport || '', 
+          codeReport: tomography?.codeReport || '',
           isRight: isAnswerYesSelected || isAnswerNoSelected,
           sectionError: selectedErrors.join(", "),
           feedback:feedback
@@ -122,25 +120,12 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
           <div className="row">
             <div className="col-md-6 border p-3 bg-white">
               {images.length > 0 ? (
-                <div>
-                  <img
-                    src={images[currentImageIndex]}
-                    alt="Tomografía"
-                    className="img-fluid"
-                    style={{ width: '100%' }}
-                  />
-                  <div className="mt-3">
-                    <Button onClick={prevImage} disabled={currentImageIndex === 0}>
-                      Anterior
-                    </Button>
-                    <Button onClick={nextImage} disabled={currentImageIndex === images.length - 1}>
-                      Siguiente
-                    </Button>
-                  </div>
-                  <p>
-                    Image {currentImageIndex + 1} of {images.length}
-                  </p>
-                </div>
+                <img
+                  src={images[0].url}
+                  alt="Tomografía"
+                  className="img-fluid"
+                  style={{ width: '100%' }}
+                />
               ) : (
                 <p>No image available</p>
               )}
@@ -148,17 +133,19 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
 
             <div className="col-md-6">
               <div className="border p-3 mb-4 bg-white">
-                <h3 style={{ color: 'var(--primary-color-1)' }}>Composición</h3>
-                <p>"Dato no disponible"</p>
-                <h3 style={{ color: 'var(--primary-color-1)' }}>Tamaño</h3>
-                <p>"Dato no disponible"</p>
-                <h3 style={{ color: 'var(--primary-color-1)' }}>Diagnóstico</h3>
-                <p>"Dato no disponible"</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Clasificacion de la tomografia</h3>
+                <p>{images.length > 0 ? images[0].tomographyCategory : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Estado del informe</h3>
+                <p>{tomography?.statusReport != null ? tomography.statusReport : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Codigo del reporte</h3>
+                <p>{tomography?.codeReport != null ? tomography.codeReport : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Documento del paciente</h3>
+                <p>{tomography?.patient != null ? tomography.patient.document : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Numero de historia clinica del paciente</h3>
+                <p>{tomography?.patient != null ? tomography.patient.clinicHistory : "Dato no disponible"}</p>
               </div>
-            </div>  
+            </div>
           </div>
-
-          {/* The rest of the modal */}
           <div className="mt-4">
             <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
               {showReport ? 'Ocultar informe' : 'Ver informe +'}
@@ -240,10 +227,10 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             )}
           </div>
         </div>
-        <FeedbackModal 
-          show={show} 
-          handleClose={() => setShow(false)} 
-          handleFunc={handleAcceptModal} 
+        <FeedbackModal
+          show={show}
+          handleClose={() => setShow(false)}
+          handleFunc={handleAcceptModal}
           feedback={feedback}
           codeReport={tomography!?.codeReport}
           userId={tomography!?.userId}

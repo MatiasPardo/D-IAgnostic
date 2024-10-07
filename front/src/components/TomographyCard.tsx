@@ -13,7 +13,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
 
     useEffect(() => {
         if (tomography && tomography.images && tomography.images.length > 0) {
-            const encodedImageUrl = encodeURI(tomography.images[0]);
+            const encodedImageUrl = encodeURI(tomography.images[0].url);
             setImageUrl(encodedImageUrl);
         } else {
             setImageUrl(null);
@@ -59,7 +59,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
                 </span>
             </p>
             <p className="card-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '10px' }}>
-                <strong>Fecha de creación:</strong> {tomography.createDate[2]}/{tomography.createDate[1]}/{tomography.createDate[0]}
+                <strong>Fecha de creación:</strong> {tomography.createdDate}
                 {/* @TODO: por favor envienme la fecha bien */}
             </p>
     

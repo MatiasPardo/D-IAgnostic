@@ -17,9 +17,9 @@ public class TomographyDTO extends Response{
     private String userId;
     private Tomography.StatusReport statusReport;
     private String codeReport;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy HH:mm:ss")
+    private LocalDateTime createdDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy HH:mm:ss")
     private LocalDateTime updateDate;
     private Boolean active;
     private List<TomographyDetail> images;

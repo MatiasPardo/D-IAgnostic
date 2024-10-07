@@ -1,16 +1,27 @@
+import { Url } from "url";
+
 export interface Tomography {
     codeReport: string;
     title: string;
     category: string;
-    images: string[];
+    images: TomographyImage[];
     statusReport: string;
-    createDate: string;
+    patient: Patient;
     userId: string;
-    patient: Patient; 
+    createdDate: string;
+}
+
+export interface TomographyImage {
+    url: string;
+    tomographyCategory: string;
 }
 
 export interface Patient {
-    clinicHistory?: string;
-    document?: string;
-    birthdate?: string; 
+    name: string;
+    lastName: string;
+    birthDate: Date;
+    document: string;
+    email: string;
+    clinicHistory: string;
 }
+
