@@ -89,6 +89,7 @@ public class CreateTomographyStep extends Step {
                         .withLine("Seleccioná una opción")
                         .withLine("1. Ver todos mis informes")
                         .withLine("2. Solicitar un nuevo informe")
+                        .withLine("3. Ver un informe de una tomografia")
                         .withLine("3. Cerrar sesión")
                         .build();
             }

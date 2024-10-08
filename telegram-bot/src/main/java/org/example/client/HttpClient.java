@@ -15,7 +15,7 @@ import org.example.exceptions.RestException;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
-    private String baseUrl = "http://146.190.76.52:8080/api"; //System.getenv("API_URL") + "/api";
+    private String baseUrl = "http://d-iagnostic.com.ar:8080/api"; //System.getenv("API_URL") + "/api";
     private MediaType mediaType;
     private ObjectMapper objectMapper;
     public HttpClient() {
@@ -66,8 +66,8 @@ public class HttpClient {
     }
 
     @SneakyThrows
-    public CreateOrderResponse shareOrder(String orderId, String token) {
-        var url = String.format("orders/%s/users", orderId);
+    public Tomography searchReport(String codeReport,String token) {
+        var url = String.format("tomographies/report/%s", codeReport);
 
         var request = new Request.Builder()
                 .url(getUrl(url))
@@ -76,7 +76,7 @@ public class HttpClient {
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
-        return getData(response, CreateOrderResponse.class);
+        return getData(response, Tomography.class);
     }
 
 
@@ -126,9 +126,6 @@ public class HttpClient {
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
-        //System.out.println("Busqueda de tomografrias exitosa: " + response.body().string());
-        //TomograpiesResponse tomograpiesResponse = new Gson().fromJson(response.body().string(), TomograpiesResponse.class);
-        //System.out.println("Busqueda de tomografrias exitosa: " + tomograpiesResponse);
         return getData(response, TomograpiesResponse.class);
 
         //return tomograpiesResponse;

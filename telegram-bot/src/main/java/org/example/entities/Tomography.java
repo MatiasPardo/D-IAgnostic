@@ -19,12 +19,13 @@ public class Tomography {
     private String userId;
     private StatusReport statusReport;
     private String codeReport;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateDate;
+    //@JsonFormat(pattern = "dd/mm/yyyy HH:mm:ss")
+    private String createdDate;
+    //@JsonFormat(pattern = "dd/mm/yyyy HH:mm:ss")
+    private String updateDate;
     private Boolean active;
     private List<TomographyDetail> tomographyDetail;
+    private Patient patient;
 
     public Tomography(String title, byte[] tac) {
         this.title = title;
