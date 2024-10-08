@@ -44,7 +44,6 @@ export const requestReport = async (tomographyRequest: TomographyRequest): Promi
     }
     
     formData.append("lastImage", tomographyRequest.lastImage ? "true" : "false");
-
     return instance.post("tomographies", formData, {
         headers: {
             'Content-Type': 'multipart/form-data'

@@ -6,8 +6,6 @@ import TextReport from './TextReport';
 import { FeedbackModal } from './FeedbackModal';
 import { UseFeedback } from "../hooks/UseFeedback";
 
-import { OrdersContext } from '../../src/context/OrdersContext';
-
 interface ModelTomographyProps {
   isModalOpen: boolean;
   closeModal: () => void;
@@ -24,8 +22,8 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
   const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = tomography?.images ?? [];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);  // Current image index
+  const images = tomography?.images ?? [];  // List of images
 
   const handleAcceptModal = async () => {
     const { handleSendFeedback } = UseFeedback();
@@ -93,6 +91,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     closeModal();
   };
 
+  // Navigation logic for images
   const nextImage = () => {
     if (currentImageIndex < images.length - 1) {
       setCurrentImageIndex(currentImageIndex + 1);
@@ -121,7 +120,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             <div className="col-md-6 border p-3 bg-white">
               {images.length > 0 ? (
                 <img
-                  src={images[0].url}
+                  src={images[currentImageIndex].url}  // Use currentImageIndex to display the image
                   alt="Tomografía"
                   className="img-fluid"
                   style={{ width: '100%' }}
@@ -129,23 +128,32 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
               ) : (
                 <p>No image available</p>
               )}
+              <div className="text-center mt-3">
+                <Button onClick={prevImage} disabled={currentImageIndex === 0}>
+                  Anterior
+                </Button>
+                <Button onClick={nextImage} disabled={currentImageIndex === images.length - 1} className="ms-2">
+                  Siguiente
+                </Button>
+              </div>
             </div>
 
             <div className="col-md-6">
               <div className="border p-3 mb-4 bg-white">
-                <h3 style={{color: 'var(--primary-color-1)'}}>Clasificacion de la tomografia</h3>
-                <p>{images.length > 0 ? images[0].tomographyCategory : "Dato no disponible"}</p>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Clasificación de la tomografía</h3>
+                <p>{images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible"}</p>
                 <h3 style={{color: 'var(--primary-color-1)'}}>Estado del informe</h3>
                 <p>{tomography?.statusReport != null ? tomography.statusReport : "Dato no disponible"}</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Codigo del reporte</h3>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Código del reporte</h3>
                 <p>{tomography?.codeReport != null ? tomography.codeReport : "Dato no disponible"}</p>
                 <h3 style={{color: 'var(--primary-color-1)'}}>Documento del paciente</h3>
                 <p>{tomography?.patient != null ? tomography.patient.document : "Dato no disponible"}</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Numero de historia clinica del paciente</h3>
+                <h3 style={{color: 'var(--primary-color-1)'}}>Número de historia clínica del paciente</h3>
                 <p>{tomography?.patient != null ? tomography.patient.clinicHistory : "Dato no disponible"}</p>
               </div>
             </div>
           </div>
+
           <div className="mt-4">
             <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
               {showReport ? 'Ocultar informe' : 'Ver informe +'}
@@ -216,7 +224,6 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                   className="mt-3"
                   onClick={(e: React.MouseEvent<HTMLElement>) => {
                     e.stopPropagation();
-                    // handleCloseWithErrors();
                     setShow(true);
                   }}
                   disabled={!(isAnswerYesSelected || (isAnswerNoSelected && selectedErrors.length > 0) || (isAnswerNoSelected && feedback.length > 0))}
