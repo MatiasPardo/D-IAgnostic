@@ -16,7 +16,6 @@ export const UseOrders = () => {
 
     const handleSaveTomography = async (tomographyRequest: TomographyRequest) => {
       try {
-        console.log("pruebaa", tomographyRequest.birthDate);
           const response = await requestReport(tomographyRequest);
           
           if (response.data && response.data.codeReport) {
