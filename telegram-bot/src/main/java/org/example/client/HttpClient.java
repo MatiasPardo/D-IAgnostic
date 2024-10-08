@@ -15,7 +15,7 @@ import org.example.exceptions.RestException;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
-    private String baseUrl = "http://147.182.128.216:8080/api"; //System.getenv("API_URL") + "/api";
+    private String baseUrl = "http://146.190.76.52:8080/api"; //System.getenv("API_URL") + "/api";
     private MediaType mediaType;
     private ObjectMapper objectMapper;
     public HttpClient() {
