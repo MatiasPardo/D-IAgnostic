@@ -3,61 +3,52 @@ import { TomographyCard } from "../components/TomographyCard";
 import { TomographiesContext } from "../context/TomographiesContext";
 import { Tomography } from "../interfaces/Tomography";
 import Filter from "../components/filters/Filter";
-import { instance } from '../services/BaseClient';
+import { findTomographies } from '../services/TomographiesService';
 
 export const Tomographies = () => {
     const { tomographies, getTomographies } = useContext(TomographiesContext);
     const [filteredTomographies, setFilteredTomographies] = useState<Tomography[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalTomographies, setTotalTomographies] = useState(0); 
+    const [totalTomographies, setTotalTomographies] = useState(0);
     const pageSize = 3;
 
     type Filters = {
-        title: string;
-        category: string;
-        statusReport: string;
+        title?: string;
+        clinicHistory?: string;
+        document?: string;
     };
 
     const [filters, setFilters] = useState<Filters>({
         title: "",
-        category: "",
-        statusReport: ""
+        clinicHistory: "",
+        document: ""
     });
 
     useEffect(() => {
-        const fetchReport = async () => {
-            try {
-                const response = await instance.get(`tomographies`);
-                setTotalTomographies(response.data.tomographies.length); 
-            } catch (error) {
-                console.error('Error loading reports:', error);
-            }
-        };
-        fetchReport();
+        const savedTotalTomographies = localStorage.getItem('totalTomographies');
+        if (savedTotalTomographies) {
+            setTotalTomographies(JSON.parse(savedTotalTomographies));
+        }
     }, []);
 
     useEffect(() => {
-        const fetchTomographies = async () => {
-            await getTomographies(currentPage);
-        };
-    
-        fetchTomographies();
+        const savedFilters = localStorage.getItem('tomographyFilters');
+        if (savedFilters) {
+            const parsedFilters = JSON.parse(savedFilters);
+            setFilters(parsedFilters);
+            getTomographies(currentPage, parsedFilters);
+        } else {
+            getTomographies(currentPage);
+        }
     }, [currentPage]);
 
     useEffect(() => {
         const filtered = tomographies.filter((tomo: Tomography) => {
             const title = tomo.title?.toLowerCase() || '';
-            const category = tomo.codeReport?.toLowerCase() || '';
-            const statusReport = tomo.statusReport?.toLowerCase() || '';
-
-            const filterTitle = filters.title.toLowerCase();
-            const filterCategory = filters.category.toLowerCase();
-            const filterStatusReport = filters.statusReport.toLowerCase();
+            const filterTitle = filters.title?.toLowerCase() || '';
 
             return (
-                (filterTitle === "" || title.includes(filterTitle)) &&
-                (filterCategory === "" || category.includes(filterCategory)) &&
-                (filterStatusReport === "" || statusReport.includes(filterStatusReport))
+                (filterTitle === "" || title.includes(filterTitle))
             );
         });
 
@@ -66,7 +57,9 @@ export const Tomographies = () => {
 
     const handleFilterChange = (newFilters: Filters) => {
         setFilters(newFilters);
-        setCurrentPage(1);  
+        setCurrentPage(1);
+        localStorage.setItem('tomographyFilters', JSON.stringify(newFilters)); // Save filters to local storage
+        getTomographies(1, newFilters);
     };
 
     const handleNextPage = () => {
@@ -81,14 +74,29 @@ export const Tomographies = () => {
 
     const isLastPage = filteredTomographies.length < pageSize;
 
+    const resetToInitialState = () => {
+        setTotalTomographies(9); 
+        setCurrentPage(1);
+        setFilters({ title: "", clinicHistory: "", document: "" });
+        localStorage.removeItem('tomographyFilters');
+        getTomographies(1); 
+    };
+
     return (
         <div className="p-5">
             <h1 className="mt-3 mb-3">Tomografías</h1>
             <p>Aquí usted puede visualizar todos los informes que ha solicitado, y buscar por título, nombre del paciente, historia clínica, etc.</p>
-            {/* @TODO: componentizar */}
-            
+
             <Filter onFilterChange={handleFilterChange} />
+
             <hr />
+
+            <div className="d-flex justify-content-end mb-3">
+                <button className="btn btn-secondary" onClick={resetToInitialState}>
+                    Resetear a Estado Inicial
+                </button>
+            </div>
+
             <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around" style={{ marginRight: '15%' }}>
                 {filteredTomographies.map((tomo: Tomography) => (
                     <TomographyCard
