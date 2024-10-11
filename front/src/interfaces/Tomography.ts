@@ -1,6 +1,8 @@
 import { Url } from "url";
 
 export interface Tomography {
+    clinicalHistory: any;
+    document: any;
     codeReport: string;
     title: string;
     category: string;
