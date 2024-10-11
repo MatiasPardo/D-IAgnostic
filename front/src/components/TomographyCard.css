@@ -81,3 +81,20 @@
         height: auto;
     }
 }
+
+.tooltiptext {
+    visibility: visible; /* Show on hover */
+    width: auto; /* Adjust width based on content */
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%; /* Position above the text */
+    left: 50%;
+    transform: translateX(-50%); /* Center the tooltip */
+    opacity: 1;
+    transition: opacity 0.3s;
+  }

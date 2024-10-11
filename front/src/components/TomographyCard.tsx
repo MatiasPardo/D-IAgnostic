@@ -28,6 +28,8 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
         setIsModalOpen(false);
     };
 
+    const [showTooltip, setShowTooltip] = useState(false);
+
     return (
         <div className="card card-tom m-3" style={{ cursor: "pointer" }} onClick={(e) => {
             if (!isModalOpen) {
@@ -38,11 +40,24 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
     >
     <div className="card-body">
         <div className="card-content">
-            <h5 className="card-title h3">{tomography.title}</h5>
-            <hr />
-            <p className="card-text"><strong>Numero Documento:</strong> {tomography.patient?.document || ''}</p>
-            <p className="card-text"><strong>Historia Clinica:</strong> {tomography.patient?.clinicHistory || ''}</p>
-            <p className="card-text"><strong>Código de reporte:</strong> {tomography.codeReport}</p>
+        <h5 
+            className="card-title h3"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            style={{
+              marginBottom: '10px',
+              color: 'var(--primary-color-1)',
+              cursor: 'pointer',
+            }}
+          >
+            {tomography.title.length > 20 ? `${tomography.title.substring(0, 20)}...` : tomography.title}
+            {showTooltip && (
+              <span className="tooltiptext">{tomography.title}</span>
+            )}
+          </h5>            <hr />
+            <p className="card-text"><strong>Numero de Documento:</strong> {tomography?.patient?.document ? tomography.patient.document : '-'}</p>
+            <p className="card-text"><strong>Historia Clinica:</strong> {tomography?.patient?.clinicHistory ? tomography.patient.clinicHistory : '-'}</p>
+            <p className="card-text"><strong>Código de reporte:</strong> {tomography?.codeReport ? tomography.codeReport : '-'}</p>
             <p className="card-text"><strong>Estado del informe: </strong>
                 <span className={`badge ${tomography.statusReport === 'INFORME_GENERADO' ? 'text-bg-success' : 'text-bg-danger'}`}>
                     {tomography.statusReport.replace("_", " ")}
