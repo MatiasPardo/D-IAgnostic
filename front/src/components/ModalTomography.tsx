@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
 import { Tomography } from '../interfaces/Tomography';
 import { instance } from '../services/BaseClient';
 import TextReport from './TextReport';
@@ -130,10 +132,12 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
               )}
               <div className="text-center mt-3">
                 <Button onClick={prevImage} disabled={currentImageIndex === 0}>
+                <FontAwesomeIcon icon={faChevronLeft} style={{ marginRight: '5px' }}/>
                   Anterior
                 </Button>
                 <Button onClick={nextImage} disabled={currentImageIndex === images.length - 1} className="ms-2">
                   Siguiente
+                  <FontAwesomeIcon icon={faChevronRight} style={{ marginLeft: '5px' }}/>
                 </Button>
               </div>
             </div>
@@ -143,20 +147,29 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
                 <h3 style={{color: 'var(--primary-color-1)'}}>Clasificación de la tomografía</h3>
                 <p>{images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible"}</p>
                 <h3 style={{color: 'var(--primary-color-1)'}}>Estado del informe</h3>
-                <p>{tomography?.statusReport != null ? tomography.statusReport : "Dato no disponible"}</p>
+                <span className={`badge ${tomography?.statusReport === 'INFORME_GENERADO' ? 'text-bg-success' : 'text-bg-danger'}`}>
+                  {tomography?.statusReport ? (tomography.statusReport).replace("_", " ") : "Dato no disponible"}</span>
                 <h3 style={{color: 'var(--primary-color-1)'}}>Código del reporte</h3>
-                <p>{tomography?.codeReport != null ? tomography.codeReport : "Dato no disponible"}</p>
+                <p>{tomography?.codeReport ? tomography.codeReport : "Dato no disponible"}</p>
                 <h3 style={{color: 'var(--primary-color-1)'}}>Documento del paciente</h3>
-                <p>{tomography?.patient != null ? tomography.patient.document : "Dato no disponible"}</p>
+                <p>{tomography?.patient?.document ? tomography.patient.document : "Dato no disponible"}</p>
                 <h3 style={{color: 'var(--primary-color-1)'}}>Número de historia clínica del paciente</h3>
-                <p>{tomography?.patient != null ? tomography.patient.clinicHistory : "Dato no disponible"}</p>
+                <p>{tomography?.patient?.clinicHistory ? tomography.patient.clinicHistory : "Dato no disponible"}</p>
               </div>
             </div>
           </div>
 
           <div className="mt-4">
             <Button className="btn btn-primary" type="button" onClick={() => setShowReport(!showReport)}>
-              {showReport ? 'Ocultar informe' : 'Ver informe +'}
+            {showReport ? (
+        <>
+          <FontAwesomeIcon icon={faMinusSquare} /> Ocultar informe
+        </>
+      ) : (
+        <>
+          <FontAwesomeIcon icon={faPlusSquare} /> Ver informe
+        </>
+      )}
             </Button>
             {showReport && (
               <Card className="mt-3">
