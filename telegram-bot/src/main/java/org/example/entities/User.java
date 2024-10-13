@@ -15,6 +15,8 @@ public class User {
     @Setter
     private String jwt;
     private List<Step> steps;
+    @Setter
+    private String codeReport;
 
     public User(Long telegramUserId) {
         this.telegramUserId = telegramUserId;
@@ -31,6 +33,5 @@ public class User {
 
         return this.steps.get(lastIndex);
     }
-
 
 }

@@ -3,9 +3,7 @@ package org.diagnostic.domain.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Map;
+import org.diagnostic.presentation.responseModels.TomographyDetailDto;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +14,10 @@ public class TomographyDetail {
 
     private String url;
 
+    public TomographyDetailDto toDto() {
+        TomographyDetailDto tomographyDetailDto = new TomographyDetailDto();
+        tomographyDetailDto.setTomographyCategory(this.getTomographyCategory().getValue());
+        tomographyDetailDto.setUrl(this.getUrl());
+        return tomographyDetailDto;
+    }
 }

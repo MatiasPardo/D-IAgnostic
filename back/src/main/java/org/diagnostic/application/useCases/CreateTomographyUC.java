@@ -45,13 +45,13 @@ public class CreateTomographyUC {
         return tomographyRepository.findByCodeReport(codeReport);
     }
 
-    public List<Tomography> getTomography(String userId, String dni, String hc) {
-        return tomographyRepository.findByUserId(userId, dni, hc);
+    public List<Tomography> getTomography(String userId, String dni, String hc, String title) {
+        return tomographyRepository.findByUserId(userId, dni, hc, title);
     }
 
-    public Page<Tomography> getTomography(String userId, String dni, String hc, Integer page, Integer size) {
+    public Page<Tomography> getTomography(String userId, String dni, String hc, String title, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        return tomographyRepository.findByUserId(userId, dni, hc, pageable);
+        return tomographyRepository.findByUserId(userId, dni, hc, title, pageable);
 
     }
 

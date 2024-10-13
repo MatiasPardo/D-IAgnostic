@@ -1,8 +1,6 @@
 package org.example.steps;
 
-import org.example.events.CreateOrderEvent;
 import org.example.events.LoginUserEvent;
-import org.example.events.RegisterUserEvent;
 import org.example.events.base.EventPublisher;
 import org.example.exceptions.InvalidOptionException;
 import org.example.messages.MessageBuilder;
