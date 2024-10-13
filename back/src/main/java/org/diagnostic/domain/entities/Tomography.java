@@ -29,8 +29,7 @@ public class Tomography{
 
     public TomographyDTO dto() {
         TomographyDTO tomographyDTO = new TomographyDTO();
-        if(this.tomographyDetail != null) tomographyDTO.setImages(tomographyDetail);
-        tomographyDTO.setCodeReport(this.codeReport);
+        if(this.tomographyDetail != null) tomographyDTO.setImages(tomographyDetail.stream().map(TomographyDetail::toDto).toList());        tomographyDTO.setCodeReport(this.codeReport);
         tomographyDTO.setTitle(this.title);
         tomographyDTO.setStatusReport(this.statusReport);
         tomographyDTO.setCreatedDate(this.createDate);

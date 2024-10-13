@@ -1,4 +1,4 @@
-org.example.events.CreateOrderEventHandler
+org.example.events.SearchReportEventHandler
 org.example.events.LoginUserEventHandler
 org.example.events.RegisterUserEventHandler
 org.example.events.ViewTomographiesEventHandler

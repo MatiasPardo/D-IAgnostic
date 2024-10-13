@@ -8,6 +8,7 @@ import org.diagnostic.presentation.dto.feedback.Feedback;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "feedbacks")
 @Data
@@ -19,7 +20,7 @@ public class FeedbackEntity {
 
     private Boolean isRight;
 
-    private Section section;
+    private List<Section> section;
 
     private String userId;
 
