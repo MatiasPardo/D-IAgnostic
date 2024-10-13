@@ -13,14 +13,15 @@ export const Orders = () => {
     const [imageUploaderRef, setImageUploaderRef] = useState<(() => void) | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-    const handleAcceptModal = async (title: string, patientName: string, clinicalHistory: string,
+    const handleAcceptModal = async (title: string, name: string,lastName: string, clinicalHistory: string,
         dni: string, birthDate: string
     ) => {
         if (uploadedImages.length > 0) { 
             try {
                 const firstResponse = await handleSaveTomography({
                     title,
-                    patientName,
+                    name,
+                    lastName,
                     clinicalHistory,
                     dni,
                     birthDate,
@@ -33,7 +34,8 @@ export const Orders = () => {
                     await handleSaveTomography({
                         codeReport, 
                         title,
-                        patientName,
+                        name,
+                        lastName,
                         clinicalHistory,
                         dni,
                         birthDate,

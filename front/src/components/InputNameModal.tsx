@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 
-export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolean, handleClose: () => void, handleFunc: (title: string, patientName: string, clinicalHistory: string, dni: string, birthDate: string) => void }) => {
+export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolean, handleClose: () => void, handleFunc: (title: string, name: string,lastName:string, clinicalHistory: string, dni: string, birthDate: string) => void }) => {
     const [title, setTitle] = useState('');
-    const [patientName, setPatientName] = useState('');
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [clinicalHistory, setClinicalHistory] = useState('');
     const [dni, setDni] = useState('');
     const [birthDate, setBirthDate] = useState('');
@@ -12,8 +13,12 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
         setTitle(event.target.value);
     };
 
-    const handlePatientNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPatientName(event.target.value);
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
+    };
+
+    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLastName(event.target.value);
     };
 
     const handleClinicalHistoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +35,8 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
     };
 
     const handleAccept = () => {
-        if (title && patientName && clinicalHistory && dni && birthDate) {
-            handleFunc(title, patientName, clinicalHistory, dni, birthDate);
+        if (title && name && lastName && clinicalHistory && dni && birthDate) {
+            handleFunc(title, name,lastName, clinicalHistory, dni, birthDate);
             handleClose();
         }
     };
@@ -63,13 +68,29 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                         <label className="col-4 col-form-label">Nombre del paciente</label>
                         <div className="col-8">
                             <input 
-                                id="patientName" 
-                                name="patientName" 
+                                id="name" 
+                                name="name" 
                                 placeholder="Ingrese el nombre del paciente" 
                                 type="text" 
                                 className="form-control" 
-                                value={patientName}
-                                onChange={handlePatientNameChange}
+                                value={name}
+                                onChange={handleNameChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    <br />
+                    <div className="form-group row">
+                        <label className="col-4 col-form-label">Apellido del paciente</label>
+                        <div className="col-8">
+                            <input 
+                                id="lasName" 
+                                name="lastName" 
+                                placeholder="Ingrese el nombre del paciente" 
+                                type="text" 
+                                className="form-control" 
+                                value={lastName}
+                                onChange={handleLastNameChange}
                                 required
                             />
                         </div>
@@ -126,7 +147,7 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <div className="col-12 d-flex justify-content-end">
                             <button 
-                                disabled={!title || !patientName || !clinicalHistory || !dni || !birthDate} 
+                                disabled={!title || !name ||!lastName || !clinicalHistory || !dni || !birthDate} 
                                 type="button" 
                                 onClick={handleAccept} 
                                 className="btn"

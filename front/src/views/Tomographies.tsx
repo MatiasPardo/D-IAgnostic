@@ -3,7 +3,13 @@ import { TomographyCard } from "../components/TomographyCard";
 import { TomographiesContext } from "../context/TomographiesContext";
 import { Tomography } from "../interfaces/Tomography";
 import Filter from "../components/filters/Filter";
-import { findTomographies } from '../services/TomographiesService';
+import { instance } from "../services/BaseClient";
+
+export const fetchTotalTomographiesFromLocalStorage = () => {
+    const savedTotalTomographies = localStorage.getItem('totalTomographies');
+    console.log("Total from localStorage:", savedTotalTomographies);
+    return savedTotalTomographies ? JSON.parse(savedTotalTomographies) : 9;
+};
 
 export const Tomographies = () => {
     const { tomographies, getTomographies } = useContext(TomographiesContext);
@@ -24,11 +30,15 @@ export const Tomographies = () => {
         document: ""
     });
 
+    const [selectedProperty, setSelectedProperty] = useState("Titulo");
+    const [isLastPage, setIsLastPage] = useState(false);
     useEffect(() => {
-        const savedTotalTomographies = localStorage.getItem('totalTomographies');
-        if (savedTotalTomographies) {
-            setTotalTomographies(JSON.parse(savedTotalTomographies));
-        }
+        const total = fetchTotalTomographiesFromLocalStorage();
+        setTotalTomographies(total);
+    }, []);
+
+    useEffect(() => {
+        resetToInitialState();
     }, []);
 
     useEffect(() => {
@@ -46,40 +56,49 @@ export const Tomographies = () => {
         const filtered = tomographies.filter((tomo: Tomography) => {
             const title = tomo.title?.toLowerCase() || '';
             const filterTitle = filters.title?.toLowerCase() || '';
-
-            return (
-                (filterTitle === "" || title.includes(filterTitle))
-            );
+            return filterTitle === "" || title.includes(filterTitle);
         });
-
         setFilteredTomographies(filtered);
     }, [filters, tomographies]);
+
+    useEffect(() => {
+        setIsLastPage(totalTomographies <= currentPage * pageSize);
+    }, [totalTomographies, currentPage]);
 
     const handleFilterChange = (newFilters: Filters) => {
         setFilters(newFilters);
         setCurrentPage(1);
-        localStorage.setItem('tomographyFilters', JSON.stringify(newFilters)); // Save filters to local storage
+        localStorage.setItem('tomographyFilters', JSON.stringify(newFilters));
         getTomographies(1, newFilters);
+        updateTotalTomographies(newFilters);
     };
 
-    const handleNextPage = () => {
-        setCurrentPage(currentPage + 1);
+    const updateTotalTomographies = (filters: Filters) => {
+        const filteredTotal = tomographies.filter((tomo: Tomography) => {
+            const title = tomo.title?.toLowerCase() || '';
+            const filterTitle = filters.title?.toLowerCase() || '';
+            return filterTitle === "" || title.includes(filterTitle);
+        });
+        setTotalTomographies(filteredTotal.length);
     };
+
+    const handleNextPage = () => setCurrentPage((prevPage) => prevPage + 1);
 
     const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
+        if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
     };
 
-    const isLastPage = filteredTomographies.length < pageSize;
-
-    const resetToInitialState = () => {
-        setTotalTomographies(9); 
-        setCurrentPage(1);
-        setFilters({ title: "", clinicHistory: "", document: "" });
+    const resetToInitialState = async () => {
         localStorage.removeItem('tomographyFilters');
-        getTomographies(1); 
+        setFilters({ title: "", clinicHistory: "", document: "" });
+        setSelectedProperty("Titulo");
+        getTomographies(1);
+
+        const response = await instance.get(`tomographies?page=0&size=3`);
+        if (response.data) {
+            localStorage.setItem('totalTomographies', JSON.stringify(response.data.pagination.totalSize));
+            setTotalTomographies(response.data.pagination.totalSize); // Update total size
+        }
     };
 
     return (
@@ -87,40 +106,31 @@ export const Tomographies = () => {
             <h1 className="mt-3 mb-3">Tomografías</h1>
             <p>Aquí usted puede visualizar todos los informes que ha solicitado, y buscar por título, nombre del paciente, historia clínica, etc.</p>
 
-            <Filter onFilterChange={handleFilterChange} />
+            <Filter 
+                onFilterChange={handleFilterChange} 
+                onReset={resetToInitialState} 
+                selectedProperty={selectedProperty}
+                setSelectedProperty={setSelectedProperty} 
+            />
 
             <hr />
 
-            <div className="d-flex justify-content-end mb-3">
-                <button className="btn btn-secondary" onClick={resetToInitialState}>
-                    Resetear a Estado Inicial
-                </button>
-            </div>
-
             <div className="row rows-cols-1 row-cols-md-6 d-flex flex-row justify-content-around" style={{ marginRight: '15%' }}>
                 {filteredTomographies.map((tomo: Tomography) => (
-                    <TomographyCard
-                        key={tomo.codeReport}
-                        tomography={tomo}
-                    />
+                    <TomographyCard key={tomo.codeReport} tomography={tomo} />
                 ))}
             </div>
+
             <div className="d-flex justify-content-center mt-4">
                 <div className="btn-group">
-                    <button
-                        className="btn btn-primary me-2"
-                        onClick={handlePreviousPage}
-                        disabled={currentPage === 1}
-                    >
+                    <button className="btn btn-primary me-2" onClick={handlePreviousPage} disabled={currentPage === 1}>
                         Anterior
                     </button>
-                    <span className="d-flex align-items-center mx-2">
-                        Página {currentPage}
-                    </span>
+                    <span className="d-flex align-items-center mx-2">Página {currentPage}</span>
                     <button
                         className="btn btn-primary ms-2"
                         onClick={handleNextPage}
-                        disabled={isLastPage || currentPage * pageSize >= totalTomographies}
+                        disabled={isLastPage}
                     >
                         Siguiente
                     </button>
