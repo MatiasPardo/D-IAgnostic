@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/feedback")
@@ -43,7 +44,7 @@ public class FeedbackController extends BaseController {
             @RequestParam(value = "feedback") String feedback,
             @RequestParam(value = "codeReport") String codeReport,
             @RequestParam(value = "isRight") Boolean isRight,
-            @RequestParam(value = "sectionError") Section section) throws IOException {
+            @RequestParam(value = "sectionError") List<Section> section) throws IOException {
 
         createFeedbackUC.saveFeedback(new Feedback(feedback,isRight,section, this.getUserFromJwt().getId(), codeReport));
 

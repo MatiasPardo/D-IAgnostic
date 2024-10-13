@@ -7,6 +7,7 @@ import org.diagnostic.domain.entities.feedback.FeedbackEntity;
 import org.diagnostic.domain.enums.Section;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +18,7 @@ public class Feedback {
 
     private Boolean isRight;
 
-    private Section section;
+    private List<Section> section;
 
     private String userId;
 
@@ -27,7 +28,7 @@ public class Feedback {
 
     private String codeReport;
 
-    public Feedback(String feedback, Boolean isRight, Section section, String id, String codeReport) {
+    public Feedback(String feedback, Boolean isRight, List<Section> section, String id, String codeReport) {
         this.feedbackComment = feedback;
         this.isRight = isRight;
         this.section = section;

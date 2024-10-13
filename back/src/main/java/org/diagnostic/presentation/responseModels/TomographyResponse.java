@@ -23,6 +23,7 @@ public class TomographyResponse {
     public TomographyResponse(List<Tomography> tomography, Boolean aTrue, long totalPage, long totalSize) {
         this.tomographies = tomography.stream().map(Tomography::dto).toList();
         this.successful = aTrue;
+
         if(totalPage > 0 || totalSize > 0) this.pagination = new PageTomography(totalPage, totalSize);
     }
 

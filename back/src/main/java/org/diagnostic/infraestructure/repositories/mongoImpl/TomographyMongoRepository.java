@@ -38,13 +38,13 @@ public class TomographyMongoRepository implements ITomographyRepository {
     }
 
     @Override
-    public List<Tomography> findByUserId(String userId, String dni, String hc) {
-        return this.findByUserIdDniAndHistoriaClinica(userId, dni, hc);
+    public List<Tomography> findByUserId(String userId, String dni, String hc, String title) {
+        return this.findByUserIdDniAndHistoriaClinica(userId, dni, hc, title);
     }
 
     @Override
-    public Page<Tomography> findByUserId(String userId, String dni, String hc, Pageable pageable) {
-        return this.findByUserIdDniAndHistoriaClinica(userId, dni, hc, pageable);
+    public Page<Tomography> findByUserId(String userId, String dni, String hc, String title, Pageable pageable) {
+        return this.findByUserIdDniAndHistoriaClinica(userId, dni, hc, title, pageable);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class TomographyMongoRepository implements ITomographyRepository {
         ITomographyMongoRepository.delete(tomography);
     }
 
-    public List<Tomography> findByUserIdDniAndHistoriaClinica(String userId, String dni, String historiaClinica) {
+    public List<Tomography> findByUserIdDniAndHistoriaClinica(String userId, String dni, String historiaClinica, String title) {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(userId));
 
@@ -64,6 +64,10 @@ public class TomographyMongoRepository implements ITomographyRepository {
             query.addCriteria(Criteria.where("patient.clinicHistory").is(historiaClinica));
         }
 
+        if (title != null && !title.isEmpty()) {
+            query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i")); // "i" para ignorar mayúsculas y minúsculas
+        }
+
         // Aplicar el ordenamiento por la fecha de creación
         query = applySorting(query);
 
@@ -71,7 +75,8 @@ public class TomographyMongoRepository implements ITomographyRepository {
     }
 
 
-    public Page<Tomography> findByUserIdDniAndHistoriaClinica(String userId, String dni, String historiaClinica, Pageable pageable) {
+
+    public Page<Tomography> findByUserIdDniAndHistoriaClinica(String userId, String dni, String historiaClinica, String title, Pageable pageable) {
         Query query = new Query();
 
         // Filtro por userId (obligatorio)
@@ -82,9 +87,12 @@ public class TomographyMongoRepository implements ITomographyRepository {
             query.addCriteria(Criteria.where("patient.document").is(dni));
         }
 
-        // Filtro por patient.clinicHistory (historiaClinica) si no está vacío ni null
         if (historiaClinica != null && !historiaClinica.isEmpty()) {
             query.addCriteria(Criteria.where("patient.clinicHistory").is(historiaClinica));
+        }
+
+        if (title != null && !title.isEmpty()) {
+            query.addCriteria(Criteria.where("title").regex(".*" + title + ".*", "i")); // "i" para ignorar mayúsculas y minúsculas
         }
 
         // Aplicar el ordenamiento por la fecha de creación

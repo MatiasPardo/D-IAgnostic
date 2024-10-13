@@ -158,6 +158,7 @@ public class TomographyController extends BaseController {
             @RequestHeader("Authorization") String jwtToken,
             @RequestParam(value = "document",required = false) String dni,
             @RequestParam(value = "clinicHistory",required = false) String clinicHistory,
+            @RequestParam(value = "title",required = false) String title,
             @RequestParam(value = "page",required = false) Integer page,
             @RequestParam(value = "size",required = false) Integer size) {
 
@@ -167,12 +168,12 @@ public class TomographyController extends BaseController {
         long pageTotal = 0;
         long sizeTotal = 0;
         if(page != null && size != null){
-            Page<Tomography> tomography = tomographyService.getTomography(userId, dni, clinicHistory, page, size);
+            Page<Tomography> tomography = tomographyService.getTomography(userId, dni, clinicHistory, title, page, size);
             pageTotal = tomography.getPageable().getPageSize();
             sizeTotal = tomography.getTotalElements();
             tomographyPage = tomography.getContent();
         }else {
-            tomographyPage = tomographyService.getTomography(userId, dni, clinicHistory);
+            tomographyPage = tomographyService.getTomography(userId, dni, clinicHistory, title);
         }
 
         logger.info("Consulta de tomografias paginadas - END");
