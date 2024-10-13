@@ -3,10 +3,12 @@ import { Filters } from "../../interfaces/Filters";
 
 interface FilterProps {
     onFilterChange: (filters: Filters) => void;
+    onReset: () => void;
+    selectedProperty: string;
+    setSelectedProperty: (property: string) => void;
 }
 
-const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
-    const [selectedProperty, setSelectedProperty] = useState<string>("Titulo");
+const Filter: React.FC<FilterProps> = ({ onFilterChange, onReset, selectedProperty, setSelectedProperty }) => {
     const [filterValue, setFilterValue] = useState<string>("");
 
     useEffect(() => {
@@ -16,11 +18,10 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
             setSelectedProperty(parsedFilters.title ? "Titulo" : (parsedFilters.document ? "Documento" : "Historia Clinica"));
             setFilterValue(parsedFilters.title || parsedFilters.document || parsedFilters.clinicHistory || "");
         }
-    }, []);
+    }, [setSelectedProperty]);
 
     const handlePropertyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedProperty(e.target.value);
-        // Clear the filter value when the property changes
         setFilterValue("");
     };
 
@@ -31,9 +32,9 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
 
     const handleFilterSubmit = () => {
         const updatedFilters: Filters = {
-            title: selectedProperty === "Titulo" ? filterValue : "",
-            document: selectedProperty === "Documento" ? filterValue : "",
-            clinicHistory: selectedProperty === "Historia Clinica" ? filterValue : "",
+            title: selectedProperty === "Titulo" ? filterValue.toLowerCase() : "",
+            document: selectedProperty === "Documento" ? filterValue.toLowerCase() : "",
+            clinicHistory: selectedProperty === "Historia Clinica" ? filterValue.toLowerCase() : "",
         };
 
         localStorage.setItem('tomographyFilters', JSON.stringify(updatedFilters));
@@ -41,10 +42,10 @@ const Filter: React.FC<FilterProps> = ({ onFilterChange }) => {
     };
 
     const handleClearFilters = () => {
-        localStorage.removeItem('tomographyFilters');
-        setSelectedProperty("Titulo");
         setFilterValue("");
-        onFilterChange({ title: "", document: "", clinicHistory: "" });
+        setSelectedProperty("Titulo");
+        localStorage.removeItem('tomographyFilters'); 
+        onReset(); 
     };
 
     return (
