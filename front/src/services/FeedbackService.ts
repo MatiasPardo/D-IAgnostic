@@ -9,7 +9,6 @@ export const requestFeedback = async (feedbackRequest: FeedbackRequest): Promise
     formData.append("codeReport", feedbackRequest.codeReport);
     formData.append("isRight", feedbackRequest.isRight ? "true" : "false");
     formData.append("sectionError", feedbackRequest.sectionError);
-    console.log("FormData contents:");
     return instance.post("feedback", formData, {
         headers: {
             'Content-Type': 'multipart/form-data;'
