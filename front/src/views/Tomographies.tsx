@@ -7,7 +7,6 @@ import { instance } from "../services/BaseClient";
 
 export const fetchTotalTomographiesFromLocalStorage = () => {
     const savedTotalTomographies = localStorage.getItem('totalTomographies');
-    console.log("Total from localStorage:", savedTotalTomographies);
     return savedTotalTomographies ? JSON.parse(savedTotalTomographies) : 9;
 };
 
