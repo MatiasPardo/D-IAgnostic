@@ -1,9 +1,9 @@
-import { instance } from "./BaseClient";
+import { instance } from "../services/BaseClient";
 import { Tomography } from "../interfaces/Tomography";
-import { TomographyRequest } from "../interfaces/TomographyRequest";
-import { AxiosResponse } from "axios";
-import axios from 'axios';
 import { Filters } from "../interfaces/Filters";
+import { fetchTotalTomographiesFromLocalStorage } from '../views/Tomographies';
+import { AxiosResponse } from "axios";
+import { TomographyRequest } from "../interfaces/TomographyRequest";
 
 interface TomographyResponse {
     tomographies: Tomography[];
@@ -11,6 +11,7 @@ interface TomographyResponse {
     error?: string;
     pagination: Pagination;
 }
+
 interface Pagination {
     totalPage: number;
     totalSize: number;
@@ -33,6 +34,8 @@ export const findTomographies = async (page: number, size: number, filter: Filte
 
         if (response.data.successful) {
             localStorage.setItem('totalTomographies', JSON.stringify(response.data.pagination.totalSize));
+            console.log("pruebaa",response.data.pagination.totalSize);
+            fetchTotalTomographiesFromLocalStorage();
             return response.data.tomographies;
         } else {
             throw new Error(response.data.error || "No tomographies available");
@@ -44,8 +47,15 @@ export const findTomographies = async (page: number, size: number, filter: Filte
 };
 
 
+
 export const requestReport = async (tomographyRequest: TomographyRequest): Promise<AxiosResponse<{ codeReport: string }, any>> => {
     const formData = new FormData();
+    if (tomographyRequest.lastName) {
+        formData.append("lastName", tomographyRequest.lastName);
+    }
+    if (tomographyRequest.name) {
+        formData.append("name", tomographyRequest.name);
+    }
     formData.append("tomography", tomographyRequest.tomography);
     formData.append("title", tomographyRequest.title);
     if (tomographyRequest.codeReport) {
@@ -61,6 +71,11 @@ export const requestReport = async (tomographyRequest: TomographyRequest): Promi
         const birthDateISO = `${tomographyRequest.birthDate}T00:00:00Z`;
         formData.append("birthdate", birthDateISO);
     }
+    console.log("FormData contents:");
+    formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+    });
+
     
     formData.append("lastImage", tomographyRequest.lastImage ? "true" : "false");
     return instance.post("tomographies", formData, {
@@ -69,3 +84,4 @@ export const requestReport = async (tomographyRequest: TomographyRequest): Promi
         }
     });
 };
+

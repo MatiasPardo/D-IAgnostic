@@ -2,7 +2,8 @@ export interface TomographyRequest {
     title: string;
     tomography: Blob;
     codeReport?: string;
-    patientName?: string;
+    name?: string;
+    lastName?: string;
     lastImage?: boolean;
     birthDate?: string;
     clinicalHistory?: string;
