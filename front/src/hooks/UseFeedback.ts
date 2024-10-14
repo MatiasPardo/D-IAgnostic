@@ -1,4 +1,4 @@
-import { AlertError, AlertOk } from "../components/SweetAlert"
+import { AlertError, AlertOkRedirect } from "../components/SweetAlert"
 import { requestFeedback } from "../services/FeedbackService"
 import { FeedbackRequest } from "../interfaces/FeedbackRequest";
 
@@ -8,7 +8,7 @@ export const UseFeedback = () => {
       try {
           const response = await requestFeedback(feedbackRequest);
           if (response.data) {
-              AlertOk('Feedback', 'El Feedback se ha enviado correctamente.');
+              AlertOkRedirect('Feedback', 'El Feedback se ha enviado correctamente.', '/tomographies');
               return response;
           } else {
               AlertError('Feedback', 'No se recibió el código de informe.', 'error');

@@ -34,7 +34,7 @@
     flex: 1 1 400px;
     max-width: 100%;
     margin: 10px;
-    max-width: 550px;
+    max-width: 550px!important;
 }
 
 @media (max-width: 1110px) {
@@ -83,8 +83,8 @@
 }
 
 .tooltiptext {
-    visibility: visible; /* Show on hover */
-    width: auto; /* Adjust width based on content */
+    visibility: visible; 
+    width: auto;
     background-color: rgba(0, 0, 0, 0.75);
     color: #fff;
     text-align: center;
@@ -92,9 +92,9 @@
     padding: 5px;
     position: absolute;
     z-index: 1;
-    bottom: 100%; /* Position above the text */
+    bottom: 100%;
     left: 50%;
-    transform: translateX(-50%); /* Center the tooltip */
+    transform: translateX(-50%);
     opacity: 1;
     transition: opacity 0.3s;
   }
