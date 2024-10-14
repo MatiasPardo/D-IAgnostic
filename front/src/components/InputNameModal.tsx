@@ -1,44 +1,49 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 
-export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolean, handleClose: () => void, handleFunc: (title: string, name: string,lastName:string, clinicalHistory: string, dni: string, birthDate: string) => void }) => {
+interface InputNameModalProps {
+    show: boolean;
+    handleClose: () => void;
+    handleFunc: (
+        title?: string,
+        name?: string,
+        lastName?: string,
+        clinicalHistory?: string,
+        dni?: string,
+        birthDate?: string,
+        sex?: string
+    ) => void;
+}
+
+export const InputNameModal = ({ show, handleClose, handleFunc }: InputNameModalProps) => {
     const [title, setTitle] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [clinicalHistory, setClinicalHistory] = useState('');
     const [dni, setDni] = useState('');
     const [birthDate, setBirthDate] = useState('');
+    const [sex, setSex] = useState<string | undefined>(undefined);
 
-    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(event.target.value);
-    };
-
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    };
-
-    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLastName(event.target.value);
-    };
-
-    const handleClinicalHistoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setClinicalHistory(event.target.value);
-    };
-
-    const handleDniChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDni(event.target.value);
-    };
-
-    const handleBirthDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const dateValue = event.target.value;
-        setBirthDate(dateValue); 
-    };
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+    const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value);
+    const handleClinicalHistoryChange = (e: React.ChangeEvent<HTMLInputElement>) => setClinicalHistory(e.target.value);
+    const handleDniChange = (e: React.ChangeEvent<HTMLInputElement>) => setDni(e.target.value);
+    const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => setBirthDate(e.target.value);
+    const handleSexChange = (e: React.ChangeEvent<HTMLInputElement>) => setSex(e.target.value);
 
     const handleAccept = () => {
-        if (title && name && lastName && clinicalHistory && dni && birthDate) {
-            handleFunc(title, name,lastName, clinicalHistory, dni, birthDate);
-            handleClose();
-        }
+        // No required fields – pass all values even if empty
+        handleFunc(
+            title || undefined,
+            name || undefined,
+            lastName || undefined,
+            clinicalHistory || undefined,
+            dni || undefined,
+            birthDate || undefined,
+            sex || undefined
+        );
+        handleClose();
     };
 
     return (
@@ -51,15 +56,12 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <label className="col-4 col-form-label">Título para la tomografía</label>
                         <div className="col-8">
-                            <input 
-                                id="text" 
-                                name="text" 
-                                placeholder="Ingrese un título" 
-                                type="text" 
-                                className="form-control" 
+                            <input
+                                type="text"
+                                className="form-control"
                                 value={title}
                                 onChange={handleTitleChange}
-                                required
+                                placeholder="Ingrese un título"
                             />
                         </div>
                     </div>
@@ -67,15 +69,12 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <label className="col-4 col-form-label">Nombre del paciente</label>
                         <div className="col-8">
-                            <input 
-                                id="name" 
-                                name="name" 
-                                placeholder="Ingrese el nombre del paciente" 
-                                type="text" 
-                                className="form-control" 
+                            <input
+                                type="text"
+                                className="form-control"
                                 value={name}
                                 onChange={handleNameChange}
-                                required
+                                placeholder="Ingrese el nombre del paciente"
                             />
                         </div>
                     </div>
@@ -83,15 +82,12 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <label className="col-4 col-form-label">Apellido del paciente</label>
                         <div className="col-8">
-                            <input 
-                                id="lasName" 
-                                name="lastName" 
-                                placeholder="Ingrese el nombre del paciente" 
-                                type="text" 
-                                className="form-control" 
+                            <input
+                                type="text"
+                                className="form-control"
                                 value={lastName}
                                 onChange={handleLastNameChange}
-                                required
+                                placeholder="Ingrese el apellido del paciente"
                             />
                         </div>
                     </div>
@@ -99,15 +95,12 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <label className="col-4 col-form-label">Historia clínica</label>
                         <div className="col-8">
-                            <input 
-                                id="clinicalHistory" 
-                                name="clinicalHistory" 
-                                placeholder="Ingrese la historia clínica" 
-                                type="text" 
-                                className="form-control" 
+                            <input
+                                type="text"
+                                className="form-control"
                                 value={clinicalHistory}
                                 onChange={handleClinicalHistoryChange}
-                                required
+                                placeholder="Ingrese la historia clínica"
                             />
                         </div>
                     </div>
@@ -115,15 +108,12 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <label className="col-4 col-form-label">DNI</label>
                         <div className="col-8">
-                            <input 
-                                id="dni" 
-                                name="dni" 
-                                placeholder="Ingrese el DNI" 
-                                type="text" 
-                                className="form-control" 
+                            <input
+                                type="text"
+                                className="form-control"
                                 value={dni}
                                 onChange={handleDniChange}
-                                required
+                                placeholder="Ingrese el DNI"
                             />
                         </div>
                     </div>
@@ -131,25 +121,48 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: { show: boolea
                     <div className="form-group row">
                         <label className="col-4 col-form-label">Fecha de nacimiento</label>
                         <div className="col-8">
-                            <input 
-                                id="birthDate" 
-                                name="birthDate" 
-                                placeholder="Ingrese la fecha de nacimiento" 
-                                type="date" 
-                                className="form-control" 
+                            <input
+                                type="date"
+                                className="form-control"
                                 value={birthDate}
                                 onChange={handleBirthDateChange}
-                                required
                             />
                         </div>
                     </div>
                     <br />
                     <div className="form-group row">
+                        <label className="col-4 col-form-label">Sexo</label>
+                        <div className="col-8 d-flex">
+                            <div className="form-check me-3">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="sex"
+                                    value="masculino"
+                                    onChange={handleSexChange}
+                                    checked={sex === 'masculino'}
+                                />
+                                <label className="form-check-label">Masculino</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="sex"
+                                    value="femenino"
+                                    onChange={handleSexChange}
+                                    checked={sex === 'femenino'}
+                                />
+                                <label className="form-check-label">Femenino</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div className="form-group row">
                         <div className="col-12 d-flex justify-content-end">
-                            <button 
-                                disabled={!title || !name ||!lastName || !clinicalHistory || !dni || !birthDate} 
-                                type="button" 
-                                onClick={handleAccept} 
+                            <button
+                                type="button"
+                                onClick={handleAccept}
                                 className="btn"
                                 style={{ backgroundColor: 'var(--accent-color)' }}
                             >

@@ -13,10 +13,16 @@ export const Orders = () => {
     const [imageUploaderRef, setImageUploaderRef] = useState<(() => void) | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-    const handleAcceptModal = async (title: string, name: string,lastName: string, clinicalHistory: string,
-        dni: string, birthDate: string
+    const handleAcceptModal = async (
+        title?: string,
+        name?: string,
+        lastName?: string,
+        clinicalHistory?: string,
+        dni?: string,
+        birthDate?: string,
+        sex?: string
     ) => {
-        if (uploadedImages.length > 0) { 
+        if (uploadedImages.length > 0) {
             try {
                 const firstResponse = await handleSaveTomography({
                     title,
@@ -25,36 +31,37 @@ export const Orders = () => {
                     clinicalHistory,
                     dni,
                     birthDate,
+                    sex,
                     tomography: uploadedImages[0],
                     lastImage: uploadedImages.length === 1
                 });
-    
+
                 const codeReport = firstResponse.data.codeReport;
                 for (let i = 1; i < uploadedImages.length; i++) {
                     await handleSaveTomography({
-                        codeReport, 
+                        codeReport,
                         title,
                         name,
                         lastName,
                         clinicalHistory,
                         dni,
                         birthDate,
+                        sex,
                         tomography: uploadedImages[i],
                         lastImage: i === uploadedImages.length - 1
                     });
                 }
-                
+
                 setUploadedImages([]);
                 if (imageUploaderRef) {
-                    imageUploaderRef(); 
+                    imageUploaderRef();
                 }
             } catch (error) {
-                console.error("Error al guardar la tomografía:", error);
+                console.error('Error al guardar la tomografía:', error);
             }
         }
         setShow(false);
     };
-    
 
     const handleFileUpload = (images: Blob[]) => {
         setUploadedImages(images);
@@ -70,11 +77,11 @@ export const Orders = () => {
                     setImageUrl(url);
                 }
             } catch (error) {
-                console.error("Error al cargar las tomografías:", error);
+                console.error('Error al cargar las tomografías:', error);
             }
         };
 
-        loadImage(); 
+        loadImage();
         return () => {
             if (imageUrl) {
                 URL.revokeObjectURL(imageUrl);
@@ -87,12 +94,12 @@ export const Orders = () => {
             <div className="background-overlay"></div>
             <div className="content">
                 <div className="progress mb-4">
-                    <div 
-                        className="progress-bar" 
-                        role="progressbar" 
+                    <div
+                        className="progress-bar"
+                        role="progressbar"
                         style={{ width: `${step === 1 ? 50 : 100}%` }}
-                        aria-valuenow={step === 1 ? 50 : 100} 
-                        aria-valuemin={0} 
+                        aria-valuenow={step === 1 ? 50 : 100}
+                        aria-valuemin={0}
                         aria-valuemax={100}
                     >
                         {step === 1 ? 'Paso 1 de 2' : 'Paso 2 de 2'}
@@ -104,9 +111,9 @@ export const Orders = () => {
                 {step === 1 && (
                     <div className="card p-4 content-card">
                         <h2 className="h4 mb-3">1): Subir una imagen o varias de la tomografía</h2>
-                        <ImageUploader 
-                            setUploadedImages={handleFileUpload} // Update to use the new prop
-                            handleDelete={(deleteFunc: any) => setImageUploaderRef(() => deleteFunc)} 
+                        <ImageUploader
+                            setUploadedImages={handleFileUpload}
+                            handleDelete={(deleteFunc: any) => setImageUploaderRef(() => deleteFunc)}
                         />
 
                         {uploadedImages.length > 0 && (
@@ -123,10 +130,14 @@ export const Orders = () => {
                             </div>
                         )}
 
-                        <button 
-                            className="btn btn-sm mt-3" 
-                            style={{ margin: '0px 50% 0px 0px', backgroundColor: 'var(--primary-color-1)', color: 'var(--text-color-2)'}}
-                            disabled={uploadedImages.length === 0} // Update condition
+                        <button
+                            className="btn btn-sm mt-3"
+                            style={{
+                                margin: '0px 50% 0px 0px',
+                                backgroundColor: 'var(--primary-color-1)',
+                                color: 'var(--text-color-2)',
+                            }}
+                            disabled={uploadedImages.length === 0}
                             onClick={() => setStep(2)}
                         >
                             Continuar al siguiente paso
@@ -136,30 +147,33 @@ export const Orders = () => {
 
                 {step === 2 && (
                     <div className="card p-4 content-card">
-                        <h2 className="h4 mb-3">2): Completar los datos del nombre del paciente</h2>
+                        <h2 className="h4 mb-3">2): Completar los datos del paciente</h2>
                         <div className="d-flex justify-content-between">
-                            <button 
+                            <button
                                 className="btn btn-secondary my-3"
                                 onClick={() => setStep(1)}
                             >
                                 Volver al paso anterior
                             </button>
-                            <button 
+                            <button
                                 className="btn my-3"
-                                style={{ backgroundColor: 'var(--primary-color-1)', color: 'var(--text-color-2)'}}
+                                style={{
+                                    backgroundColor: 'var(--primary-color-1)',
+                                    color: 'var(--text-color-2)',
+                                }}
                                 onClick={() => setShow(true)}
-                                disabled={uploadedImages.length === 0} // Update condition
+                                disabled={uploadedImages.length === 0}
                             >
                                 Completar Datos y Solicitar Informe
                             </button>
                         </div>
                     </div>
                 )}
-                
-                <InputNameModal 
-                    show={show} 
-                    handleClose={() => setShow(false)} 
-                    handleFunc={handleAcceptModal} 
+
+                <InputNameModal
+                    show={show}
+                    handleClose={() => setShow(false)}
+                    handleFunc={handleAcceptModal}
                 />
             </div>
         </div>
