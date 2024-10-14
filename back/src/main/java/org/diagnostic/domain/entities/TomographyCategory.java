@@ -9,7 +9,7 @@ public enum TomographyCategory {
     Tumor("Tumor"),
     Cyst("Quiste"),
     STATELESS("Sin_estado"),
-    OTHER("Otro");
+    Other("Otro");
 
     private String value;
 
