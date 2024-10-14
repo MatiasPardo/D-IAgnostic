@@ -21,3 +21,14 @@ export const AlertError = (title: string, message: string, errorMessage: string)
         icon: 'error'
       });
 }
+
+export const AlertOkRedirect = (title: string, message: string, route: string) => {
+  alert.fire({
+    title: title,
+    text: message,
+    icon: 'success',
+    willClose: () => {
+        window.location.href = route;
+    }
+  });
+}
