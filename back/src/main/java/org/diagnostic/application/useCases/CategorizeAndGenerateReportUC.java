@@ -46,7 +46,7 @@ public class CategorizeAndGenerateReportUC {
             tomographyRepository.save(tomography);
         }
 
-        if(tomographyCategory != null && tomographyCategory.stream().anyMatch(t-> t.getTomographyCategory().equals(TomographyCategory.OTHER))){
+        if(tomographyCategory != null && tomographyCategory.stream().anyMatch(t-> t.getTomographyCategory().equals(TomographyCategory.Other))){
             tomography.setStatusReport(Tomography.StatusReport.NO_CORRESPONDE_INFORME);
             tomography.setReport(reportOther);
             tomographyRepository.save(tomography);
