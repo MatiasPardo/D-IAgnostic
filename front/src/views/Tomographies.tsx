@@ -92,13 +92,20 @@ export const Tomographies = () => {
         setFilters({ title: "", clinicHistory: "", document: "" });
         setSelectedProperty("Titulo");
         getTomographies(1);
-
-        const response = await instance.get(`tomographies?page=0&size=3`);
-        if (response.data) {
-            localStorage.setItem('totalTomographies', JSON.stringify(response.data.pagination.totalSize));
-            setTotalTomographies(response.data.pagination.totalSize); // Update total size
+        try {
+            const response = await instance.get(`tomographies?page=0&size=3`);
+    
+            if (response.data.pagination.totalSize) {
+                localStorage.setItem('totalTomographies', JSON.stringify(response.data.pagination.totalSize));
+                setTotalTomographies(response.data.pagination.totalSize);
+            } else {
+                console.log("No hay tomografías disponibles.");
+                setTotalTomographies(0); 
+            }
+        } catch (error) {
         }
     };
+    
 
     return (
         <div className="p-5">
