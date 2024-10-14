@@ -34,7 +34,6 @@ export const findTomographies = async (page: number, size: number, filter: Filte
 
         if (response.data.successful) {
             localStorage.setItem('totalTomographies', JSON.stringify(response.data.pagination.totalSize));
-            console.log("pruebaa",response.data.pagination.totalSize);
             fetchTotalTomographiesFromLocalStorage();
             return response.data.tomographies;
         } else {
@@ -56,8 +55,12 @@ export const requestReport = async (tomographyRequest: TomographyRequest): Promi
     if (tomographyRequest.name) {
         formData.append("name", tomographyRequest.name);
     }
-    formData.append("tomography", tomographyRequest.tomography);
-    formData.append("title", tomographyRequest.title);
+    if (tomographyRequest.title) {
+        formData.append("title", tomographyRequest.title);
+    }
+    if (tomographyRequest.tomography) {
+        formData.append("tomography", tomographyRequest.tomography);
+    }
     if (tomographyRequest.codeReport) {
         formData.append("codeReport", tomographyRequest.codeReport);
     }
@@ -71,12 +74,7 @@ export const requestReport = async (tomographyRequest: TomographyRequest): Promi
         const birthDateISO = `${tomographyRequest.birthDate}T00:00:00Z`;
         formData.append("birthdate", birthDateISO);
     }
-    console.log("FormData contents:");
-    formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-    });
 
-    
     formData.append("lastImage", tomographyRequest.lastImage ? "true" : "false");
     return instance.post("tomographies", formData, {
         headers: {
