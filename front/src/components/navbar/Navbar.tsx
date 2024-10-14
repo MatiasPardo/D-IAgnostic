@@ -9,8 +9,15 @@ export const Navbar = () => {
     const navigate = useNavigate();
 
     const onLogout = () => {
+        
         handlerLogout();
         navigate('/login');
+        localStorage.clear(); 
+        sessionStorage.clear();
+        localStorage.removeItem('tomographyFilters');
+        localStorage.removeItem('totalTomographies');
+        console.log("Cache cleared successfully");
+        window.location.reload();
     }
 
     return (
