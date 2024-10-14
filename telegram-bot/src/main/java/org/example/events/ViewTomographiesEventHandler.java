@@ -65,6 +65,7 @@ public class ViewTomographiesEventHandler extends EventHandler<ViewOrdersEvent> 
                     .withLine("Titulo de la tomografia: " +  r.getTitle())
                     .withLine("Estado del informe: " + r.getStatusReport().getDesc())
                     .withLine("Fecha de solicitud: " + r.getCreatedDate())
+                    .withLine("Codigo de Informe: " + r.getCodeReport())
                     .withLine("------------------");
         });
         return messageBuilder.build();

@@ -36,8 +36,8 @@ public class Tomography {
     public enum StatusReport {
         SIN_INFORME("Sin informe"),
         GENERACION_EN_PROCESO("Solicitud en proceso"),
-        INFORME_GENERADO("Finalizado");
-
+        INFORME_GENERADO("Finalizado"),
+        NO_CORRESPONDE_INFORME("No corresponde imagen por la clasificacion encontrada en la/s imagen/es");
         String desc;
 
         StatusReport(String s) {
