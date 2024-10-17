@@ -72,7 +72,7 @@ public class HttpClient {
         var request = new Request.Builder()
                 .url(getUrl(url))
                 .header("Authorization", "Bearer " + token)
-                .patch(RequestBody.create("", mediaType))
+                .get()
                 .build();
 
         var response = this.okHttpClient.newCall(request).execute();
