@@ -37,4 +37,4 @@ back/src/main/resources/data/repositories/
 ### ENV ###
 .env
 back/target/*
-
+telegram-bot/target/*
