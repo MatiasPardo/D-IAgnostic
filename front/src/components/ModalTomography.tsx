@@ -23,9 +23,14 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [reportContent, setReportContent] = useState<string>('');
   const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
   const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
+  const [isEditable, setIsEditable] = useState(false); // New state for edit mode
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);  // Current image index
   const images = tomography?.images ?? [];  // List of images
+
+  const [classification, setClassification] = useState<string>(images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible");
+  const [patientDocument, setPatientDocument] = useState<string>(tomography?.patient?.document || "Dato no disponible");
+  const [clinicHistory, setClinicHistory] = useState<string>(tomography?.patient?.clinicHistory || "Dato no disponible");
 
   const handleAcceptModal = async () => {
     const { handleSendFeedback } = UseFeedback();
@@ -83,17 +88,50 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     );
   };
 
+  const toggleEditMode = () => {
+    setIsEditable(!isEditable);
+    
+    console.log('Toggle Edit Mode:', {
+      isEditable: !isEditable,
+      classification: classification,
+      patientDocument: patientDocument,
+      clinicHistory: clinicHistory,
+    });
+  };
+
+  const saveChanges = async () => {
+    console.log("entre a guardar")
+    if (images.length > 0 && currentImageIndex !== null) {
+      images[currentImageIndex].tomographyCategory = classification;
+    }
+    
+    if (tomography?.patient) {
+      tomography.patient.document = patientDocument;
+      tomography.patient.clinicHistory = clinicHistory;
+    }
+  
+    const form = new FormData();
+    
+    form.append('classification', classification);
+    form.append('patientDocument', patientDocument);
+    form.append('clinicHistory', clinicHistory);
+  
+    try {
+      // const response = await instance.post(`tomographies/${tomography?.codeReport}`, form);
+      // console.log('Response from server:', response.data);
+      closeModal();
+      //window.location.reload();
+    } catch (error) {
+      console.error('Error while posting data:', error);
+    }
+  };
+  
   const handleSendErrors = () => {
     console.log('Errors selected:', selectedErrors);
     setShowErrorSection(false);
   };
 
-  const handleCloseWithErrors = () => {
-    handleSendErrors();
-    closeModal();
-  };
 
-  // Navigation logic for images
   const nextImage = () => {
     if (currentImageIndex < images.length - 1) {
       setCurrentImageIndex(currentImageIndex + 1);
@@ -143,19 +181,57 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             </div>
 
             <div className="col-md-6">
-              <div className="border p-3 mb-4 bg-white">
-                <h3 style={{color: 'var(--primary-color-1)'}}>Clasificación de la tomografía</h3>
-                <p>{images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible"}</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Estado del informe</h3>
-                <span className={`badge ${tomography?.statusReport === 'INFORME_GENERADO' ? 'text-bg-success' : 'text-bg-danger'}`}>
-                  {tomography?.statusReport ? (tomography.statusReport).replace("_", " ") : "Dato no disponible"}</span>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Código del reporte</h3>
-                <p>{tomography?.codeReport ? tomography.codeReport : "Dato no disponible"}</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Documento del paciente</h3>
-                <p>{tomography?.patient?.document ? tomography.patient.document : "Dato no disponible"}</p>
-                <h3 style={{color: 'var(--primary-color-1)'}}>Número de historia clínica del paciente</h3>
-                <p>{tomography?.patient?.clinicHistory ? tomography.patient.clinicHistory : "Dato no disponible"}</p>
+  <div className="border p-3 mb-4 bg-white">
+    <h3 style={{ color: 'var(--primary-color-1)' }}>Clasificación de la tomografía</h3>
+    <input
+      type="text"
+      value={classification}
+      onChange={(e) => setClassification(e.target.value)}
+      readOnly={!isEditable}
+      className={`${
+        isEditable 
+          ? 'form-control'  
+          : 'border-0 bg-transparent text-white'  
+      }`} 
+    />
+
+    <h3 style={{ color: 'var(--primary-color-1)' }}>Estado del informe</h3>
+    <span className={`badge ${tomography?.statusReport === 'INFORME_GENERADO' ? 'text-bg-success' : 'text-bg-danger'}`}>
+      {tomography?.statusReport ? (tomography.statusReport).replace("_", " ") : "Dato no disponible"}
+    </span>
+
+    <h3 style={{ color: 'var(--primary-color-1)' }}>Código del reporte</h3>
+    <p>{tomography?.codeReport ? tomography.codeReport : "Dato no disponible"}</p>
+
+    <h3 style={{ color: 'var(--primary-color-1)' }}>Documento del paciente</h3>
+    <input
+      type="text"
+      value={patientDocument}
+      onChange={(e) => setPatientDocument(e.target.value)}
+      readOnly={!isEditable}
+      className={`${
+        isEditable 
+          ? 'form-control'  
+          : 'border-0 bg-transparent text-white'  
+      }`} 
+    />
+
+    <h3 style={{ color: 'var(--primary-color-1)' }}>Número de historia clínica del paciente</h3>
+    <input
+      type="text"
+      value={clinicHistory}
+      onChange={(e) => setClinicHistory(e.target.value)}
+      readOnly={!isEditable}
+      className={`${
+        isEditable 
+          ? 'form-control'  
+          : 'border-0 bg-transparent text-white'  
+      }`} 
+    />
               </div>
+              <Button variant="outline-primary" onClick={isEditable ? saveChanges : toggleEditMode}>
+  <             FontAwesomeIcon icon={faPlusSquare} /> {isEditable ? "Guardar Cambios" : "Editar"}
+              </Button>
             </div>
           </div>
 
