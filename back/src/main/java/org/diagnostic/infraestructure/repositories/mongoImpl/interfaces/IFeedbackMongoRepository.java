@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface IFeedbackMongoRepository extends MongoRepository<FeedbackEntity, String> {
 
+    FeedbackEntity findByCodeReport(String codeReport);
 }

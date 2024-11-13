@@ -17,4 +17,9 @@ public class FeedbackMongoRepository implements IFeedbackRepository {
     public void save(FeedbackEntity feedback) {
         iFeedbackMongoRepository.save(feedback);
     }
+
+    @Override
+    public FeedbackEntity find(String codeReport) {
+        return iFeedbackMongoRepository.findByCodeReport(codeReport);
+    }
 }
