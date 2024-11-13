@@ -16,8 +16,8 @@ public class S3Config {
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
-                "DO00QLXDWLRBRJME2TEU",
-                "nEl8gQJNIbMYMxTjeY5b+J+sDNHCFHM6r8xZH1yNtTE"
+                "DO00ZUQ2W3R2FR2VKH34",
+                "pnRfkjqmEhx+xH8OtpS+K/0tQmyb/NCNm61WQdtEF0c"
         );
 
         return S3Client.builder()
