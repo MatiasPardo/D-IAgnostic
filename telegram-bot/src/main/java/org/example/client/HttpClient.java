@@ -15,7 +15,7 @@ import org.example.exceptions.RestException;
 
 public class HttpClient {
     private OkHttpClient okHttpClient;
-    private String baseUrl = "http://d-iagnostic.com.ar:8080/api"; //System.getenv("API_URL") + "/api";
+    private String baseUrl = "https://d-iagnostic.com.ar/api"; //System.getenv("API_URL") + "/api";
     private MediaType mediaType;
     private ObjectMapper objectMapper;
     public HttpClient() {
