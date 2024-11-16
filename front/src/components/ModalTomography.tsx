@@ -160,7 +160,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             <div className="col-md-6 border p-3 bg-white">
               {images.length > 0 ? (
                 <img
-                  src={images[currentImageIndex].url}  // Use currentImageIndex to display the image
+                  src={images[currentImageIndex].url} 
                   alt="Tomografía"
                   className="img-fluid"
                   style={{ width: '100%' }}
@@ -182,18 +182,8 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
 
             <div className="col-md-6">
   <div className="border p-3 mb-4 bg-white">
-    <h3 style={{ color: 'var(--primary-color-1)' }}>Clasificación de la tomografía</h3>
-    <input
-      type="text"
-      value={classification}
-      onChange={(e) => setClassification(e.target.value)}
-      readOnly={!isEditable}
-      className={`${
-        isEditable 
-          ? 'form-control'  
-          : 'border-0 bg-transparent text-white'  
-      }`} 
-    />
+  <h3 style={{color: 'var(--primary-color-1)'}}>Clasificación de la tomografía</h3>
+  <p>{images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible"}</p>
 
     <h3 style={{ color: 'var(--primary-color-1)' }}>Estado del informe</h3>
     <span className={`badge ${tomography?.statusReport === 'INFORME_GENERADO' ? 'text-bg-success' : 'text-bg-danger'}`}>
@@ -203,31 +193,33 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     <h3 style={{ color: 'var(--primary-color-1)' }}>Código del reporte</h3>
     <p>{tomography?.codeReport ? tomography.codeReport : "Dato no disponible"}</p>
 
-    <h3 style={{ color: 'var(--primary-color-1)' }}>Documento del paciente</h3>
-    <input
-      type="text"
-      value={patientDocument}
-      onChange={(e) => setPatientDocument(e.target.value)}
-      readOnly={!isEditable}
-      className={`${
-        isEditable 
-          ? 'form-control'  
-          : 'border-0 bg-transparent text-white'  
-      }`} 
-    />
+<h3 style={{ color: 'var(--primary-color-1)' }}>Documento del paciente</h3>
+<input
+  type="text"
+  value={patientDocument}
+  onChange={(e) => setPatientDocument(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }}
+/>
 
-    <h3 style={{ color: 'var(--primary-color-1)' }}>Número de historia clínica del paciente</h3>
-    <input
-      type="text"
-      value={clinicHistory}
-      onChange={(e) => setClinicHistory(e.target.value)}
-      readOnly={!isEditable}
-      className={`${
-        isEditable 
-          ? 'form-control'  
-          : 'border-0 bg-transparent text-white'  
-      }`} 
-    />
+<h3 style={{ color: 'var(--primary-color-1)' }}>Número de historia clínica del paciente</h3>
+<input
+  type="text"
+  value={clinicHistory}
+  onChange={(e) => setClinicHistory(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }} 
+/>
               </div>
               <Button variant="outline-primary" onClick={isEditable ? saveChanges : toggleEditMode}>
   <             FontAwesomeIcon icon={faPlusSquare} /> {isEditable ? "Guardar Cambios" : "Editar"}
