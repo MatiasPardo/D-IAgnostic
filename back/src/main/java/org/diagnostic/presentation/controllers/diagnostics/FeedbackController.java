@@ -7,16 +7,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.diagnostic.application.useCases.CreateFeedbackUC;
+import org.diagnostic.application.useCases.GetFeedbackUC;
 import org.diagnostic.domain.enums.Section;
 import org.diagnostic.presentation.controllers.BaseController;
 import org.diagnostic.presentation.dto.feedback.Feedback;
+import org.diagnostic.presentation.responseModels.FeedbackResponse;
 import org.diagnostic.presentation.responseModels.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,6 +28,9 @@ public class FeedbackController extends BaseController {
 
     @Autowired
     private CreateFeedbackUC createFeedbackUC;
+
+    @Autowired
+    private GetFeedbackUC getFeedbackUC;
 
     @Operation(summary = "Upload a new feedback", description = "Uploads a new feedback and positive or negative result")
     @ApiResponses(value = {
@@ -49,6 +51,21 @@ public class FeedbackController extends BaseController {
         createFeedbackUC.saveFeedback(new Feedback(feedback,isRight,section, this.getUserFromJwt().getId(), codeReport));
 
         return ResponseEntity.ok(new Response("200", "Creacion exitosa", LocalDateTime.now()));
+    }
+
+    @Operation(summary = "Get a feedback", description = "Get a feedback for codeReport")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Feedback get successfully ",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping(path = "/{codeReport}", produces = "application/json")
+    public ResponseEntity<FeedbackResponse> getFeedback(
+            @PathVariable String codeReport) {
+        return ResponseEntity.ok(new FeedbackResponse(getFeedbackUC.get(codeReport)));
     }
 
 }

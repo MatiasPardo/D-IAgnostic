@@ -50,4 +50,4 @@ jobs:
         username: ${{ secrets.DROPLET_USER }}
         password: ${{ secrets.DROPLET_PASSWORD }}
         script: |
-          /home/diagnostic/cicd.sh ${{ github.sha }}
+          /home/cicd/cicd-back.sh ${{ github.sha }}

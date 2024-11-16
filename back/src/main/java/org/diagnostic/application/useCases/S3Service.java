@@ -14,7 +14,7 @@ public class S3Service {
     @Autowired
     private S3Client s3Client;
 
-    private final String bucketName = "d-iagnostics2";
+    private final String bucketName = "d-iagnostics";
 
     public String uploadFile(String fileName, byte[] fileData) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()

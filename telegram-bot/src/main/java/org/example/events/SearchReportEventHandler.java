@@ -51,12 +51,7 @@ public class SearchReportEventHandler extends EventHandler<SearchReportEvent> {
         //UserRepository.get(this.userId)
 
         messageBuilder
-                .withLine("Titulo de la tomografia: " +  r.getTitle())
-                .withLine("Estado del informe: " + r.getStatusReport().getDesc())
-                .withLine("Informe: " + r.getCreatedDate())
-                .withLine("Codigo del informe:" + r.getCodeReport())
-                .withLine("Codigo del informe:" + r.getCodeReport())
-                .withLine("------------------");
+                .withLine(r.getReport() != null ? "Informe: " + r.getReport():r.getStatusReport().equals(Tomography.StatusReport.NO_CORRESPONDE_INFORME)? Tomography.StatusReport.NO_CORRESPONDE_INFORME.getDesc():" Informe aun no generado");
 
         return messageBuilder.build();
     }

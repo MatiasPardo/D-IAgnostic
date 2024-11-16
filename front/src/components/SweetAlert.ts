@@ -13,14 +13,17 @@ export const AlertOk = (title: string, message: string) => {
       });
 }
 
-export const AlertError = (title: string, message: string, errorMessage: string) => {
-    message = `${message}. Mensaje para el desarrollador: ${errorMessage}`
-    alert.fire({
-        title: title,
-        text: message,
-        icon: 'error'
-      });
-}
+export const AlertError = (title: string, message: string, errorMessage: any) => {
+  if (String(errorMessage).includes("400")) {
+      message = "Error de contraseña o usuario";
+  }
+  alert.fire({
+      title: title,
+      text: message,
+      icon: 'error'
+  });
+};
+
 
 export const AlertOkRedirect = (title: string, message: string, route: string) => {
   alert.fire({

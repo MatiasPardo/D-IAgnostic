@@ -77,4 +77,4 @@ jobs:
         username: ${{ secrets.DROPLET_USER }}
         password: ${{ secrets.DROPLET_PASSWORD }}
         script: |
-          /home/diagnostic/cicd-front.sh ${{ github.sha }}
+          /home/cicd/cicd-front.sh ${{ github.sha }}
