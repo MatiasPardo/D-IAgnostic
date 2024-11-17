@@ -94,6 +94,7 @@ public class TomographyController extends BaseController {
         }else{
             Patient patient = new Patient();
             patient.setBirthdate(birthdate);
+            patient.setTypeDocument(typeDocument);
             patient.setDetail(detail);
             patient.setEmail(email);
             patient.setHospital(hospital);
@@ -209,6 +210,47 @@ public class TomographyController extends BaseController {
 
         }
         logger.info("Eliminacion de tomografias - END");
+        return new ResponseEntity<>(new Response(), HttpStatus.OK);
+
+    }
+
+    @PatchMapping(path = "/{codeReport}", produces = "application/json")
+    public ResponseEntity<Response> modifyTomography(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable String codeReport,
+            // Datos del paciente
+            @RequestParam(value = "document",required = false) String document,
+            @RequestParam(value = "typeDocument",required = false) TypeDocument typeDocument,
+            @RequestParam(value = "hospital",required = false) String hospital,
+            @RequestParam(value = "name",required = false) String name,
+            @RequestParam(value = "lastName",required = false) String lastName,
+            @RequestParam(value = "email",required = false) String email,
+            @RequestParam(value = "clinicHistory",required = false) String clinicHistory,
+            @RequestParam(value = "detail",required = false) String detail,
+            @RequestParam(value = "birthdate",required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime birthdate) {
+
+        logger.info("Actualizacion de tomografias - START");
+        String userId = this.getUserFromJwt().getId();
+        logger.info("Actualizando tomografia con codigo de reporte: {} del usuario: {}", codeReport, userId);
+        try{
+            Tomography tomodb = tomographyService.getTomographyStatus(codeReport);
+            Patient patient = tomodb.getPatient();
+            if(name!=null) patient.setName(name);
+            if(typeDocument!=null) patient.setTypeDocument(typeDocument);
+            if(document!=null) patient.setDocument(document);
+            if(hospital!=null) patient.setHospital(hospital);
+            if(lastName!=null) patient.setLastName(lastName);
+            if(email!=null) patient.setEmail(email);
+            if(clinicHistory!=null) patient.setClinicHistory(clinicHistory);
+            if(detail!=null) patient.setDetail(detail);
+            if(birthdate!=null) patient.setBirthdate(birthdate);
+
+            tomographyService.modifyTomography(patient,codeReport);
+        }catch(NotFoundTomographyException e){
+            return new ResponseEntity<>(new Response("404","Error al actualizar la tomografia solicitada",LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Actualizacion de tomografias - END");
         return new ResponseEntity<>(new Response(), HttpStatus.OK);
 
     }

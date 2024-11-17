@@ -10,7 +10,7 @@ public class Patient {
 
     private String document;
 
-    private TypeDocument typeDocumentti;
+    private TypeDocument typeDocument;
 
     private String hospital;
 
