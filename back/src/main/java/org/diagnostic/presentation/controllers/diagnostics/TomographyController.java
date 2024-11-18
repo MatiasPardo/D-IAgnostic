@@ -25,7 +25,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -248,7 +247,7 @@ public class TomographyController extends BaseController {
 
             tomographyService.modifyTomography(patient,codeReport);
         }catch(NotFoundTomographyException e){
-            return new ResponseEntity<>(new Response("404","Error al actualizar la tomografia solicitada",LocalDateTime.now()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Response("404","Error al actualizar la tomografia solicitada",LocalDateTime.now()), HttpStatus.NOT_FOUND);
         }
         logger.info("Actualizacion de tomografias - END");
         return new ResponseEntity<>(new Response(), HttpStatus.OK);
