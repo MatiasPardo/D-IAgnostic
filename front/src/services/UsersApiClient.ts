@@ -1,6 +1,7 @@
 import {CreateUser} from "../interfaces/CreateUser";
 import {Credentials} from "../interfaces/Credentials";
 import {User} from "../interfaces/User";
+import {Email} from "../interfaces/Email";
 import {instance} from "./BaseClient";
 
 const endpoint = 'users'
@@ -16,6 +17,10 @@ export const createUser = (user: CreateUser): Promise<any> => {
 
 export const loginUser = (credentials: Credentials): Promise<any> => {
     return instance.post(`${endpoint}/login`, credentials);   
+}
+
+export const recoverySendEmail = (email: Email): Promise<any> => {
+  return instance.post(`${endpoint}/recovery`, email);   
 }
 
 export const logoutUser = () => {

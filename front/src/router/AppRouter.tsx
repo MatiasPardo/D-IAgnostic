@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {Home, Login, Register} from '../auth/pages';
+import {Home, Login, Register, PasswordRecoveryPage} from '../auth/pages';
 import {Orders} from '../auth/pages/Orders';
 import {Navbar} from '../components/navbar/Navbar';
 import { Tomographies } from '../views'
@@ -31,6 +31,7 @@ export const AppRouter = () => {
                             {/* Rutas públicas */}
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
+                            <Route path="/password-recovery" element={<PasswordRecoveryPage />} />
                             <Route path="/home" element={<Home />} />
 
                             {/* Rutas protegidas (requiere autenticación) */}
