@@ -172,15 +172,15 @@ const [isLoading, setIsLoading] = useState(false);
     const initialDateNew = mostrarFechaBienConHora(String(birthdatePatient ?? ""));
 
     const queryParams = new URLSearchParams({
-      document: encodeValue(patientDocument),
-      typeDocument: encodeValue(patientTypeDocument),
-      clinicHistory: encodeValue(clinicHistory),
+      document: (patientDocument),
+      typeDocument: (patientTypeDocument),
+      clinicHistory: (clinicHistory),
       birthdate: (initialDateNew), 
-      name: encodeValue(namePatient),
-      lastName: encodeValue(lastNamePatient),
-      email: encodeValue(emailPatient),
-      hospital: encodeValue(hospital),
-      detail: encodeValue(patientDetails),
+      name: (namePatient),
+      lastName: (lastNamePatient),
+      email: (emailPatient),
+      hospital: (hospital),
+      detail: (patientDetails),
     }).toString();
   
     try {
