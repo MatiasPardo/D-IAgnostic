@@ -53,8 +53,11 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [patientDetails, setPatientDetails] = useState<string>(tomography?.patient?.detail || "Dato no disponible");
   const [birthdatePatient, setBirthdatePatient] = useState<string>( initialDate  || "Dato no disponible")
   const [hospital, sethospital] = useState<string>(tomography?.patient?.hospital || "Dato no disponible");
-  const [patientTypeDocument, setTypeDocument] = useState<string>(tomography?.patient?.typeDocument || "Dato no disponible");
-  const [emailError, setEmailError] = useState('');
+  const [patientTypeDocument, setTypeDocument] = useState<string>(
+    tomography?.patient?.typeDocument === "Dato no disponible" 
+      ? "DNI" 
+      : tomography?.patient?.typeDocument || "DNI"
+  );  const [emailError, setEmailError] = useState('');
 
 const [isLoading, setIsLoading] = useState(false);
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -295,18 +298,22 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   style={{ color: 'black' }}
 />
 <h3 style={{ color: 'var(--primary-color-1)' }}>Tipo de documento</h3>
-<input
-  type="text"
+<select
   value={patientTypeDocument}
   onChange={(e) => setTypeDocument(e.target.value)}
-  readOnly={!isEditable}
+  disabled={!isEditable}
   className={`${
     isEditable 
       ? 'form-control'  
       : 'border-0 bg-transparent'
   }`}
-  style={{ color: 'black' }}
-/>
+  style={{ color: isEditable ? 'black' : 'gray', backgroundColor: isEditable ? 'white' : 'transparent' }}
+>
+  <option value="DNI">DNI</option>
+  <option value="CUIL">CUIL</option>
+  <option value="CUIT">CUIT</option>
+</select>
+
 <h3 style={{ color: 'var(--primary-color-1)' }}>Número de historia clínica</h3>
 <input
   type="text"
@@ -470,21 +477,14 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                     className={selectedErrors.includes('Composición') ? 'active' : ''}
                     onClick={() => handleErrorOptionChange('Composición')}
                   >
-                    Composición
+                    Patologia
                   </Button>
                   <Button
                     variant="outline-dark"
                     className={selectedErrors.includes('Tamaño') ? 'active' : ''}
                     onClick={() => handleErrorOptionChange('Tamaño')}
                   >
-                    Tamaño
-                  </Button>
-                  <Button
-                    variant="outline-dark"
-                    className={selectedErrors.includes('Diagnóstico') ? 'active' : ''}
-                    onClick={() => handleErrorOptionChange('Diagnóstico')}
-                  >
-                    Diagnóstico
+                    Informe Medico
                   </Button>
                 </div>
                 <Form.Group className="mt-3">
