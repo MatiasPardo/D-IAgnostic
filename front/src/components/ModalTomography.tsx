@@ -89,6 +89,21 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   };
 
   useEffect(() => {
+    const fetchFeedback = async () => {
+        if (tomography?.codeReport) {
+            try {
+              const response = await instance.get(`/feedback/${tomography?.codeReport}`);
+              setFeedback(response.data.feedbackComment);
+            } catch (error) {
+                console.error('Error al obtener el feedback:', error);
+                setFeedback('Error al cargar el feedback'); 
+            }
+        }
+    };
+
+    fetchFeedback(); 
+}, [tomography?.codeReport]); 
+  useEffect(() => {
     if (showReport && tomography?.codeReport) {
       const fetchReport = async () => {
         try {
@@ -168,19 +183,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       tomography.patient.typeDocument = patientTypeDocument;
       tomography.patient.detail = patientDetails;
     }
-  
-    const encodeValue = (value: string | undefined) => {
-      if (value === "Dato no disponible") {
-        return "";
-      }
-      return encodeURIComponent(value ?? ""); 
-    };
-  
-    const isValidDate = (dateStr: string) => {
-      const date = new Date(dateStr);
-      return !isNaN(date.getTime()); 
-    };
-    
+
     const initialDateNew = mostrarFechaBienConHora(String(birthdatePatient ?? ""));
 
     const queryParams = new URLSearchParams({
