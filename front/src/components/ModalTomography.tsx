@@ -54,9 +54,21 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [birthdatePatient, setBirthdatePatient] = useState<string>( initialDate  || "Dato no disponible")
   const [hospital, sethospital] = useState<string>(tomography?.patient?.hospital || "Dato no disponible");
   const [patientTypeDocument, setTypeDocument] = useState<string>(tomography?.patient?.typeDocument || "Dato no disponible");
+  const [emailError, setEmailError] = useState('');
 
 const [isLoading, setIsLoading] = useState(false);
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+  const handleEmailChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    setEmailPatient(value);
+
+    if (!emailRegex.test(value)) {
+      setEmailError('Por favor ingrese un correo electrónico válido.');
+    } else {
+      setEmailError('');
+    }
+  };
   const handleAcceptModal = async () => {
     const { handleSendFeedback } = UseFeedback();
 
@@ -330,19 +342,20 @@ const [isLoading, setIsLoading] = useState(false);
   }`}
   style={{ color: 'black' }} 
 />
-<h3 style={{ color: 'var(--primary-color-1)' }}>Email</h3>
-<input
-  type="text"
-  value={emailPatient}
-  onChange={(e) => setEmailPatient(e.target.value)}
-  readOnly={!isEditable}
-  className={`${
-    isEditable 
-      ? 'form-control'  
-      : 'border-0 bg-transparent'
-  }`}
-  style={{ color: 'black' }}
-/>
+<div>
+      <h3 style={{ color: 'var(--primary-color-1)' }}>Email</h3>
+      <input
+        type="text"
+        value={emailPatient}
+        onChange={handleEmailChange}
+        readOnly={!isEditable}
+        className={`${
+          isEditable ? 'form-control' : 'border-0 bg-transparent'
+        }`}
+        style={{ color: 'black' }}
+      />
+      {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
+    </div>
 <h3 style={{ color: 'var(--primary-color-1)' }}>Fecha de nacimiento</h3>
 <input
   type="text" 
