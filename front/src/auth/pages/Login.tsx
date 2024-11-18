@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { AlertError } from '../../components/SweetAlert';
 import AppLogo from '../../components/AppLogo';
-import { PasswordRecoveryModal } from '../../components/PasswordRecoveryModal'; 
+// import { PasswordRecoveryModal } from '../../components/PasswordRecoveryModal'; 
 
 import './login.css';
 
@@ -102,13 +102,9 @@ export const Login = () => {
             <div className="mt-3 text-center">
               <p>
                 ¿Olvidaste tu contraseña?{' '}
-                <button
-                  type="button"
-                  className="btn btn-link"
-                  onClick={() => setShowRecoveryModal(true)}
-                >
+                <NavLink className="btn btn-link" to="/password-recovery">
                   Recuperar contraseña
-                </button>
+                </NavLink>
               </p>
               <p>¿No tienes una cuenta?</p>
               <NavLink className="btn btn-link" to="/register">
@@ -119,10 +115,10 @@ export const Login = () => {
         </div>
       </div>
 
-      <PasswordRecoveryModal
+      {/* <PasswordRecoveryModal
         show={showRecoveryModal}
         onClose={() => setShowRecoveryModal(false)}
-      />
+      /> */}
     </div>
   );
 };
