@@ -129,7 +129,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
                   : "text-bg-danger"
               }`}
             >
-              {tomography.statusReport.replace("_", " ")}
+              {tomography.statusReport.replace(/_/g, " ")}
             </span>
           </p>
           <p className="card-text">
