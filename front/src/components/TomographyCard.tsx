@@ -15,6 +15,9 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
+  const images = tomography?.images ?? [];  
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [classification, setClassification] = useState<string>(images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible");
 
   useEffect(() => {
     if (tomography?.images?.length > 0) {
@@ -43,7 +46,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
       confirmButtonText: 'OK',
       timer: 3000,
     }).then(() => {
-      window.location.reload(); // Redirect or reload after confirming
+      window.location.reload(); 
     });
   };
 
@@ -59,7 +62,7 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
   const handleDelete = async () => {
     try {
       await deleteTomography(tomography.codeReport);
-      setIsDeleteConfirmationOpen(false); // Close the confirmation modal
+      setIsDeleteConfirmationOpen(false); 
       AlertOkRedirect('Eliminar', 'Se ha eliminado la tomografía.');
     } catch (error) {
       AlertError('Eliminar', 'No se pudo eliminar la tomografía.');
@@ -107,6 +110,9 @@ export const TomographyCard: React.FC<TomographyCardProps> = ({ tomography }) =>
           <hr />
           <p className="card-text">
             <strong>Numero de Documento:</strong> {tomography?.patient?.document || "-"}
+          </p>
+          <p className="card-text">
+            <strong>Clasificación de la tomografía:</strong> {images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible"}
           </p>
           <p className="card-text">
             <strong>Historia Clinica:</strong> {tomography?.patient?.clinicHistory || "-"}
