@@ -33,6 +33,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.github.mvallim</groupId>
       <artifactId>java-fluent-validator</artifactId>
       <version>1.10.0</version>

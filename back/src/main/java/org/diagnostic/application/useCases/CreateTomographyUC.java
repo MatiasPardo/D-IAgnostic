@@ -1,7 +1,9 @@
 package org.diagnostic.application.useCases;
 
 
+import org.diagnostic.domain.entities.Patient;
 import org.diagnostic.domain.entities.Tomography;
+import org.diagnostic.domain.exceptions.NotFoundTomographyException;
 import org.diagnostic.infraestructure.repositories.interfaces.ITomographyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,6 +59,13 @@ public class CreateTomographyUC {
 
     public String uploadFile(String codeReport, byte[] tomography) {
         return s3Service.uploadFile(codeReport, tomography);
+    }
+
+    public void modifyTomography(Patient patient,String codeReport) {
+        Tomography tomoDB = tomographyRepository.findByCodeReport(codeReport);
+        if(tomoDB == null) throw new NotFoundTomographyException();
+        tomoDB.setPatient(patient);
+        tomographyRepository.save(tomoDB);
     }
 }
 
