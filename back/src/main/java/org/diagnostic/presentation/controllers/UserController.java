@@ -73,7 +73,7 @@ public class UserController extends BaseController{
         try{
             boolean isValid = recoveryTokenService.validateToken(change.getToken(), change.getEmail(), change.getCode());
             if(isValid){
-                createUserUC.ressetPassward(change.getNewPassword(), this.getUserFromJwt().getUsername());
+                createUserUC.ressetPassward(change.getNewPassword(), change.getEmail());
                 return ResponseEntity.ok(new Response("200","Codigo enviado",LocalDateTime.now()));
             }else return new ResponseEntity<>(new Response("400","Datos no validos",LocalDateTime.now()), HttpStatus.BAD_REQUEST);
 
