@@ -1,19 +1,22 @@
 package org.diagnostic.application.useCases.users;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.diagnostic.application.security.JwtUtils;
 import org.diagnostic.domain.entities.User;
 import org.diagnostic.domain.enums.Rol;
 import org.diagnostic.infraestructure.repositories.interfaces.IUserRepository;
 import org.diagnostic.presentation.requestModels.LoginRequest;
 import org.diagnostic.presentation.responseModels.LoginResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import java.util.Objects;
 
 @Service
@@ -47,5 +50,10 @@ public class LoginUserUC {
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 rol);
+    }
+
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
     }
 }

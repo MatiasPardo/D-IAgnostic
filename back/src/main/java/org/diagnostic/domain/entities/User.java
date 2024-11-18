@@ -1,18 +1,16 @@
 package org.diagnostic.domain.entities;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Getter;
+import org.diagnostic.domain.enums.Rol;
+import org.diagnostic.infraestructure.config.CustomAuthorityDeserializer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.diagnostic.domain.enums.Rol;
-import org.diagnostic.infraestructure.config.CustomAuthorityDeserializer;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import lombok.Getter;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 public class User implements UserDetails {
@@ -76,6 +74,10 @@ public class User implements UserDetails {
     
     public List<String> getOrderShared(){
     	return this.orderShared != null ? this.orderShared : new LinkedList<String>();
+    }
+
+    public void newPassword(String newPassword){
+        this.password =  newPassword;
     }
     
     

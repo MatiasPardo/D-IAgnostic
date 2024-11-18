@@ -1,15 +1,15 @@
 package org.diagnostic.application.useCases.users;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.diagnostic.application.events.UserCreatedEvent;
 import org.diagnostic.domain.entities.User;
 import org.diagnostic.domain.exceptions.RegistrationException;
 import org.diagnostic.infraestructure.repositories.interfaces.IUserRepository;
 import org.diagnostic.presentation.requestModels.CreateUserRequest;
 import org.diagnostic.presentation.responseModels.ResponseCreateUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
@@ -42,5 +42,11 @@ public class CreateUserUC {
         this.publisher.publishEvent(userCreatedEvent);
 
         return new ResponseCreateUser(user.getId());
+    }
+
+    public void ressetPassward(String newPassword, String username) {
+        User user = this.userRepository.findByUsername(username).get();
+        user.newPassword(encoder.encode(newPassword));
+        this.userRepository.update(user);
     }
 }
