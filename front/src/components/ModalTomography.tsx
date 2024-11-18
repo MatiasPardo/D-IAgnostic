@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form, Card } from 'react-bootstrap';
+import { Modal, Button, Form, Card, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight, faPlusSquare, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faPlusSquare, faMinusSquare, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 import { Tomography } from '../interfaces/Tomography';
 import { instance } from '../services/BaseClient';
 import TextReport from './TextReport';
-import { FeedbackModal } from './FeedbackModal';
+import { FeedbackModal } from '../components/FeedbackModal';
 import { UseFeedback } from "../hooks/UseFeedback";
+import Swal from 'sweetalert2';
 
 interface ModelTomographyProps {
   isModalOpen: boolean;
@@ -23,14 +24,38 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [reportContent, setReportContent] = useState<string>('');
   const [isAnswerYesSelected, setIsAnswerYesSelected] = useState<boolean>(false); 
   const [isAnswerNoSelected, setIsAnswerNoSelected] = useState<boolean>(false); 
-  const [isEditable, setIsEditable] = useState(false); // New state for edit mode
+  const [isEditable, setIsEditable] = useState(false); 
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);  // Current image index
-  const images = tomography?.images ?? [];  // List of images
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = tomography?.images ?? [];  
+
+  const mostrarFechaBien = (fechaString: string): string => {
+    if (!fechaString) return "Fecha no disponible";
+    
+    const [year, month, day] = fechaString.split(/[-,]/).map(Number);
+    const date = new Date(year, month - 1, day);
+    
+    const dayFormatted = date.getDate().toString().padStart(2, '0');
+    const monthFormatted = (date.getMonth() + 1).toString().padStart(2, '0');
+    
+    return `${dayFormatted}-${monthFormatted}-${date.getFullYear()}`;
+  };
+  
+  
+  const initialDate = mostrarFechaBien(String(tomography?.patient?.birthdate ?? ""));
 
   const [classification, setClassification] = useState<string>(images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible");
   const [patientDocument, setPatientDocument] = useState<string>(tomography?.patient?.document || "Dato no disponible");
+  const [namePatient, setNamePatient] = useState<string>(tomography?.patient?.name || "Dato no disponible");
+  const [lastNamePatient, setLastNamePatient] = useState<string>(tomography?.patient?.lastName || "Dato no disponible");
   const [clinicHistory, setClinicHistory] = useState<string>(tomography?.patient?.clinicHistory || "Dato no disponible");
+  const [emailPatient, setEmailPatient] = useState<string>(tomography?.patient?.email || "Dato no disponible");
+  const [patientDetails, setPatientDetails] = useState<string>(tomography?.patient?.detail || "Dato no disponible");
+  const [birthdatePatient, setBirthdatePatient] = useState<string>( initialDate  || "Dato no disponible")
+  const [hospital, sethospital] = useState<string>(tomography?.patient?.hospital || "Dato no disponible");
+  const [patientTypeDocument, setTypeDocument] = useState<string>(tomography?.patient?.typeDocument || "Dato no disponible");
+
+const [isLoading, setIsLoading] = useState(false);
 
   const handleAcceptModal = async () => {
     const { handleSendFeedback } = UseFeedback();
@@ -86,43 +111,100 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
         ? prevSelected.filter((err) => err !== option)
         : [...prevSelected, option]
     );
-  };
+  }; 
 
   const toggleEditMode = () => {
     setIsEditable(!isEditable);
-    
-    console.log('Toggle Edit Mode:', {
-      isEditable: !isEditable,
-      classification: classification,
-      patientDocument: patientDocument,
-      clinicHistory: clinicHistory,
-    });
   };
+  const mostrarFechaBienConHora = (fechaString: string): string => {
+    if (!fechaString || fechaString === "null" || fechaString === "undefined") {
+      return "Fecha no disponible";
+    }
+  
+    const [day, month, year] = fechaString.split('-').map(Number);
+  
+    const adjustedMonth = month - 1; 
+  
+    const date = new Date(Date.UTC(year, adjustedMonth, day)); 
+  
+    if (isNaN(date.getTime())) {
+      return "Fecha no válida"; 
+    }
+  
+    const formattedDate = date.toISOString(); 
+  
+    return formattedDate; 
+  };
+  
+  
 
   const saveChanges = async () => {
-    console.log("entre a guardar")
+    setIsLoading(true);
+  
     if (images.length > 0 && currentImageIndex !== null) {
       images[currentImageIndex].tomographyCategory = classification;
     }
-    
+  
     if (tomography?.patient) {
       tomography.patient.document = patientDocument;
       tomography.patient.clinicHistory = clinicHistory;
+      tomography.patient.birthdate = birthdatePatient;
+      tomography.patient.name = namePatient;
+      tomography.patient.lastName = lastNamePatient;
+      tomography.patient.email = emailPatient;
+      tomography.patient.hospital = hospital;
+      tomography.patient.typeDocument = patientTypeDocument;
+      tomography.patient.detail = patientDetails;
     }
   
-    const form = new FormData();
+    const encodeValue = (value: string | undefined) => {
+      if (value === "Dato no disponible") {
+        return "";
+      }
+      return encodeURIComponent(value ?? ""); 
+    };
+  
+    const isValidDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      return !isNaN(date.getTime()); 
+    };
     
-    form.append('classification', classification);
-    form.append('patientDocument', patientDocument);
-    form.append('clinicHistory', clinicHistory);
+    const initialDateNew = mostrarFechaBienConHora(String(birthdatePatient ?? ""));
+
+    const queryParams = new URLSearchParams({
+      document: encodeValue(patientDocument),
+      typeDocument: encodeValue(patientTypeDocument),
+      clinicHistory: encodeValue(clinicHistory),
+      birthdate: (initialDateNew), 
+      name: encodeValue(namePatient),
+      lastName: encodeValue(lastNamePatient),
+      email: encodeValue(emailPatient),
+      hospital: encodeValue(hospital),
+      detail: encodeValue(patientDetails),
+    }).toString();
   
     try {
-      // const response = await instance.post(`tomographies/${tomography?.codeReport}`, form);
-      // console.log('Response from server:', response.data);
-      closeModal();
-      //window.location.reload();
-    } catch (error) {
-      console.error('Error while posting data:', error);
+      const response = await instance.patch(
+        `tomographies/${tomography?.codeReport}?${queryParams}`
+      );
+  
+  
+      setTimeout(() => {
+        toggleEditMode();
+      }, 500);
+    }catch (error: any) {
+      const AlertError = (title: string, message: string) => {
+        Swal.fire({
+          icon: 'error',
+          title: title,
+          text: message,
+          confirmButtonText: 'OK',
+        });
+      };
+  
+      AlertError('Error al guardar cambios', error?.message || 'Hubo un problema al actualizar los datos.');
+    } finally {
+      setIsLoading(false);
     }
   };
   
@@ -144,6 +226,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
     }
   };
 
+  
   return (
     <Modal
       show={isModalOpen}
@@ -181,19 +264,9 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
             </div>
 
             <div className="col-md-6">
+            <h3 style={{ color: 'var(--primary-color-1)' }}>Datos del paciente</h3>
   <div className="border p-3 mb-4 bg-white">
-  <h3 style={{color: 'var(--primary-color-1)'}}>Clasificación de la tomografía</h3>
-  <p>{images.length > 0 ? images[currentImageIndex].tomographyCategory : "Dato no disponible"}</p>
-
-    <h3 style={{ color: 'var(--primary-color-1)' }}>Estado del informe</h3>
-    <span className={`badge ${tomography?.statusReport === 'INFORME_GENERADO' ? 'text-bg-success' : 'text-bg-danger'}`}>
-      {tomography?.statusReport ? (tomography.statusReport).replace("_", " ") : "Dato no disponible"}
-    </span>
-
-    <h3 style={{ color: 'var(--primary-color-1)' }}>Código del reporte</h3>
-    <p>{tomography?.codeReport ? tomography.codeReport : "Dato no disponible"}</p>
-
-<h3 style={{ color: 'var(--primary-color-1)' }}>Documento del paciente</h3>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Numero del documento</h3>
 <input
   type="text"
   value={patientDocument}
@@ -206,8 +279,20 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   }`}
   style={{ color: 'black' }}
 />
-
-<h3 style={{ color: 'var(--primary-color-1)' }}>Número de historia clínica del paciente</h3>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Tipo de documento</h3>
+<input
+  type="text"
+  value={patientTypeDocument}
+  onChange={(e) => setTypeDocument(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }}
+/>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Número de historia clínica</h3>
 <input
   type="text"
   value={clinicHistory}
@@ -219,11 +304,111 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
       : 'border-0 bg-transparent'
   }`}
   style={{ color: 'black' }} 
+/><h3 style={{ color: 'var(--primary-color-1)' }}>Nombre</h3>
+<input
+  type="text"
+  value={namePatient}
+  onChange={(e) => setNamePatient(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }} 
+/>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Apellido</h3>
+<input
+  type="text"
+  value={lastNamePatient}
+  onChange={(e) => setLastNamePatient(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }} 
+/>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Email</h3>
+<input
+  type="text"
+  value={emailPatient}
+  onChange={(e) => setEmailPatient(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }}
+/>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Fecha de nacimiento</h3>
+<input
+  type="text" 
+  value={birthdatePatient}
+  onChange={(e) => {
+    setBirthdatePatient(e.target.value);
+  }}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }}
+/>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Detalles</h3>
+<input
+  type="text"
+  value={patientDetails}
+  onChange={(e) => setPatientDetails(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }}
+/>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Hospital</h3>
+<input
+  type="text"
+  value={hospital}
+  onChange={(e) => sethospital(e.target.value)}
+  readOnly={!isEditable}
+  className={`${
+    isEditable 
+      ? 'form-control'  
+      : 'border-0 bg-transparent'
+  }`}
+  style={{ color: 'black' }}
 />
               </div>
-              <Button variant="outline-primary" onClick={isEditable ? saveChanges : toggleEditMode}>
-  <             FontAwesomeIcon icon={faPlusSquare} /> {isEditable ? "Guardar Cambios" : "Editar"}
-              </Button>
+              <Button
+  variant="outline-primary"
+  onClick={isEditable ? saveChanges : toggleEditMode}
+  disabled={isLoading} 
+>
+  {isLoading ? (
+    <>
+      <Spinner
+        as="span"
+        animation="border"
+        size="sm"
+        role="status"
+        aria-hidden="true"
+      />{" "}
+      Guardando...
+    </>
+  ) : (
+    <>
+      <FontAwesomeIcon icon={isEditable ? faSave : faEdit} />{" "}
+      {isEditable ? "Guardar Cambios" : "Editar"}
+    </>
+  )}
+</Button>
+
             </div>
           </div>
 
@@ -332,4 +517,8 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   );
 };
 
+
 export default ModelTomography;
+function setIsLoading(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
