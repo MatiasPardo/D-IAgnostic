@@ -44,8 +44,8 @@ public class CreateUserUC {
         return new ResponseCreateUser(user.getId());
     }
 
-    public void ressetPassward(String newPassword, String username) {
-        User user = this.userRepository.findByUsername(username).get();
+    public void ressetPassward(String newPassword, String email) {
+        User user = this.userRepository.findByEmail(email).get();
         user.newPassword(encoder.encode(newPassword));
         this.userRepository.update(user);
     }
