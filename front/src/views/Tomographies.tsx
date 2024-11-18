@@ -95,6 +95,7 @@ export const Tomographies = () => {
         getTomographies(1);
         try {
             const response = await instance.get(`tomographies?page=0&size=3`);
+            console.log("eliel",response)
             if (response.status === 200) {
                 localStorage.setItem('totalTomographies', JSON.stringify(response.data.pagination.totalSize));
                 setTotalTomographies(response.data.pagination.totalSize); // Update total size

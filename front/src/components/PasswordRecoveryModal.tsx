@@ -10,17 +10,31 @@ export const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({ sh
   const [recoveryEmail, setRecoveryEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (modalPage === 1) {
       console.log("Email submitted:", recoveryEmail);
-      setModalPage(2); 
+      setModalPage(2);
     } else {
       console.log("Code:", verificationCode, "New Password:", newPassword);
-      onClose(); 
-      setModalPage(1); 
+      onClose();
+      setModalPage(1);
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewPassword(value);
+
+    if (!passwordRegex.test(value)) {
+      setPasswordError('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.');
+    } else {
+      setPasswordError('');
     }
   };
 
@@ -69,12 +83,13 @@ export const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({ sh
                     type="password"
                     id="newPassword"
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     className="form-control"
                     required
                   />
+                  {passwordError && <div className="text-danger">{passwordError}</div>}
                 </div>
-                <button type="submit" className="btn btn-primary">Restablecer Contraseña</button>
+                <button type="submit" className="btn btn-primary" disabled={!!passwordError}>Restablecer Contraseña</button>
               </form>
             )}
           </div>

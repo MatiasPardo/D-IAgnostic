@@ -21,9 +21,12 @@ export interface TomographyImage {
 export interface Patient {
     name: string;
     lastName: string;
-    birthDate: Date;
+    birthdate: string;
     document: string;
     email: string;
     clinicHistory: string;
+    hospital : string;
+    typeDocument : string;
+    detail : string;
 }
 
