@@ -30,7 +30,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const images = tomography?.images ?? [];  
 
   const mostrarFechaBien = (fechaString: string): string => {
-    if (!fechaString) return "Fecha no disponible";
+    if (!fechaString) return "01-01-2000";
     
     const [year, month, day] = fechaString.split(/[-,]/).map(Number);
     const date = new Date(year, month - 1, day);
@@ -51,7 +51,7 @@ const ModelTomography: React.FC<ModelTomographyProps> = ({ isModalOpen, closeMod
   const [clinicHistory, setClinicHistory] = useState<string>(tomography?.patient?.clinicHistory || "Dato no disponible");
   const [emailPatient, setEmailPatient] = useState<string>(tomography?.patient?.email || "Dato no disponible");
   const [patientDetails, setPatientDetails] = useState<string>(tomography?.patient?.detail || "Dato no disponible");
-  const [birthdatePatient, setBirthdatePatient] = useState<string>( initialDate  || "Dato no disponible")
+  const [birthdatePatient, setBirthdatePatient] = useState<string>( initialDate  || "01-01-2000")
   const [hospital, sethospital] = useState<string>(tomography?.patient?.hospital || "Dato no disponible");
   const [patientTypeDocument, setTypeDocument] = useState<string>(
     tomography?.patient?.typeDocument === "Dato no disponible" 
@@ -366,7 +366,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       />
       {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
     </div>
-<h3 style={{ color: 'var(--primary-color-1)' }}>Fecha de nacimiento</h3>
+<h3 style={{ color: 'var(--primary-color-1)' }}>Fecha de nacimiento (dd-MM-YYYY)</h3>
 <input
   type="text" 
   value={birthdatePatient}
