@@ -2,14 +2,15 @@ import { instance } from "./BaseClient";
 import { FeedbackRequest } from "../interfaces/FeedbackRequest";
 import { AxiosResponse } from "axios";
 
-type SectionErrorKey = "Composición" | "Tamaño" | "Reporte" | "Otro";
+type SectionErrorKey = "Patologia" | "Informe Medico" | "Reporte" | "Otro";
 
 const sectionErrorEnum = {
-    "Composición": "COMPOSITION",
-    "Tamaño": "SIZE",
+    "Patologia": "COMPOSITION",
+    "Informe Medico": "SIZE",
     "Reporte": "REPORT",
     "Otro": "OTRO"
 };
+// @TODO ojo aca estan las variables viejas q recibe el back
 
 export const requestFeedback = async (feedbackRequest: FeedbackRequest): Promise<AxiosResponse<any>> => {
     const formData = new FormData();

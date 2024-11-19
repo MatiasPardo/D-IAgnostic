@@ -474,15 +474,15 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 <div className="btn-group">
                   <Button
                     variant="outline-dark"
-                    className={selectedErrors.includes('Composición') ? 'active' : ''}
-                    onClick={() => handleErrorOptionChange('Composición')}
+                    className={selectedErrors.includes('Patologia') ? 'active' : ''}
+                    onClick={() => handleErrorOptionChange('Patologia')}
                   >
                     Patologia
                   </Button>
                   <Button
                     variant="outline-dark"
-                    className={selectedErrors.includes('Tamaño') ? 'active' : ''}
-                    onClick={() => handleErrorOptionChange('Tamaño')}
+                    className={selectedErrors.includes('Informe Medico') ? 'active' : ''}
+                    onClick={() => handleErrorOptionChange('Informe Medico')}
                   >
                     Informe Medico
                   </Button>
