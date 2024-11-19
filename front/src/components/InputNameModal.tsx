@@ -23,8 +23,13 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: InputNameModal
     const [dni, setDni] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [sex, setSex] = useState<string | undefined>(undefined);
+    const [titleError, setTitleError] = useState(false);  // Estado para manejar el error del título
 
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value);
+        setTitleError(false); // Limpiar error al escribir
+    };
+
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
     const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value);
     const handleClinicalHistoryChange = (e: React.ChangeEvent<HTMLInputElement>) => setClinicalHistory(e.target.value);
@@ -33,9 +38,13 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: InputNameModal
     const handleSexChange = (e: React.ChangeEvent<HTMLInputElement>) => setSex(e.target.value);
 
     const handleAccept = () => {
-        // No required fields – pass all values even if empty
+        if (!title) {
+            setTitleError(true); // Marcar como error si no hay título
+            return;
+        }
+
         handleFunc(
-            title || undefined,
+            title,
             name || undefined,
             lastName || undefined,
             clinicalHistory || undefined,
@@ -54,15 +63,19 @@ export const InputNameModal = ({ show, handleClose, handleFunc }: InputNameModal
             <Modal.Body>
                 <form>
                     <div className="form-group row">
-                        <label className="col-4 col-form-label">Título para la tomografía</label>
+                        <label className="col-4 col-form-label">
+                            Título para la tomografía <span className="text-danger">*</span>
+                        </label>
                         <div className="col-8">
                             <input
                                 type="text"
-                                className="form-control"
+                                className={`form-control ${titleError ? 'is-invalid' : ''}`}
                                 value={title}
                                 onChange={handleTitleChange}
                                 placeholder="Ingrese un título"
+                                required
                             />
+                            {titleError && <div className="invalid-feedback">El título es obligatorio.</div>}
                         </div>
                     </div>
                     <br />
