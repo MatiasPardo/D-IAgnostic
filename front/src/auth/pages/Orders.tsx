@@ -110,8 +110,8 @@ export const Orders = () => {
 
                 {step === 1 && (
                     <div className="card p-4 content-card">
-                        <h2 className="h4 mb-3">1): Subir una imagen o varias de la tomografía</h2>
-                        <ImageUploader
+                        <h2 className="h4 mb-3">1): Subir una imagen o varias de la tomografía del órgano renal</h2>
+                <ImageUploader
                             setUploadedImages={handleFileUpload}
                             handleDelete={(deleteFunc: any) => setImageUploaderRef(() => deleteFunc)}
                         />
